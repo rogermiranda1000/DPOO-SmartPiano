@@ -1,0 +1,9 @@
+
+{
+  "port": "3306",
+  "ip": "mc.rogermiranda1000.com",
+  "dbName": "pianoDB",
+  "username": "admin",
+  "password": "yosoyadmin",
+  "scrapping": "300000"
+}
