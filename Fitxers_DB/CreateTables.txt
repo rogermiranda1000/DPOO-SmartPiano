@@ -1,52 +1,66 @@
 CREATE OR REPLACE TABLE Users (
 	id MEDIUMINT NOT NULL AUTO_INCREMENT,
-	nom VARCHAR(255),
-	correu VARCHAR(255),
-	contrasenya CHAR(32),
+	name VARCHAR(255),
+	email VARCHAR(255),
+	password CHAR(32),
+	octave_mode enum(Single, Full),
+	volume_piano FLOAT,
+	volume_song FLOAT,
 	PRIMARY KEY (id)
+);
+CREATE OR REPLACE TABLE Keys (
+	note enum(Do1, Do#1, Re1, Re#1, Mi1, Fa1, Fa#1, Sol, Sol#1, La1, La#1, Si1, Do2, Do#2, Re2, Re#2, Mi2, Fa2, Fa#2, Sol2, Sol#2, La2, La#2, Si2) NOT NULL,
+	user MEDIUMINT,
+	keyboard CHAR(1),
+	PRIMARY KEY (note),
+	FOREIGN KEY (user)
+	REFERENCES Users(id)
 );
 CREATE OR REPLACE TABLE Songs (
 	id MEDIUMINT NOT NULL AUTO_INCREMENT,
 	public BINARY(1),
-	nom VARCHAR(255),
-	data DATETIME,
+	name VARCHAR(255),
+	date DATETIME,
 	author MEDIUMINT,
 	PRIMARY KEY (id),
 	FOREIGN KEY (author)
-		REFERENCES Users(id)
+	REFERENCES Users(id)
 );
 CREATE OR REPLACE TABLE List (
 	id MEDIUMINT NOT NULL AUTO_INCREMENT,
-	nom VARCHAR(255),
+	name VARCHAR(255),
 	author MEDIUMINT,
 	PRIMARY KEY (id),
 	FOREIGN KEY (author)
-		REFERENCES Users(id)
+	REFERENCES Users(id)
 );
 CREATE OR REPLACE TABLE Ranking (
 	user MEDIUMINT NOT NULL,
 	song MEDIUMINT NOT NULL,
+	points MEDIUMINT,
 	PRIMARY KEY (user, song),
 	FOREIGN KEY (user)
-		REFERENCES Users(id),
+	REFERENCES Users(id),
 	FOREIGN KEY (song)
-		REFERENCES Songs(id)
+	REFERENCES Songs(id)
 );
 CREATE OR REPLACE TABLE Listen (
+	date DATE NOT NULL,
 	user MEDIUMINT NOT NULL,
 	song MEDIUMINT NOT NULL,
-	PRIMARY KEY (user, song),
+	seconds_listened MEDIUMINT,
+	PRIMARY KEY (date, user, song),
 	FOREIGN KEY (user)
-		REFERENCES Users(id),
+	REFERENCES Users(id),
 	FOREIGN KEY (song)
-		REFERENCES Songs(id)
+	REFERENCES Songs(id)
 );
 CREATE OR REPLACE TABLE ListSongs (
 	list MEDIUMINT NOT NULL,
 	song MEDIUMINT NOT NULL,
 	PRIMARY KEY (list, song),
 	FOREIGN KEY (list)
-		REFERENCES List(id),
+	REFERENCES List(id),
 	FOREIGN KEY (song)
-		REFERENCES Songs(id)
+	REFERENCES Songs(id)
 );
