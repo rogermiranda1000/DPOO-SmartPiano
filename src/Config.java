@@ -1,47 +1,39 @@
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.Scanner;
 
 public class Config {
-    private static int scrapping;
+    private static Gson gson = new Gson();
 
-    public static int getScrapping() {
-        return scrapping;
+    private int scrapping;
+    private final File configFile;
+
+    public Config(File f) {
+        this.configFile = f;
     }
 
-    public static void setScrapping(int scrapping) {
-        Config.scrapping = scrapping;
+    public int getScrapping() {
+        return this.scrapping;
     }
 
-    public DDBB readConfig(String path){
-        File file = new File(path);
+    public void setScrapping(int scrapping) {
+        this.scrapping = scrapping;
+    }
 
-        if (!file.exists() || file.isDirectory()) {
-            return null;
-        }
+    public DDBB readConfig() throws FileNotFoundException {
+        if (!this.configFile.exists()) throw new FileNotFoundException("El fitxer especificat no existeix");
 
-        String content = "";
+        // llegim el fitxer; la seva informació queda guardada a 'sb'
+        String fileResult;
+        StringBuilder sb = new StringBuilder();
+        Scanner scanner = new Scanner(this.configFile);
+        while (scanner.hasNextLine()) sb.append(scanner.nextLine());
+        scanner.close();
+        fileResult = sb.toString();
 
-        try {
-            content = new String ( Files.readAllBytes( Paths.get(path) ) );
-        } catch (IOException e) {
-            e.printStackTrace();
-            return  null;
-        }
-        JsonParser parser = new JsonParser();
-        JsonObject rootObj = parser.parse(content).getAsJsonObject();
-
-        String port = rootObj.get("port").getAsString();
-        String ip = rootObj.get("ip").getAsString();
-        String dbName = rootObj.get("dbName").getAsString();
-        String username = rootObj.get("username").getAsString();
-        String password = rootObj.get("password").getAsString();
-        setScrapping(rootObj.get("scrapping").getAsInt());
-        DDBB r = new DDBB(port, ip, dbName, username, password);
-
-        return r;
+        this.setScrapping(Config.gson.fromJson(fileResult, JsonObject.class).get("scrapping").getAsInt());
+        return Config.gson.fromJson(fileResult, DDBB.class);
     }
 }
