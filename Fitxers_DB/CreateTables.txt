@@ -1,66 +1,68 @@
+-- SET FOREIGN_KEY_CHECKS=0; -- Enable this if you are having problems updating the tables because of foreign keys, re-enable checks at the end
 CREATE OR REPLACE TABLE Users (
-	id MEDIUMINT NOT NULL AUTO_INCREMENT,
-	name VARCHAR(255),
-	email VARCHAR(255),
-	password CHAR(32),
-	octave_mode enum(Single, Full),
-	volume_piano FLOAT,
-	volume_song FLOAT,
-	PRIMARY KEY (id)
+   id MEDIUMINT NOT NULL AUTO_INCREMENT,
+   name VARCHAR(255),
+   email VARCHAR(255),
+   password CHAR(32),
+   octave_mode enum('Single', 'Full'),
+   volume_piano FLOAT,  -- Volume of the notes played in the piano (1 = max volume, 0 = silenced)
+   volume_song FLOAT,   -- Volume of the song in the player (1 = max volume, 0 = silenced)
+   PRIMARY KEY (id)
 );
-CREATE OR REPLACE TABLE Keys (
-	note enum(Do1, Do#1, Re1, Re#1, Mi1, Fa1, Fa#1, Sol, Sol#1, La1, La#1, Si1, Do2, Do#2, Re2, Re#2, Mi2, Fa2, Fa#2, Sol2, Sol#2, La2, La#2, Si2) NOT NULL,
-	user MEDIUMINT,
-	keyboard CHAR(1),
-	PRIMARY KEY (note),
-	FOREIGN KEY (user)
-	REFERENCES Users(id)
+CREATE OR REPLACE TABLE PianoKeys (
+   note enum('Do1', 'Do#1', 'Re1', 'Re#1', 'Mi1', 'Fa1', 'Fa#1', 'Sol', 'Sol#1', 'La1', 'La#1', 'Si1', 'Do2', 'Do#2', 'Re2', 'Re#2', 'Mi2', 'Fa2', 'Fa#2', 'Sol2', 'Sol#2', 'La2', 'La#2', 'Si2') NOT NULL, -- Note of the piano this represents
+   user MEDIUMINT,      -- User that configured these settings
+   keyboard CHAR(1),    -- Character/key related to the note
+   PRIMARY KEY (note),
+   FOREIGN KEY (user)
+   REFERENCES Users(id)
 );
 CREATE OR REPLACE TABLE Songs (
-	id MEDIUMINT NOT NULL AUTO_INCREMENT,
-	public BINARY(1),
-	name VARCHAR(255),
-	date DATETIME,
-	author MEDIUMINT,
-	PRIMARY KEY (id),
-	FOREIGN KEY (author)
-	REFERENCES Users(id)
+   id MEDIUMINT NOT NULL AUTO_INCREMENT,
+   public BINARY(1),    -- 1 = public, 0 = private
+   name VARCHAR(255),
+   date DATETIME DEFAULT CURRENT_TIMESTAMP, -- Moment when the song was published, default value = row creation date
+   author MEDIUMINT,
+   PRIMARY KEY (id),
+   FOREIGN KEY (author)
+   REFERENCES Users(id)
 );
 CREATE OR REPLACE TABLE List (
-	id MEDIUMINT NOT NULL AUTO_INCREMENT,
-	name VARCHAR(255),
-	author MEDIUMINT,
-	PRIMARY KEY (id),
-	FOREIGN KEY (author)
-	REFERENCES Users(id)
+   id MEDIUMINT NOT NULL AUTO_INCREMENT,
+   name VARCHAR(255),
+   author MEDIUMINT,
+   PRIMARY KEY (id),
+   FOREIGN KEY (author)
+   REFERENCES Users(id)
 );
 CREATE OR REPLACE TABLE Ranking (
-	user MEDIUMINT NOT NULL,
-	song MEDIUMINT NOT NULL,
-	points MEDIUMINT,
-	PRIMARY KEY (user, song),
-	FOREIGN KEY (user)
-	REFERENCES Users(id),
-	FOREIGN KEY (song)
-	REFERENCES Songs(id)
+   user MEDIUMINT NOT NULL,
+   song MEDIUMINT NOT NULL,
+   points MEDIUMINT,
+   PRIMARY KEY (user, song),
+   FOREIGN KEY (user)
+   REFERENCES Users(id),
+   FOREIGN KEY (song)
+   REFERENCES Songs(id)
 );
 CREATE OR REPLACE TABLE Listen (
-	date DATE NOT NULL,
-	user MEDIUMINT NOT NULL,
-	song MEDIUMINT NOT NULL,
-	seconds_listened MEDIUMINT,
-	PRIMARY KEY (date, user, song),
-	FOREIGN KEY (user)
-	REFERENCES Users(id),
-	FOREIGN KEY (song)
-	REFERENCES Songs(id)
+   date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,  -- Date when the reproduction took place, default value = row creation date
+   user MEDIUMINT NOT NULL,
+   song MEDIUMINT NOT NULL,
+   seconds_listened MEDIUMINT,  -- How many seconds the user listened to the song that specific moment
+   PRIMARY KEY (date, user, song),
+   FOREIGN KEY (user)
+   REFERENCES Users(id),
+   FOREIGN KEY (song)
+   REFERENCES Songs(id)
 );
 CREATE OR REPLACE TABLE ListSongs (
-	list MEDIUMINT NOT NULL,
-	song MEDIUMINT NOT NULL,
-	PRIMARY KEY (list, song),
-	FOREIGN KEY (list)
-	REFERENCES List(id),
-	FOREIGN KEY (song)
-	REFERENCES Songs(id)
+   list MEDIUMINT NOT NULL,
+   song MEDIUMINT NOT NULL,
+   PRIMARY KEY (list, song),
+   FOREIGN KEY (list)
+   REFERENCES List(id),
+   FOREIGN KEY (song)
+   REFERENCES Songs(id)
 );
+-- SET FOREIGN_KEY_CHECKS=1;
