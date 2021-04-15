@@ -11,8 +11,8 @@ DROP TABLE IF EXISTS Users CASCADE;
 -- Update all tables
 CREATE TABLE Users (
    id MEDIUMINT NOT NULL AUTO_INCREMENT,
-   name VARCHAR(255),
-   email VARCHAR(255),
+   username VARCHAR(255) UNIQUE,
+   email VARCHAR(255) UNIQUE,
    password CHAR(32),
    octave_mode ENUM('Single', 'Full'),
    volume_piano FLOAT,  -- Volume of the notes played in the piano (1 = max volume, 0 = silenced)
