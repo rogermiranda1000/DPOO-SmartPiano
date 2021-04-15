@@ -81,7 +81,7 @@ CREATE TABLE SongNote (
     tick INT NOT NULL,              -- Moment when the event happened
     pressed BINARY(1) NOT NULL,     -- 1 = the key was pressed, 0 = the key was released
     song MEDIUMINT NOT NULL,
-    velocity TINYINT,               -- Volume of the note, 0 = silent,
+    velocity TINYINT,               -- Volume of the note. 0 = silent, 127 = max volume
     PRIMARY KEY (note, tick, pressed, song),
     FOREIGN KEY (song)
     REFERENCES Songs(id)
