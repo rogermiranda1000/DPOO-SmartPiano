@@ -1,5 +1,14 @@
--- SET FOREIGN_KEY_CHECKS=0; -- Enable this if you are having problems updating the tables because of foreign keys, re-enable checks at the end
-CREATE OR REPLACE TABLE Users (
+-- Delete all tables
+DROP TABLE IF EXISTS ListSongs CASCADE;
+DROP TABLE IF EXISTS Listen CASCADE;
+DROP TABLE IF EXISTS Ranking CASCADE;
+DROP TABLE IF EXISTS List CASCADE;
+DROP TABLE IF EXISTS Songs CASCADE;
+DROP TABLE IF EXISTS PianoKeys CASCADE;
+DROP TABLE IF EXISTS Users CASCADE;
+
+-- Update all tables
+CREATE TABLE Users (
    id MEDIUMINT NOT NULL AUTO_INCREMENT,
    name VARCHAR(255),
    email VARCHAR(255),
@@ -9,7 +18,7 @@ CREATE OR REPLACE TABLE Users (
    volume_song FLOAT,   -- Volume of the song in the player (1 = max volume, 0 = silenced)
    PRIMARY KEY (id)
 );
-CREATE OR REPLACE TABLE PianoKeys (
+CREATE TABLE PianoKeys (
    note enum('Do1', 'Do#1', 'Re1', 'Re#1', 'Mi1', 'Fa1', 'Fa#1', 'Sol', 'Sol#1', 'La1', 'La#1', 'Si1', 'Do2', 'Do#2', 'Re2', 'Re#2', 'Mi2', 'Fa2', 'Fa#2', 'Sol2', 'Sol#2', 'La2', 'La#2', 'Si2') NOT NULL, -- Note of the piano this represents
    user MEDIUMINT,      -- User that configured these settings
    keyboard CHAR(1),    -- Character/key related to the note
@@ -17,7 +26,7 @@ CREATE OR REPLACE TABLE PianoKeys (
    FOREIGN KEY (user)
    REFERENCES Users(id)
 );
-CREATE OR REPLACE TABLE Songs (
+CREATE TABLE Songs (
    id MEDIUMINT NOT NULL AUTO_INCREMENT,
    public BINARY(1),    -- 1 = public, 0 = private
    name VARCHAR(255),
@@ -27,7 +36,7 @@ CREATE OR REPLACE TABLE Songs (
    FOREIGN KEY (author)
    REFERENCES Users(id)
 );
-CREATE OR REPLACE TABLE List (
+CREATE TABLE List (
    id MEDIUMINT NOT NULL AUTO_INCREMENT,
    name VARCHAR(255),
    author MEDIUMINT,
@@ -35,7 +44,7 @@ CREATE OR REPLACE TABLE List (
    FOREIGN KEY (author)
    REFERENCES Users(id)
 );
-CREATE OR REPLACE TABLE Ranking (
+CREATE TABLE Ranking (
    user MEDIUMINT NOT NULL,
    song MEDIUMINT NOT NULL,
    points MEDIUMINT,
@@ -45,7 +54,7 @@ CREATE OR REPLACE TABLE Ranking (
    FOREIGN KEY (song)
    REFERENCES Songs(id)
 );
-CREATE OR REPLACE TABLE Listen (
+CREATE TABLE Listen (
    date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,  -- Date when the reproduction took place, default value = row creation date
    user MEDIUMINT NOT NULL,
    song MEDIUMINT NOT NULL,
@@ -56,7 +65,7 @@ CREATE OR REPLACE TABLE Listen (
    FOREIGN KEY (song)
    REFERENCES Songs(id)
 );
-CREATE OR REPLACE TABLE ListSongs (
+CREATE TABLE ListSongs (
    list MEDIUMINT NOT NULL,
    song MEDIUMINT NOT NULL,
    PRIMARY KEY (list, song),
@@ -65,4 +74,3 @@ CREATE OR REPLACE TABLE ListSongs (
    FOREIGN KEY (song)
    REFERENCES Songs(id)
 );
--- SET FOREIGN_KEY_CHECKS=1;
