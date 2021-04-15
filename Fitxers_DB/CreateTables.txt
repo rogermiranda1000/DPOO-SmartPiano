@@ -1,4 +1,5 @@
 -- Delete all tables
+DROP TABLE IF EXISTS SongNote CASCADE;
 DROP TABLE IF EXISTS ListSongs CASCADE;
 DROP TABLE IF EXISTS Listen CASCADE;
 DROP TABLE IF EXISTS Ranking CASCADE;
@@ -13,13 +14,13 @@ CREATE TABLE Users (
    name VARCHAR(255),
    email VARCHAR(255),
    password CHAR(32),
-   octave_mode enum('Single', 'Full'),
+   octave_mode ENUM('Single', 'Full'),
    volume_piano FLOAT,  -- Volume of the notes played in the piano (1 = max volume, 0 = silenced)
    volume_song FLOAT,   -- Volume of the song in the player (1 = max volume, 0 = silenced)
    PRIMARY KEY (id)
 );
 CREATE TABLE PianoKeys (
-   note enum('Do1', 'Do#1', 'Re1', 'Re#1', 'Mi1', 'Fa1', 'Fa#1', 'Sol', 'Sol#1', 'La1', 'La#1', 'Si1', 'Do2', 'Do#2', 'Re2', 'Re#2', 'Mi2', 'Fa2', 'Fa#2', 'Sol2', 'Sol#2', 'La2', 'La#2', 'Si2') NOT NULL, -- Note of the piano this represents
+   note ENUM('Do1', 'Do#1', 'Re1', 'Re#1', 'Mi1', 'Fa1', 'Fa#1', 'Sol', 'Sol#1', 'La1', 'La#1', 'Si1', 'Do2', 'Do#2', 'Re2', 'Re#2', 'Mi2', 'Fa2', 'Fa#2', 'Sol2', 'Sol#2', 'La2', 'La#2', 'Si2') NOT NULL, -- Note of the piano this represents
    user MEDIUMINT,      -- User that configured these settings
    keyboard CHAR(1),    -- Character/key related to the note
    PRIMARY KEY (note),
@@ -73,4 +74,15 @@ CREATE TABLE ListSongs (
    REFERENCES List(id),
    FOREIGN KEY (song)
    REFERENCES Songs(id)
+);
+CREATE TABLE SongNote (
+    -- Table that stores the info about a note press or release in a specific song
+    note ENUM('Do1', 'Do#1', 'Re1', 'Re#1', 'Mi1', 'Fa1', 'Fa#1', 'Sol', 'Sol#1', 'La1', 'La#1', 'Si1', 'Do2', 'Do#2', 'Re2', 'Re#2', 'Mi2', 'Fa2', 'Fa#2', 'Sol2', 'Sol#2', 'La2', 'La#2', 'Si2') NOT NULL,
+    tick INT NOT NULL,              -- Moment when the event happened
+    pressed BINARY(1) NOT NULL,     -- 1 = the key was pressed, 0 = the key was released
+    song MEDIUMINT NOT NULL,
+    velocity TINYINT,               -- Volume of the note, 0 = silent,
+    PRIMARY KEY (note, tick, pressed, song),
+    FOREIGN KEY (song)
+    REFERENCES Songs(id)
 );
