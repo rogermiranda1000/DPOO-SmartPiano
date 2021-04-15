@@ -23,7 +23,7 @@ public class Config {
     }
 
     public DDBB readConfig() throws FileNotFoundException {
-        if (!this.configFile.exists()) throw new FileNotFoundException("El fitxer especificat no existeix");
+        if (!this.configFile.exists()) throw new FileNotFoundException("The file don't exists");
 
         // llegim el fitxer; la seva informació queda guardada a 'sb'
         String fileResult;
