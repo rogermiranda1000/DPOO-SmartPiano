@@ -78,7 +78,7 @@ CREATE TABLE ListSongs (
 CREATE TABLE SongNote (
     -- Table that stores the info about a note press or release in a specific song
     note ENUM('Do1', 'Do#1', 'Re1', 'Re#1', 'Mi1', 'Fa1', 'Fa#1', 'Sol', 'Sol#1', 'La1', 'La#1', 'Si1', 'Do2', 'Do#2', 'Re2', 'Re#2', 'Mi2', 'Fa2', 'Fa#2', 'Sol2', 'Sol#2', 'La2', 'La#2', 'Si2') NOT NULL,
-    tick INT NOT NULL,              -- Moment when the event happened
+    tick BIGINT NOT NULL,           -- Moment when the event happened
     pressed BINARY(1) NOT NULL,     -- 1 = the key was pressed, 0 = the key was released
     song MEDIUMINT NOT NULL,
     velocity TINYINT,               -- Volume of the note, 0 = silent,
