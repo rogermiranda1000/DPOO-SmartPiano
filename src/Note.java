@@ -22,5 +22,11 @@ public enum Note {
     SolX2,
     La2,
     LaX2,
-    Si2
+    Si2;
+
+    public static Note getNote(int index) {
+        Note[] r = Note.values();
+        index %= r.length; // TODO que fem???
+        return r[index];
+    }
 }
