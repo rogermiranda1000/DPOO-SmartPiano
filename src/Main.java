@@ -1,5 +1,6 @@
 import business.BusinessFacade;
 import ddbb.DDBBAccess;
+import entities.User;
 import model.SongDDBBDAO;
 import model.UserDDBBDAO;
 
@@ -27,6 +28,7 @@ public class Main {
         try {
             DDBBAccess ddbb = new DDBBAccess(new Config(new File("config.json")).readConfig());
             new BusinessFacade(new SongDDBBDAO(ddbb), new UserDDBBDAO(ddbb));
+            System.out.println(new UserDDBBDAO(ddbb).addUser(new User("Carbassot", "carbassot@salle.url.edu"), "fa_el_que_pot"));
         } catch (FileNotFoundException | SQLException ex) {
             ex.printStackTrace();
         }
