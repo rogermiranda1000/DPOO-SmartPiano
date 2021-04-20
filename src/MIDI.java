@@ -29,7 +29,7 @@ public class MIDI {
                         long tick = event.getTick();
                         int key = sm.getData1();
                         byte velocity = (byte)sm.getData2();
-                        notes.add(new SongNote(tick, (sm.getCommand() == NOTE_ON), velocity, Note.getNote(key)));
+                        notes.add(new SongNote(tick, (sm.getCommand() == NOTE_ON), velocity, (byte)(key/12), Note.getNote(key)));
                     }
                     //else System.out.println("Command:" + sm.getCommand());
                 }
