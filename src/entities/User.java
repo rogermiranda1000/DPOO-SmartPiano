@@ -17,4 +17,12 @@ public class User {
     public String getEmail() {
         return this.email;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }
