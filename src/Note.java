@@ -12,6 +12,11 @@ public enum Note {
     LaX,
     Si;
 
+    /**
+     * Retorna la nota corresponent. Si index > Note.values().length es fa el mòdul.
+     * @param index Index de la nota
+     * @return Nota segons l'index
+     */
     public static Note getNote(int index) {
         Note[] r = Note.values();
         index %= r.length;
