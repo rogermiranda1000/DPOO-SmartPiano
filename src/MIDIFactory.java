@@ -1,3 +1,7 @@
+import entities.Note;
+import entities.Song;
+import entities.SongNote;
+
 import javax.sound.midi.*;
 import java.io.File;
 import java.io.IOException;
@@ -16,12 +20,12 @@ public class MIDIFactory {
      * @throws IOException Error al obrir el fitxer
      * @throws InvalidMidiDataException Error al tractar el fitxer com MIDI
      */
-    public static SongNote[] getSong(File path) throws IOException, InvalidMidiDataException {
-        ArrayList<SongNote> notes = new ArrayList<>();
-
+    public static Song getSong(File path) throws IOException, InvalidMidiDataException {
         Sequence sequence = MidiSystem.getSequence(path);
 
-        double tickLenght = (double) sequence.getMicrosecondLength()/sequence.getTickLength(); // temps [us] per tick
+        double tickLenght = (double) sequence.getMicrosecondLength()/sequence.getTickLength();
+
+        Song r = new Song(tickLenght);
 
         for (Track track : sequence.getTracks()) {
             //System.out.println("Track " + trackNumber + ": size = " + track.size());
@@ -39,21 +43,34 @@ public class MIDIFactory {
                         long tick = event.getTick();
                         int key = sm.getData1();
                         byte velocity = (byte)sm.getData2();
-                        notes.add(new SongNote(tick, (sm.getCommand() == NOTE_ON), velocity, (byte)(key/12), Note.getNote(key)));
+                        r.addNote(new SongNote(tick, (sm.getCommand() == NOTE_ON), velocity, (byte)(key/12), Note.getNote(key)));
                     }
                     //else System.out.println("Command:" + sm.getCommand());
                 }
                 //else System.out.println("Other message: " + message.getClass());
-                // TODO tempo
             }
         }
 
-        Collections.sort(notes);
-        return notes.toArray(new SongNote[0]);
+        return r;
     }
 
-    public static void generateSong(SongNote[] notes) {
+    public static void generateSong(SongNote[] notes) throws MidiUnavailableException {
         // TODO
+        MidiChannel[] channels;
+        int INSTRUMENT = 0; // 0 is a piano
+
+        Synthesizer synth = MidiSystem.getSynthesizer();
+        synth.open();
+        channels = synth.getChannels();
+
+        // * start playing a note
+        //channels[INSTRUMENT].noteOn(id(note), VOLUME );
+        // * wait
+        //Thread.sleep( duration );
+        // * stop playing a note
+        //channels[INSTRUMENT].noteOff(id(note));
+
+        synth.close();
     }
 
     public static void main(String[] args) throws Exception {
