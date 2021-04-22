@@ -2,23 +2,25 @@ package entities;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 
 public class Song {
-    /**
-     * Indica si l'array està ordenat o no
-     */
-    private boolean isSorted;
-
     private final ArrayList<SongNote> notes;
 
     /**
      * Temps [us] per tick
      */
     private final double tickLenght;
+    private final String songName;
+    private final String author;
+    private final Date creationDate;
 
-    public Song(double tickLenght) {
+    public Song(String songName, String author, Date creationDate, double tickLenght) {
         this.notes = new ArrayList<>();
         this.tickLenght = tickLenght;
+        this.songName = songName;
+        this.author = author;
+        this.creationDate = creationDate;
     }
 
     /**
@@ -27,11 +29,9 @@ public class Song {
      */
     public void addNote(SongNote note) {
         this.notes.add(note);
-        this.isSorted = false;
     }
 
-    private void sort() {
+    public void sort() {
         Collections.sort(this.notes);
-        this.isSorted = true;
     }
 }
