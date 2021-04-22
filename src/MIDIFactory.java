@@ -21,8 +21,8 @@ public class MIDIFactory {
      * @param creation Temps de creació
      * @param url Ruta del midi
      * @return Conço (array de notes)
-     * @throws IOException Error al obrir el fitxer
-     * @throws InvalidMidiDataException Error al tractar el fitxer com MIDI
+     * @throws IOException Error al obrir el fitxer (file not found?)
+     * @throws InvalidMidiDataException Error al tractar el fitxer com MIDI (.zip?)
      */
     public static Song getSong(String song, String author, Date creation, URL url) throws IOException, InvalidMidiDataException {
         Sequence sequence = MidiSystem.getSequence(url);
