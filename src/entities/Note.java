@@ -1,3 +1,5 @@
+package entities;
+
 public enum Note {
     Do,
     DoX,
@@ -13,7 +15,7 @@ public enum Note {
     Si;
 
     /**
-     * Retorna la nota corresponent. Si index > Note.values().length es fa el mòdul.
+     * Retorna la nota corresponent. Si index > entities.Note.values().length es fa el mòdul.
      * @param index Index de la nota
      * @return Nota segons l'index
      */

@@ -1,3 +1,5 @@
+package entities;
+
 public class SongNote implements Comparable<SongNote> {
     private final long tick;
     private final boolean pressed;
