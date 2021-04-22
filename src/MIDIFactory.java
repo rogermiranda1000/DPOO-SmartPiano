@@ -6,8 +6,9 @@ import javax.sound.midi.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.String;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 public class MIDIFactory {
     public static final int NOTE_ON = 0x90;
@@ -15,17 +16,20 @@ public class MIDIFactory {
 
     /**
      * Donat un fitxer .mid extreu les tecles
-     * @param path Ruta del fitxer
+     * @param song Nom de la canço
+     * @param author Autor creador de la canço
+     * @param creation Temps de creació
+     * @param url Ruta del midi
      * @return Conço (array de notes)
      * @throws IOException Error al obrir el fitxer
      * @throws InvalidMidiDataException Error al tractar el fitxer com MIDI
      */
-    public static Song getSong(File path) throws IOException, InvalidMidiDataException {
-        Sequence sequence = MidiSystem.getSequence(path);
+    public static Song getSong(String song, String author, Date creation, URL url) throws IOException, InvalidMidiDataException {
+        Sequence sequence = MidiSystem.getSequence(url);
 
         double tickLenght = (double) sequence.getMicrosecondLength()/sequence.getTickLength();
 
-        Song r = new Song(tickLenght);
+        Song r = new Song(song, author, creation, tickLenght);
 
         for (Track track : sequence.getTracks()) {
             //System.out.println("Track " + trackNumber + ": size = " + track.size());
@@ -47,10 +51,18 @@ public class MIDIFactory {
                     }
                     //else System.out.println("Command:" + sm.getCommand());
                 }
+                /*else if (message instanceof MetaMessage) {
+                    MetaMessage mm = (MetaMessage) message;
+                    if (mm.getType() == 1) {
+                        // la metadata és de tipus 'Text'
+                        System.out.println(new String(mm.getData(), StandardCharsets.ISO_8859_1));
+                    }
+                }*/
                 //else System.out.println("Other message: " + message.getClass());
             }
         }
 
+        r.sort();
         return r;
     }
 
@@ -74,7 +86,7 @@ public class MIDIFactory {
     }
 
     public static void main(String[] args) throws Exception {
-        MIDIFactory.getSong(new File("test.mid"));
+        MIDIFactory.getSong("name", "author", new Date(), new URL("https://www.mutopiaproject.org/ftp/AscherJ/alice/alice.mid"));
         System.out.println();
 
     }
