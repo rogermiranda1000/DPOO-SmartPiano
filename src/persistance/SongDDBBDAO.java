@@ -1,7 +1,6 @@
-package model;
+package persistance;
 
 import business.SongDAO;
-import ddbb.DDBBAccess;
 import entities.Song;
 
 public class SongDDBBDAO implements SongDAO {

@@ -1,8 +1,8 @@
 import business.BusinessFacade;
-import ddbb.DDBBAccess;
 import entities.User;
-import model.SongDDBBDAO;
-import model.UserDDBBDAO;
+import persistance.DDBBAccess;
+import persistance.SongDDBBDAO;
+import persistance.UserDDBBDAO;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,7 +28,10 @@ public class Main {
         try {
             DDBBAccess ddbb = new DDBBAccess(new Config(new File("config.json")).readConfig());
             new BusinessFacade(new SongDDBBDAO(ddbb), new UserDDBBDAO(ddbb));
-            //System.out.println(new UserDDBBDAO(ddbb).addUser(new User("Carbassot", "carbassot@salle.url.edu"), "fa_el_que_pot"));
+            System.out.println(new UserDDBBDAO(ddbb).addUser(new User("Carbassot", "carbassot@salle.url.edu"), "fa_el_que_pot"));
+            User u = new UserDDBBDAO(ddbb).getUser("carbassot@salle.url.edu", "fa_el_que_pot");
+            System.out.println(u);
+            System.out.println(new UserDDBBDAO(ddbb).deleteUser(u, "fa_el_que_pot"));
             System.out.println(new UserDDBBDAO(ddbb).getUser("carbassot@salle.url.edu", "fa_el_que_pot"));
         } catch (FileNotFoundException | SQLException ex) {
             ex.printStackTrace();
