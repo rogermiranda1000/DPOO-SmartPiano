@@ -1,4 +1,4 @@
-package ddbb;
+package persistance;
 
 import entities.DDBBInfo;
 
