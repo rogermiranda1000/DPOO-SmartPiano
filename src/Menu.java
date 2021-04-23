@@ -36,36 +36,37 @@ public class Menu extends JFrame implements ActionListener {
 
     public JPanel topPanel(){
         JPanel panel = new JPanel();
+        // TODO: Upgrade
         panel.setLayout(new GridLayout(0,6));
 
         songsButton = new JButton("Songs");
-        songsButton.setBackground(Constants.COLOR.BUTTON);
-        songsButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
+        songsButton.setBackground(ColorConstants.BUTTON.getColor());
+        songsButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
         songsButton.setFont(new Font("Arial", Font.BOLD,20));
 
         playlistButton = new JButton("Playlist");
-        playlistButton.setBackground(Constants.COLOR.BUTTON);
-        playlistButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
+        playlistButton.setBackground(ColorConstants.BUTTON.getColor());
+        playlistButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
         playlistButton.setFont(new Font("Arial", Font.BOLD,20));
 
         pianoButton = new JButton("Piano");
-        pianoButton.setBackground(Constants.COLOR.BUTTON);
-        pianoButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
+        pianoButton.setBackground(ColorConstants.BUTTON.getColor());
+        pianoButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
         pianoButton.setFont(new Font("Arial", Font.BOLD,20));
 
         rankingButton = new JButton("Ranking");
-        rankingButton.setBackground(Constants.COLOR.BUTTON);
-        rankingButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
+        rankingButton.setBackground(ColorConstants.BUTTON.getColor());
+        rankingButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
         rankingButton.setFont(new Font("Arial", Font.BOLD,20));
 
         settingsButton = new JButton("Settings");
-        settingsButton.setBackground(Constants.COLOR.BUTTON);
-        settingsButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
+        settingsButton.setBackground(ColorConstants.BUTTON.getColor());
+        settingsButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
         settingsButton.setFont(new Font("Arial", Font.BOLD,20));
 
         exitButton = new JButton("Exit");
-        exitButton.setBackground(Constants.COLOR.BUTTON);
-        exitButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
+        exitButton.setBackground(ColorConstants.BUTTON.getColor());
+        exitButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
         exitButton.setFont(new Font("Arial", Font.BOLD,20));
 
         songsButton.addActionListener(this);
@@ -74,6 +75,13 @@ public class Menu extends JFrame implements ActionListener {
         rankingButton.addActionListener(this);
         settingsButton.addActionListener(this);
         exitButton.addActionListener(this);
+
+        songsButton.setFocusable(false);
+        playlistButton.setFocusable(false);
+        pianoButton.setFocusable(false);
+        rankingButton.setFocusable(false);
+        settingsButton.setFocusable(false);
+        exitButton.setFocusable(false);
 
         panel.add(songsButton);
         panel.add(playlistButton);
@@ -87,11 +95,12 @@ public class Menu extends JFrame implements ActionListener {
 
     public JPanel botPanel(){
         JPanel panel = new JPanel();
-        panel.setBackground(Constants.COLOR.MENU);
+        panel.setBackground(ColorConstants.MENU.getColor());
+        // TODO: Upgrade
         panel.setLayout(new GridLayout(0,2));
 
         JPanel currentSong = new JPanel();
-        currentSong.setBackground(Constants.COLOR.MENU);
+        currentSong.setBackground(ColorConstants.MENU.getColor());
         playingSong = new JLabel("Select a song or a playlist to play - ♬ლ(▀̿Ĺ̯▀̿ ̿ლ)♬");
         JPanel playerMenu = songPlayerMenu();
 
@@ -108,30 +117,30 @@ public class Menu extends JFrame implements ActionListener {
 
     public JPanel songPlayerMenu(){
         JPanel panel = new JPanel();
-        panel.setBackground(Constants.COLOR.MENU);
+        panel.setBackground(ColorConstants.MENU.getColor());
 
-        loopButton = new JButton(Constants.ICON.LOOP);
-        loopButton.setBackground(Constants.COLOR.BUTTON);
+        loopButton = new JButton(Icon.LOOP.getIcon());
+        loopButton.setBackground(ColorConstants.BUTTON.getColor());
         loopButton.setForeground(Color.LIGHT_GRAY);
         loopButton.setVisible(true);
 
-        backButton = new JButton(Constants.ICON.BACK);
-        backButton.setBackground(Constants.COLOR.BUTTON);
+        backButton = new JButton(Icon.BACK.getIcon());
+        backButton.setBackground(ColorConstants.BUTTON.getColor());
         backButton.setForeground(Color.LIGHT_GRAY);
         backButton.setVisible(true);
 
-        playButton = new JButton(Constants.ICON.PAUSE);
-        playButton.setBackground(Constants.COLOR.BUTTON);
+        playButton = new JButton(Icon.PAUSE.getIcon());
+        playButton.setBackground(ColorConstants.BUTTON.getColor());
         playButton.setForeground(Color.LIGHT_GRAY);
         playButton.setVisible(true);
 
-        nextButton = new JButton(Constants.ICON.NEXT);
-        nextButton.setBackground(Constants.COLOR.BUTTON);
+        nextButton = new JButton(Icon.NEXT.getIcon());
+        nextButton.setBackground(ColorConstants.BUTTON.getColor());
         nextButton.setForeground(Color.LIGHT_GRAY);
         nextButton.setVisible(true);
 
-        shuffleButton = new JButton(Constants.ICON.SHUFFLE);
-        shuffleButton.setBackground(Constants.COLOR.BUTTON);
+        shuffleButton = new JButton(Icon.SHUFFLE.getIcon());
+        shuffleButton.setBackground(ColorConstants.BUTTON.getColor());
         shuffleButton.setForeground(Color.LIGHT_GRAY);
         shuffleButton.setVisible(true);
 
@@ -140,6 +149,12 @@ public class Menu extends JFrame implements ActionListener {
         playButton.addActionListener(this);
         nextButton.addActionListener(this);
         shuffleButton.addActionListener(this);
+
+        loopButton.setFocusable(false);
+        backButton.setFocusable(false);
+        playButton.setFocusable(false);
+        nextButton.setFocusable(false);
+        shuffleButton.setFocusable(false);
 
         panel.add(loopButton);
         panel.add(backButton);
@@ -150,14 +165,22 @@ public class Menu extends JFrame implements ActionListener {
         return panel;
     }
 
+    private void resetButtonsColors(){
+        songsButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
+        playlistButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
+        pianoButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
+        rankingButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
+        settingsButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == loopButton) {
-            if(event.requestLoopButton()){
+            if(event.toggleLoop()){
                 loopButton.setForeground(Color.LIGHT_GRAY);
                 // TODO: player.setLoopState(false);
             } else {
-                loopButton.setForeground(Constants.COLOR.ACTIVE_BUTTON);
+                loopButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
                 // TODO: player.setLoopState(true);
             }
         } else if (e.getSource() == backButton) {
@@ -167,10 +190,10 @@ public class Menu extends JFrame implements ActionListener {
             }
         } else if (e.getSource() == playButton) {
             if(event.playing()){
-                playButton.setText(Constants.ICON.PAUSE);
+                playButton.setText(Icon.PAUSE.getIcon());
                 // TODO: player.pausePlay();
             } else {
-                playButton.setText(Constants.ICON.PLAY);
+                playButton.setText(Icon.PLAY.getIcon());
                 //TODO player.resumePlay();
             }
         } else if (e.getSource() == nextButton) {
@@ -181,46 +204,30 @@ public class Menu extends JFrame implements ActionListener {
         } else if (e.getSource() == songsButton) {
             //TODO: showSongList
 
-            songsButton.setForeground(Constants.COLOR.ACTIVE_BUTTON);
-            playlistButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
-            pianoButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
-            rankingButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
-            settingsButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
+            resetButtonsColors();
+            songsButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == playlistButton) {
             //TODO: showPlaylistList
 
-            songsButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
-            playlistButton.setForeground(Constants.COLOR.ACTIVE_BUTTON);
-            pianoButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
-            rankingButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
-            settingsButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
+            resetButtonsColors();
+            playlistButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == pianoButton) {
             //TODO: showPiano
 
-            songsButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
-            playlistButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
-            pianoButton.setForeground(Constants.COLOR.ACTIVE_BUTTON);
-            rankingButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
-            settingsButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
+            resetButtonsColors();
+            pianoButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == rankingButton) {
             //TODO: showRanking
 
-            songsButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
-            playlistButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
-            pianoButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
-            rankingButton.setForeground(Constants.COLOR.ACTIVE_BUTTON);
-            settingsButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
+            resetButtonsColors();
+            rankingButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == settingsButton) {
             //TODO: showSettings
 
-            songsButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
-            playlistButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
-            pianoButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
-            rankingButton.setForeground(Constants.COLOR.TOP_BUTTON_FONT);
-            settingsButton.setForeground(Constants.COLOR.ACTIVE_BUTTON);
+            resetButtonsColors();
+            settingsButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == exitButton) {
             window.dispose();
         }
-
     }
 }

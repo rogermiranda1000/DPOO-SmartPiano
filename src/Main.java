@@ -16,7 +16,7 @@ public class Main {
 
         MenuEvent m = new MenuEvent() {
             @Override
-            public boolean requestLoopButton() {
+            public boolean toggleLoop() {
                 // TODO: Check in player if loop mode on.
                 return false;
             }
