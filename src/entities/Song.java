@@ -8,4 +8,17 @@ public class Song {
     private Date date;
     private String artist;
     // TODO SongNote
+
+
+    public String getName() {
+        return name;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public String getArtist() {
+        return artist;
+    }
 }
