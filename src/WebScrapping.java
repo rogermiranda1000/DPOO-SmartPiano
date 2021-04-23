@@ -1,15 +1,10 @@
 import entities.Song;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import javax.sound.midi.InvalidMidiDataException;
-import javax.xml.xpath.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,7 +38,7 @@ public class WebScrapping {
                         URL midi = new URL(Jsoup.parse(webContent).selectFirst(String.format(WebScrapping.PATH_MIDI, x)).attr("href"));
                         Date date = new SimpleDateFormat("yyyy/MM/dd").parse(Jsoup.parse(webContent).selectFirst(String.format(WebScrapping.PATH_DATE, x)).text());
 
-                        r.add(MIDIFactory.getSong(song, author.equalsIgnoreCase(WebScrapping.ANONYMOUS_USER) ? null : author, date, midi));
+                        r.add(MIDIFactory.getSong(song, author.equalsIgnoreCase(WebScrapping.ANONYMOUS_USER) ? "" : author, date, midi));
                     } catch (ParseException e) {
                         e.printStackTrace();
                     } catch (InvalidMidiDataException | IOException ex) {
