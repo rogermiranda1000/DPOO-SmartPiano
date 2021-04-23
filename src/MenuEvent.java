@@ -1,5 +1,5 @@
 public interface MenuEvent {
-    boolean requestLoopButton();
+    boolean toggleLoop();
 
     int currentSongPos();
 

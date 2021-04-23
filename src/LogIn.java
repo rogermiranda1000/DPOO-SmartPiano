@@ -37,7 +37,7 @@ public class LogIn extends JDialog implements ActionListener {
 
         // Logo
         JPanel logo = new JPanel();
-        logo.setBackground(Constants.COLOR.BACKGROUND);
+        logo.setBackground(ColorConstants.BACKGROUND.getColor());
         logo.setVisible(true);
         logo.setMaximumSize(new Dimension(WIDTH,200));
         String LOGO_PATH = "images\\smartpiano.png";
@@ -53,7 +53,7 @@ public class LogIn extends JDialog implements ActionListener {
 
         // Username
         JPanel username = new JPanel();
-        username.setBackground(Constants.COLOR.BACKGROUND);
+        username.setBackground(ColorConstants.BACKGROUND.getColor());
         username.setVisible(true);
         username.setMaximumSize(new Dimension(WIDTH,45));
 
@@ -68,7 +68,7 @@ public class LogIn extends JDialog implements ActionListener {
 
         // Password
         JPanel password = new JPanel();
-        password.setBackground(Constants.COLOR.BACKGROUND);
+        password.setBackground(ColorConstants.BACKGROUND.getColor());
         password.setVisible(true);
         password.setMaximumSize(new Dimension(WIDTH,45));
 
@@ -83,7 +83,7 @@ public class LogIn extends JDialog implements ActionListener {
 
         // Buttons
         JPanel buttons = new JPanel();
-        buttons.setBackground(Constants.COLOR.BACKGROUND);
+        buttons.setBackground(ColorConstants.BACKGROUND.getColor());
         buttons.setVisible(true);
         buttons.setMaximumSize(new Dimension(WIDTH,100));
 
