@@ -11,6 +11,8 @@ public class Menu extends JFrame implements ActionListener {
     private JLabel playingSong;
     private MenuEvent event;
 
+
+
     JFrame window;
 
     Menu(LoginEvent loginE, MenuEvent menuE ){
