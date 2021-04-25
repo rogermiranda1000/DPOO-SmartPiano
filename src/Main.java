@@ -12,6 +12,12 @@ public class Main {
                 // TODO: Check in ddbb if user exists.
                 return user.contains("admin") && password.contains("admin");
             }
+
+            @Override
+            public boolean requestRegister(String user, String email, String password) {
+                // TODO: Check if user already exists and no empty fields.
+                return true;
+            }
         };
 
         MenuEvent m = new MenuEvent() {

@@ -11,11 +11,15 @@ public class Menu extends JFrame implements ActionListener {
     private JLabel playingSong;
     private MenuEvent event;
 
+
+
     JFrame window;
 
     Menu(LoginEvent loginE, MenuEvent menuE ){
         this.event = menuE;
         window = new JFrame("Piano TIME!");
+        ImageIcon img = new ImageIcon("images\\icon.jpg");
+        window.setIconImage(img.getImage());
         window.setVisible(false);
 
         LogIn l = new LogIn(loginE, window);
