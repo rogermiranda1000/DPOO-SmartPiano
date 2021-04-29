@@ -35,6 +35,10 @@ public class SongNote implements Comparable<SongNote> {
         return note;
     }
 
+    public int getId() {
+        return (this.getOctave() + 1) * 12 + this.getNote().ordinal();
+    }
+
     /**
      * Retorna <0 si tu vas abans que l'altre.
      *          =0 si sou iguals
