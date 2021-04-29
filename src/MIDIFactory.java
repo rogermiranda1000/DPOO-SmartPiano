@@ -4,11 +4,9 @@ import entities.Song;
 import entities.SongNote;
 
 import javax.sound.midi.*;
-import java.io.File;
 import java.io.IOException;
 import java.lang.String;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class MIDIFactory {
@@ -69,7 +67,6 @@ public class MIDIFactory {
 
     public static void main(String[] args) throws Exception {
         Song s = MIDIFactory.getSong("name", "author", new Date(), new URL("http://www.vgmusic.com/new-files/UT-Megalovania.mid"));
-        System.out.println();
 
         new Thread(new NotePlayer(s)).start();
 

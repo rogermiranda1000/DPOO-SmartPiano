@@ -7,12 +7,13 @@ import javax.sound.midi.Synthesizer;
 import java.util.ArrayList;
 
 public class NotePlayer implements Runnable {
-    private ArrayList<SongNote> notes;
-    private double tickLength;
-    private MidiChannel[] channels;
-    private Synthesizer synth;
-    public static final int INSTRUMENT = 0;
-    public static final int SPEED = 1;
+    private static final int INSTRUMENT = 0;
+    private static final int SPEED = 1;
+
+    private final ArrayList<SongNote> notes;
+    private final double tickLength;
+    private final MidiChannel[] channels;
+    private final Synthesizer synth;
 
     public NotePlayer(Song song) throws MidiUnavailableException {
         this.notes = song.getNotes();
@@ -24,6 +25,7 @@ public class NotePlayer implements Runnable {
     }
 
     @Override
+    @SuppressWarnings("BusyWait")
     public void run() {
         long tick = 0;
         int i = 0;
@@ -44,19 +46,20 @@ public class NotePlayer implements Runnable {
         }
     }
 
+    // TODO ??
     public void closeSynth() {
         this.synth.close();
     }
 
     public void executeNote(SongNote note) {
         if (note.isPressed()) {
-            this.channels[INSTRUMENT].noteOn(id(note), note.getVelocity() );
+            this.channels[INSTRUMENT].noteOn(note.getId(), note.getVelocity());
         } else {
-            this.channels[INSTRUMENT].noteOff(id(note), note.getVelocity() );
+            this.channels[INSTRUMENT].noteOff(note.getId(), note.getVelocity());
         }
     }
 
-    private int id(SongNote note) {
-        return (note.getOctave() + 1) * 12 + note.getNote().ordinal();
-    }
+    /*public static void executeNote(SongNote note, double tickLength) throws MidiUnavailableException {
+        new NotePlayer(tickLength).executeNote(note);
+    }*/
 }
