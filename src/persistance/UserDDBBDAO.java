@@ -1,6 +1,6 @@
 package persistance;
 
-import business.UserDAO;
+import model.UserDAO;
 import entities.User;
 
 import java.sql.ResultSet;

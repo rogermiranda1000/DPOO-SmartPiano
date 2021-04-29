@@ -1,3 +1,5 @@
+package controller;
+
 public interface MenuEvent {
     boolean toggleLoop();
 
