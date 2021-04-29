@@ -1,4 +1,5 @@
 import entities.Note;
+import entities.NotePlayer;
 import entities.Song;
 import entities.SongNote;
 
@@ -27,9 +28,9 @@ public class MIDIFactory {
     public static Song getSong(String song, String author, Date creation, URL url) throws IOException, InvalidMidiDataException {
         Sequence sequence = MidiSystem.getSequence(url);
 
-        double tickLenght = (double) sequence.getMicrosecondLength()/sequence.getTickLength();
+        double tickLength = (double) sequence.getMicrosecondLength()/sequence.getTickLength();
 
-        Song r = new Song(song, author, creation, tickLenght);
+        Song r = new Song(song, author, creation, tickLength);
 
         for (Track track : sequence.getTracks()) {
             //System.out.println("Track " + trackNumber + ": size = " + track.size());
@@ -66,28 +67,11 @@ public class MIDIFactory {
         return r;
     }
 
-    public static void generateSong(SongNote[] notes) throws MidiUnavailableException {
-        // TODO
-        MidiChannel[] channels;
-        int INSTRUMENT = 0; // 0 is a piano
-
-        Synthesizer synth = MidiSystem.getSynthesizer();
-        synth.open();
-        channels = synth.getChannels();
-
-        // * start playing a note
-        //channels[INSTRUMENT].noteOn(id(note), VOLUME );
-        // * wait
-        //Thread.sleep( duration );
-        // * stop playing a note
-        //channels[INSTRUMENT].noteOff(id(note));
-
-        synth.close();
-    }
-
     public static void main(String[] args) throws Exception {
-        MIDIFactory.getSong("name", "author", new Date(), new URL("https://www.mutopiaproject.org/ftp/AscherJ/alice/alice.mid"));
+        Song s = MIDIFactory.getSong("name", "author", new Date(), new URL("http://www.vgmusic.com/new-files/UT-Megalovania.mid"));
         System.out.println();
+
+        new Thread(new NotePlayer(s)).start();
 
     }
 }
