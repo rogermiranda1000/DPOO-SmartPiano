@@ -4,14 +4,14 @@ public class SongNote implements Comparable<SongNote> {
     private final long tick;
     private final boolean pressed;
     private final byte velocity;
-    private final byte octava;
+    private final byte octave;
     private final Note note;
 
     public SongNote(long tick, boolean pressed, byte velocity, byte octava, Note note) {
         this.tick = tick;
         this.pressed = pressed;
         this.velocity = velocity;
-        this.octava = octava;
+        this.octave = octava;
         this.note = note;
     }
 
@@ -25,6 +25,10 @@ public class SongNote implements Comparable<SongNote> {
 
     public byte getVelocity() {
         return velocity;
+    }
+
+    public byte getOctave() {
+        return octave;
     }
 
     public Note getNote() {
