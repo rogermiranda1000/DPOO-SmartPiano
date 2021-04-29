@@ -1,8 +1,7 @@
 package persistance;
 
-import business.SongDAO;
+import model.SongDAO;
 import entities.Song;
-import entities.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,7 +24,7 @@ public class SongDDBBDAO implements SongDAO {
     }
 
     @Override
-    public boolean exists(Song song) {
+    public boolean existsSong(Song song) {
         try {
             ResultSet rs = this.ddbb.getSentence("SELECT COUNT(*) FROM Songs WHERE name = ? AND author = ? AND date = ?;",
                     song.getName(), song.getArtist(), song.getDate());
