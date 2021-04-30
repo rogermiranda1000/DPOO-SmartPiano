@@ -1,13 +1,13 @@
+package model;
+
 import entities.Note;
 import entities.Song;
 import entities.SongNote;
 
 import javax.sound.midi.*;
-import java.io.File;
 import java.io.IOException;
 import java.lang.String;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class MIDIFactory {

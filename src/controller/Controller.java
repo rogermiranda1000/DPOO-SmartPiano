@@ -8,10 +8,13 @@ import view.Menu;
 public class Controller implements LoginEvent, MenuEvent {
     private final Menu view;
     private final BusinessFacade model;
+    private final SongDownloader scrapper;
 
-    public Controller(SongDAO songManager, UserDAO userManager) {
+    public Controller(int scrappingTime, SongDAO songManager, UserDAO userManager) {
         this.model = new BusinessFacade(songManager, userManager);
         this.view = new Menu(this, this);
+        this.scrapper = new SongDownloader(scrappingTime);
+        this.scrapper.start();
     }
 
 
