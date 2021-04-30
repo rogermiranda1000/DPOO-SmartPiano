@@ -1,3 +1,5 @@
+package view;
+
 public enum Icon {
 
     LOOP("\uD83D\uDD04"),
