@@ -1,4 +1,7 @@
+package controller;
+
 import entities.Song;
+import model.WebScrapping;
 
 public class SongDownloader extends Thread {
     private final int scrappingTime;
@@ -14,7 +17,7 @@ public class SongDownloader extends Thread {
             while (true) {
                 // obtè de la WEB
                 Song[] result = WebScrapping.getSongs();
-                System.out.println(result.length);
+                // TODO send result to data persistance
 
                 // espera el temps d'scrapping
                 long now = System.currentTimeMillis();

@@ -34,4 +34,16 @@ public class Song {
     public void sort() {
         Collections.sort(this.notes);
     }
+
+    public String getName() {
+        return songName;
+    }
+
+    public String getArtist() {
+        return author;
+    }
+
+    public Date getDate() {
+        return creationDate;
+    }
 }
