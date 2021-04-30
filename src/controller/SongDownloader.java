@@ -5,19 +5,21 @@ import model.WebScrapping;
 
 public class SongDownloader extends Thread {
     private final int scrappingTime;
+    private final SongNotifier notifier;
     private long lastTime;
 
-    public SongDownloader(int scrappingTime) {
+    public SongDownloader(SongNotifier notifier, int scrappingTime) {
         this.scrappingTime = scrappingTime;
         this.lastTime = System.currentTimeMillis();
+        this.notifier = notifier;
     }
 
+    @SuppressWarnings({"BusyWait", "InfiniteLoopStatement"})
     public void run() {
         try {
             while (true) {
                 // obtè de la WEB
-                Song[] result = WebScrapping.getSongs();
-                // TODO send result to data persistance
+                for (Song s : WebScrapping.getSongs()) this.notifier.addSong(s);
 
                 // espera el temps d'scrapping
                 long now = System.currentTimeMillis();
