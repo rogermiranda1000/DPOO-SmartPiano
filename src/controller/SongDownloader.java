@@ -14,6 +14,7 @@ public class SongDownloader extends Thread {
         this.notifier = notifier;
     }
 
+    @Override
     @SuppressWarnings({"BusyWait", "InfiniteLoopStatement"})
     public void run() {
         try {
