@@ -66,8 +66,18 @@ public class MIDIFactory {
 
     public static void main(String[] args) throws Exception {
         Song s = MIDIFactory.getSong("name", "author", new Date(), new URL("http://www.vgmusic.com/new-files/UT-Megalovania.mid"));
+        NotePlayer player = new NotePlayer(s);
+        player.start();
         Thread.sleep(4000);
-        //new Thread(new NotePlayer(s)).start();
+        player.setPlay(false);
+        Thread.sleep(4000);
+        player.setPlay(true);
+        Thread.sleep(4000);
+        player.closePlayer();
+
+
+        /*
+        Thread.sleep(4000);
         NotePlayer.executeSingleNote(new SongNote(0, true, (byte)127, (byte)2, Note.Do));
         Thread.sleep(400);
         NotePlayer.executeSingleNote(new SongNote(0, true, (byte)120, (byte)3, Note.Do));
@@ -79,5 +89,6 @@ public class MIDIFactory {
         NotePlayer.executeSingleNote(new SongNote(0, true, (byte)105, (byte)4, Note.Do));
         Thread.sleep(4000);
         NotePlayer.closeSinglePlayer();
+         */
     }
 }
