@@ -35,6 +35,17 @@ public class Song {
         Collections.sort(this.notes);
     }
 
+    public String getName() {
+        return songName;
+    }
+
+    public String getArtist() {
+        return author;
+    }
+
+    public Date getDate() {
+        return creationDate;
+    }
 
     public ArrayList<SongNote> getNotes() {
         return this.notes;
