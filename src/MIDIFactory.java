@@ -1,5 +1,4 @@
 import entities.Note;
-import entities.NotePlayer;
 import entities.Song;
 import entities.SongNote;
 
@@ -67,8 +66,18 @@ public class MIDIFactory {
 
     public static void main(String[] args) throws Exception {
         Song s = MIDIFactory.getSong("name", "author", new Date(), new URL("http://www.vgmusic.com/new-files/UT-Megalovania.mid"));
-
-        new Thread(new NotePlayer(s)).start();
-
+        Thread.sleep(4000);
+        //new Thread(new NotePlayer(s)).start();
+        NotePlayer.executeSingleNote(new SongNote(0, true, (byte)127, (byte)2, Note.Do));
+        Thread.sleep(400);
+        NotePlayer.executeSingleNote(new SongNote(0, true, (byte)120, (byte)3, Note.Do));
+        Thread.sleep(30);
+        NotePlayer.executeSingleNote(new SongNote(0, true, (byte)110, (byte)3, Note.Mi));
+        Thread.sleep(31);
+        NotePlayer.executeSingleNote(new SongNote(0, true, (byte)100, (byte)3, Note.Sol));
+        Thread.sleep(32);
+        NotePlayer.executeSingleNote(new SongNote(0, true, (byte)105, (byte)4, Note.Do));
+        Thread.sleep(4000);
+        NotePlayer.closeSinglePlayer();
     }
 }
