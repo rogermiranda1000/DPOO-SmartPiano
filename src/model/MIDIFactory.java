@@ -3,8 +3,12 @@ package model;
 import entities.Note;
 import entities.Song;
 import entities.SongNote;
+import persistance.Config;
+import persistance.DDBBAccess;
+import persistance.SongDDBBDAO;
 
 import javax.sound.midi.*;
+import java.io.File;
 import java.io.IOException;
 import java.lang.String;
 import java.net.URL;
@@ -29,7 +33,7 @@ public class MIDIFactory {
 
         double tickLenght = (double) sequence.getMicrosecondLength()/sequence.getTickLength();
 
-        Song r = new Song(song, author, creation, tickLenght);
+        Song r = new Song(song, author, creation, tickLenght, true);
 
         for (Track track : sequence.getTracks()) {
             //System.out.println("Track " + trackNumber + ": size = " + track.size());
@@ -86,8 +90,7 @@ public class MIDIFactory {
     }
 
     public static void main(String[] args) throws Exception {
-        MIDIFactory.getSong("name", "author", new Date(), new URL("https://www.mutopiaproject.org/ftp/AscherJ/alice/alice.mid"));
-        System.out.println();
-
+        DDBBAccess d = new DDBBAccess(new Config(new File("config.json")).readConfig());
+        new SongDDBBDAO(d).addSong(MIDIFactory.getSong("name", "author", new Date(), new URL("https://www.mutopiaproject.org/ftp/AscherJ/alice/alice.mid")));
     }
 }
