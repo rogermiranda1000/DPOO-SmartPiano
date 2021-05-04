@@ -16,25 +16,26 @@ public class MIDIFactory {
 
     /**
      * Donat un fitxer .mid extreu les tecles
-     * @param song Nom de la canço
-     * @param author Autor creador de la canço
+     *
+     * @param song     Nom de la canço
+     * @param author   Autor creador de la canço
      * @param creation Temps de creació
-     * @param url Ruta del midi
+     * @param url      Ruta del midi
      * @return Conço (array de notes)
-     * @throws IOException Error al obrir el fitxer (file not found?)
+     * @throws IOException              Error al obrir el fitxer (file not found?)
      * @throws InvalidMidiDataException Error al tractar el fitxer com MIDI (.zip?)
      */
     public static Song getSong(String song, String author, Date creation, URL url) throws IOException, InvalidMidiDataException {
         Sequence sequence = MidiSystem.getSequence(url);
 
-        double tickLength = (double) sequence.getMicrosecondLength()/sequence.getTickLength();
+        double tickLength = (double) sequence.getMicrosecondLength() / sequence.getTickLength();
 
         Song r = new Song(song, author, creation, tickLength);
 
         for (Track track : sequence.getTracks()) {
             //System.out.println("Track " + trackNumber + ": size = " + track.size());
 
-            for (int i=0; i < track.size(); i++) {
+            for (int i = 0; i < track.size(); i++) {
                 MidiEvent event = track.get(i);
 
                 MidiMessage message = event.getMessage();
@@ -46,8 +47,8 @@ public class MIDIFactory {
                     if (sm.getCommand() == NOTE_ON || sm.getCommand() == NOTE_OFF) {
                         long tick = event.getTick();
                         int key = sm.getData1();
-                        byte velocity = (byte)sm.getData2();
-                        r.addNote(new SongNote(tick, (sm.getCommand() == NOTE_ON), velocity, (byte)(key/12), Note.getNote(key)));
+                        byte velocity = (byte) sm.getData2();
+                        r.addNote(new SongNote(tick, (sm.getCommand() == NOTE_ON), velocity, (byte) (key / 12), Note.getNote(key)));
                     }
                     //else System.out.println("Command:" + sm.getCommand());
                 }
@@ -64,33 +65,5 @@ public class MIDIFactory {
 
         r.sort();
         return r;
-    }
-
-    public static void main(String[] args) throws Exception {
-        Song s = MIDIFactory.getSong("name", "author", new Date(), new URL("http://www.vgmusic.com/new-files/UT-Megalovania.mid"));
-        NotePlayer player = new NotePlayer(s);
-        player.start();
-        Thread.sleep(4000);
-        player.setPlay(false);
-        Thread.sleep(4000);
-        player.setPlay(true);
-        Thread.sleep(4000);
-        player.closePlayer();
-
-
-        /*
-        Thread.sleep(4000);
-        NotePlayer.executeSingleNote(new SongNote(0, true, (byte)127, (byte)2, Note.Do));
-        Thread.sleep(400);
-        NotePlayer.executeSingleNote(new SongNote(0, true, (byte)120, (byte)3, Note.Do));
-        Thread.sleep(30);
-        NotePlayer.executeSingleNote(new SongNote(0, true, (byte)110, (byte)3, Note.Mi));
-        Thread.sleep(31);
-        NotePlayer.executeSingleNote(new SongNote(0, true, (byte)100, (byte)3, Note.Sol));
-        Thread.sleep(32);
-        NotePlayer.executeSingleNote(new SongNote(0, true, (byte)105, (byte)4, Note.Do));
-        Thread.sleep(4000);
-        NotePlayer.closeSinglePlayer();
-         */
     }
 }
