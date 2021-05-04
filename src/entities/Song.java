@@ -5,22 +5,28 @@ import java.util.Collections;
 import java.util.Date;
 
 public class Song {
-    private final ArrayList<SongNote> notes;
-
     /**
      * Temps [us] per tick
      */
-    private final double tickLenght;
+    private final double tickLength;
     private final String songName;
     private final String author;
     private final Date creationDate;
+    private final boolean isPublic;
+    private final ArrayList<SongNote> notes;
+    private Integer id;
 
-    public Song(String songName, String author, Date creationDate, double tickLenght) {
+    public Song(Integer id, String songName, String author, Date creationDate, double tickLength, boolean isPublic) {
         this.notes = new ArrayList<>();
-        this.tickLenght = tickLenght;
+        this.tickLength = tickLength;
         this.songName = songName;
         this.author = author;
         this.creationDate = creationDate;
+        this.isPublic = isPublic;
+        this.id = id;
+    }
+    public Song(String songName, String author, Date creationDate, double tickLength, boolean isPublic) {
+        this(null, songName, author, creationDate, tickLength, isPublic);
     }
 
     /**
@@ -45,5 +51,25 @@ public class Song {
 
     public Date getDate() {
         return creationDate;
+    }
+
+    public SongNote[] getNotes() {
+        return this.notes.toArray(new SongNote[0]);
+    }
+
+    public double getTickLength() {
+        return this.tickLength;
+    }
+
+    public boolean getPublic() {
+        return this.isPublic;
+    }
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
