@@ -1,3 +1,5 @@
+package model;
+
 import entities.Song;
 import entities.SongNote;
 
@@ -57,7 +59,6 @@ public class NotePlayer extends Thread {
             this.paused = !p;
             if (p) this.notified.notify();
         }
-        // TODO: acabar notes que estan sonant
 
     }
 
