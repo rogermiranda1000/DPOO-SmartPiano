@@ -7,7 +7,7 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Synthesizer;
 import java.util.ArrayList;
 
-public class NotePlayer implements Runnable {
+public class NotePlayer extends Thread {
     private static NotePlayer globalNotePlayer = new NotePlayer();
     private static final int INSTRUMENT = 0;
     private static final int SPEED = 1;
@@ -17,8 +17,15 @@ public class NotePlayer implements Runnable {
     private final MidiChannel[] channels;
     private final Synthesizer synth;
 
+    private boolean paused;
+    private boolean alive;
+
+    private final Object notified; //Utilitzat per fer el notify
 
     public NotePlayer(Song song) {
+        this.paused = false;
+        this.alive = true;
+        this.notified = new Object();
         this.notes = song.getNotes();
         this.tickLength = song.getTickLength();
         MidiChannel[] channels = null;
@@ -41,35 +48,62 @@ public class NotePlayer implements Runnable {
         this(new Song("","",null, 1));
     }
 
+    /**
+     * Funció que canvia l'estat de pausa de la cançó
+     * @param p Booleà que indica si es pausa
+     */
+    public void setPlay(boolean p) {
+        synchronized (this.notified) {
+            this.paused = !p;
+            if (p) this.notified.notify();
+        }
+        // TODO: acabar notes que estan sonant
+
+    }
+
+    public synchronized boolean getAlive() {
+        return this.alive;
+    }
+
+    private void closeSynth() {
+        this.synth.close();
+    }
+
+    public synchronized void closePlayer() {
+        this.alive = false;
+        this.closeSynth();
+    }
+
+    public static void closeSinglePlayer() {
+        NotePlayer.globalNotePlayer.closeSynth();
+    }
+
     @Override
     @SuppressWarnings("BusyWait")
     public void run() {
         long tick = 0;
         int i = 0;
-        while (i < notes.size()) {
+        while (i < notes.size() && this.getAlive()) {
             // Esperem fins al seguent event
             if (notes.get(i).getTick() > tick) {
                 try {
                     Thread.sleep((long)((notes.get(i).getTick() - tick) * tickLength / (1000 * SPEED)));
+                    synchronized (this.notified) {
+                        if (this.paused) this.notified.wait();
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 tick = notes.get(i).getTick();
             }
             //Reproduim els events d'aquest tick
-            while (i < notes.size() && notes.get(i).getTick() == tick) {
-                executeNote(notes.get(i++));
+            if (this.getAlive()) {
+                while (i < notes.size() && notes.get(i).getTick() == tick) {
+                    executeNote(notes.get(i++));
+                }
             }
         }
-    }
-
-    // TODO ??
-    public void closeSynth() {
-        this.synth.close();
-    }
-
-    public static void closeSinglePlayer() {
-        NotePlayer.globalNotePlayer.closeSynth();
+        this.closeSynth();
     }
 
     public void executeNote(SongNote note) {
