@@ -14,19 +14,14 @@ public class Song {
     private final Date creationDate;
     private final boolean isPublic;
     private final ArrayList<SongNote> notes;
-    private Integer id;
 
-    public Song(Integer id, String songName, String author, Date creationDate, double tickLength, boolean isPublic) {
+    public Song(String songName, String author, Date creationDate, double tickLength, boolean isPublic) {
         this.notes = new ArrayList<>();
         this.tickLength = tickLength;
         this.songName = songName;
         this.author = author;
         this.creationDate = creationDate;
         this.isPublic = isPublic;
-        this.id = id;
-    }
-    public Song(String songName, String author, Date creationDate, double tickLength, boolean isPublic) {
-        this(null, songName, author, creationDate, tickLength, isPublic);
     }
 
     /**
@@ -63,13 +58,5 @@ public class Song {
 
     public boolean getPublic() {
         return this.isPublic;
-    }
-
-    public Integer getId() {
-        return this.id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }
