@@ -1,5 +1,6 @@
 package entities;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -44,8 +45,8 @@ public class Song {
         return author;
     }
 
-    public Date getDate() {
-        return creationDate;
+    public String getDate() {
+        return new SimpleDateFormat("yyyy-MM-dd").format(this.creationDate);
     }
 
     public SongNote[] getNotes() {

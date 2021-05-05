@@ -33,8 +33,9 @@ public class SongDDBBDAO implements SongDAO {
                 if (songId == null) return false;
 
                 for (SongNote sn : song.getNotes()) {
-                    if (this.ddbb.runSentence("INSERT INTO SongNotes(note, tick, pressed, song, velocity) VALUES (?,?,?,?,?);",
-                            sn.getNote().toString(), sn.getTick(), sn.isPressed(), songId, sn.getVelocity()) == 0) return false;
+                    // hi han cançons que començen/acaben 2 tecles idéntiques al mateix moment (?); ignorem aquestes
+                    this.ddbb.runSentence("INSERT IGNORE INTO SongNotes(note, tick, pressed, song, velocity) VALUES (?,?,?,?,?);",
+                            sn.getNote().toString().replaceAll("X$", "#"), sn.getTick(), sn.isPressed(), songId, sn.getVelocity());
                 }
                 return true;
             }
