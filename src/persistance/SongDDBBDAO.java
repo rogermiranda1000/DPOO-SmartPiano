@@ -8,21 +8,33 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SongDDBBDAO implements SongDAO {
+    private final UserDDBBDAO users;
     private final DDBBAccess ddbb;
 
-    public SongDDBBDAO(DDBBAccess ddbb) {
+    public SongDDBBDAO(DDBBAccess ddbb, UserDDBBDAO users) {
         this.ddbb = ddbb;
+        this.users = users;
     }
 
     @Override
     public boolean addSong(Song song) {
         try {
-            if (this.ddbb.runSentence("INSERT INTO Songs(public, name, tick_length) VALUES (?,?,?);",
-                    song.getPublic(), song.getName(), /*song.getArtist(),*/ song.getTickLength()) > 0) { // TODO artist referencia a user?
-                this.getSongId(song);
+            Integer userId = this.users.getVirtualUserId(song.getArtist());
+            if (userId == null) {
+                // l'usuari no existeix
+                if (!this.users.addVirtualUser(song.getArtist())) return false; // afegeix
+                userId = this.users.getVirtualUserId(song.getArtist()); // obtè ID
+                if (userId == null) return false;
+            }
+
+            if (this.ddbb.runSentence("INSERT INTO Songs(public, name, date, author, tick_length) VALUES (?,?,?,?,?);",
+                    song.getPublic(), song.getName(), song.getDate(), userId, song.getTickLength()) > 0) {
+                Integer songId = this.getSongId(song);
+                if (songId == null) return false;
+
                 for (SongNote sn : song.getNotes()) {
-                    if (this.ddbb.runSentence("INSERT INTO SongNote(note, tick, pressed, song, velocity) VALUES (?,?,?,?,?);",
-                            sn.getNote().toString(), sn.getTick(), sn.isPressed(), song.getId(), sn.getVelocity()) == 0) return false;
+                    if (this.ddbb.runSentence("INSERT INTO SongNotes(note, tick, pressed, song, velocity) VALUES (?,?,?,?,?);",
+                            sn.getNote().toString(), sn.getTick(), sn.isPressed(), songId, sn.getVelocity()) == 0) return false;
                 }
                 return true;
             }
@@ -39,24 +51,17 @@ public class SongDDBBDAO implements SongDAO {
 
     @Override
     public boolean existsSong(Song song) {
-        try {
-            ResultSet rs;
-            if (song.getId() == null) rs = this.ddbb.getSentence("SELECT COUNT(*) FROM Songs WHERE name = ? AND author = (SELECT id FROM Users WHERE username = ?) AND date = ?;", song.getName(), song.getArtist(), song.getDate());
-            else rs = this.ddbb.getSentence("SELECT COUNT(*) FROM Songs WHERE id = ?;", song.getId());
-
-            if (!rs.next()) return false; // no hi ha coincidencies
-            return (rs.getInt(1) > 0);
-        } catch (SQLException throwables) {
-            return false;
-        }
+        return (this.getSongId(song) != null);
     }
 
-    private void getSongId(Song song) {
+    private Integer getSongId(Song song) {
         try {
-            ResultSet rs = this.ddbb.getSentence("SELECT id FROM Songs WHERE name = ? AND author = (SELECT id FROM Users WHERE username = ?) AND date = ?;", song.getName(), song.getArtist(), song.getDate());
+            ResultSet rs = this.ddbb.getSentence("SELECT id FROM Songs WHERE name = ? AND author IN (SELECT id FROM Users WHERE username = ?) AND date = ?;", song.getName(), song.getArtist(), song.getDate());
 
-            if (!rs.next()) return; // no hi ha coincidencies
-            song.setId(rs.getInt(1));
-        } catch (SQLException throwables) { }
+            if (!rs.next()) return null; // no hi ha coincidencies
+            return rs.getInt(1);
+        } catch (SQLException ex) {
+            return null;
+        }
     }
 }

@@ -6,6 +6,7 @@ import entities.SongNote;
 import persistance.Config;
 import persistance.DDBBAccess;
 import persistance.SongDDBBDAO;
+import persistance.UserDDBBDAO;
 
 import javax.sound.midi.*;
 import java.io.File;
@@ -91,6 +92,6 @@ public class MIDIFactory {
 
     public static void main(String[] args) throws Exception {
         DDBBAccess d = new DDBBAccess(new Config(new File("config.json")).readConfig());
-        new SongDDBBDAO(d).addSong(MIDIFactory.getSong("name", "author", new Date(), new URL("https://www.mutopiaproject.org/ftp/AscherJ/alice/alice.mid")));
+        new SongDDBBDAO(d, new UserDDBBDAO(d)).addSong(MIDIFactory.getSong("name", "author", new Date(), new URL("https://www.mutopiaproject.org/ftp/AscherJ/alice/alice.mid")));
     }
 }
