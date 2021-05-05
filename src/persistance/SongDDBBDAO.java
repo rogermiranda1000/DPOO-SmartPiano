@@ -47,7 +47,14 @@ public class SongDDBBDAO implements SongDAO {
 
     @Override
     public boolean deleteSong(Song song) {
-        return false;
+        Integer id = this.getSongId(song);
+        if (id == null) return false;
+        try {
+            this.ddbb.runSentence("DELETE FROM SongNotes WHERE song = ?;", id);
+            return (this.ddbb.runSentence("DELETE FROM Songs WHERE id = ?;", id) > 0);
+        } catch (SQLException ex) {
+            return false;
+        }
     }
 
     @Override
@@ -57,7 +64,8 @@ public class SongDDBBDAO implements SongDAO {
 
     private Integer getSongId(Song song) {
         try {
-            ResultSet rs = this.ddbb.getSentence("SELECT id FROM Songs WHERE name = ? AND author IN (SELECT id FROM Users WHERE username = ?) AND date = ?;", song.getName(), song.getArtist(), song.getDate());
+            ResultSet rs = this.ddbb.getSentence("SELECT id FROM Songs WHERE name = ? AND author IN (SELECT id FROM Users WHERE username = ?) AND date = ?;",
+                    song.getName(), song.getArtist(), song.getDate());
 
             if (!rs.next()) return null; // no hi ha coincidencies
             return rs.getInt(1);

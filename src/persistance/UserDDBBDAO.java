@@ -41,7 +41,8 @@ public class UserDDBBDAO implements UserDAO {
     private Integer addUserAndGetId(String nick) {
         try {
             if (this.ddbb.runSentence("INSERT INTO Users(username) VALUES (?);", nick) > 0) {
-                ResultSet rs = this.ddbb.getSentence("SELECT MAX(id) FROM Users WHERE username = ?;", nick);
+                ResultSet rs = this.ddbb.getSentence("SELECT MAX(id) FROM Users WHERE username = ?;",
+                        nick);
 
                 if (!rs.next()) return null; // no hi ha coincidencies
                 return rs.getInt(1);
@@ -53,7 +54,8 @@ public class UserDDBBDAO implements UserDAO {
     @Override
     public Boolean existsUser(String nick) {
         try {
-            ResultSet rs = this.ddbb.getSentence("SELECT COUNT(*) FROM Users JOIN RegisteredUsers ON Users.id = RegisteredUsers.id WHERE username = ?;");
+            ResultSet rs = this.ddbb.getSentence("SELECT COUNT(*) FROM Users JOIN RegisteredUsers ON Users.id = RegisteredUsers.id WHERE username = ?;",
+                    nick);
             if (!rs.next()) return null; // no hi ha coincidencies
             return (rs.getInt(1) > 0);
         } catch (SQLException ex) {
@@ -64,7 +66,8 @@ public class UserDDBBDAO implements UserDAO {
     @Override
     public boolean deleteUser(User user, String password) {
         try {
-            ResultSet rs = this.ddbb.getSentence("SELECT Users.id FROM Users JOIN RegisteredUsers ON Users.id = RegisteredUsers.id WHERE username = ? AND password=MD5(?);");
+            ResultSet rs = this.ddbb.getSentence("SELECT Users.id FROM Users JOIN RegisteredUsers ON Users.id = RegisteredUsers.id WHERE username = ? AND password=MD5(?);",
+                    user.getName(), password);
             if (!rs.next()) return false; // no hi ha coincidencies
             int id = rs.getInt(1);
 
