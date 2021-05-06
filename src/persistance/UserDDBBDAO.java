@@ -63,6 +63,17 @@ public class UserDDBBDAO implements UserDAO {
     }
 
     @Override
+    public Boolean existsVirtualUser(String nick) {
+        try {
+            ResultSet rs = this.ddbb.getSentence("SELECT COUNT(*) FROM Users JOIN VirtualUsers ON Users.id = VirtualUsers.id WHERE username = ?;", nick);
+            if (!rs.next()) return null; // no hi ha coincidencies
+            return (rs.getInt(1) > 0);
+        } catch (SQLException ex) {
+            return null;
+        }
+    }
+
+    @Override
     public boolean deleteUser(User user, String password) {
         try {
             ResultSet rs = this.ddbb.getSentence("SELECT Users.id FROM Users JOIN RegisteredUsers ON Users.id = RegisteredUsers.id WHERE username = ? AND password=MD5(?);",
@@ -84,16 +95,6 @@ public class UserDDBBDAO implements UserDAO {
                     match, match, password);
             if (!rs.next()) return null; // no hi ha coincidencies
             return new User(rs.getString(1), rs.getString(2));
-        } catch (SQLException ex) {
-            return null;
-        }
-    }
-
-    private Integer getVirtualUserId(String nick) {
-        try {
-            ResultSet rs = this.ddbb.getSentence("SELECT Users.id FROM Users JOIN VirtualUsers ON Users.id = VirtualUsers.id WHERE username = ?;", nick);
-            if (!rs.next()) return null; // no hi ha coincidencies
-            return rs.getInt(1);
         } catch (SQLException ex) {
             return null;
         }

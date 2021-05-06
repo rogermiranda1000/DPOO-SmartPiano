@@ -18,8 +18,26 @@ public class BusinessFacade {
         this.userManager = userManager;
     }
 
+    /**
+     * Afegeix una canço som autor RegisteredUser
+     * @param song Canço a afegir
+     * @return Si s'ha afegit (true) o hi ha hagut un error (false)
+     */
     public boolean addSong(Song song) {
+        //if (!this.userManager.existsUser(song.getArtist())) return false; // no hauria de pasar mai
         return this.songManager.addSong(song);
+    }
+
+    /**
+     * Afegeix una canço som autor VirtualUser
+     * @param song Canço a afegir
+     * @return Si s'ha afegit (true) o hi ha hagut un error (false)
+     */
+    public boolean addDownloadedSong(Song song) {
+        if (!this.userManager.existsVirtualUser(song.getArtist())) {
+            if (!this.userManager.addVirtualUser(song.getArtist())) return false;
+        }
+        return this.songManager.addVirtualSong(song);
     }
 
     public boolean deleteSong(Song song) {
