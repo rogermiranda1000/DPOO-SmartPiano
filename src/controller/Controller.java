@@ -52,6 +52,6 @@ public class Controller implements LoginEvent, MenuEvent, SongNotifier {
 
     @Override
     public void addSong(Song song) {
-        if (!this.model.existsSong(song)) this.model.addSong(song);
+        if (!this.model.existsSong(song)) this.model.addDownloadedSong(song);
     }
 }

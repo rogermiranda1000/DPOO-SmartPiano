@@ -93,8 +93,7 @@ public class MIDIFactory {
     public static void main(String[] args) throws Exception {
         DDBBAccess d = new DDBBAccess(new Config(new File("config.json")).readConfig());
         Song s = MIDIFactory.getSong("name", "author", new Date(), new URL("https://www.mutopiaproject.org/ftp/AscherJ/alice/alice.mid"));
-        SongDDBBDAO dao = new SongDDBBDAO(d, new UserDDBBDAO(d));
-        //dao.addSong(s);
+        new BusinessFacade(new SongDDBBDAO(d), new UserDDBBDAO(d)).addDownloadedSong(s);
         //System.out.println(dao.existsSong(s));
         //dao.deleteSong(s);
     }

@@ -24,4 +24,6 @@ public interface UserDAO {
      * @return Si s'ha afegit (true) o hi ha hagut algun problema (false)
      */
     boolean addVirtualUser(String nick);
+
+    Boolean existsVirtualUser(String nick);
 }
