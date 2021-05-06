@@ -1,6 +1,5 @@
 package persistance;
 
-import model.UserDAO;
 import entities.User;
 
 import java.sql.ResultSet;
@@ -90,8 +89,7 @@ public class UserDDBBDAO implements UserDAO {
         }
     }
 
-    @Override
-    public Integer getVirtualUserId(String nick) {
+    private Integer getVirtualUserId(String nick) {
         try {
             ResultSet rs = this.ddbb.getSentence("SELECT Users.id FROM Users JOIN VirtualUsers ON Users.id = VirtualUsers.id WHERE username = ?;", nick);
             if (!rs.next()) return null; // no hi ha coincidencies

@@ -1,7 +1,6 @@
 package persistance;
 
 import entities.SongNote;
-import model.SongDAO;
 import entities.Song;
 
 import java.sql.ResultSet;
@@ -22,6 +21,7 @@ public class SongDDBBDAO implements SongDAO {
             Integer userId = this.users.getVirtualUserId(song.getArtist());
             if (userId == null) {
                 // l'usuari no existeix
+                // TODO 'SELECT LAST_INSERT_ID();'
                 if (!this.users.addVirtualUser(song.getArtist())) return false; // afegeix
                 userId = this.users.getVirtualUserId(song.getArtist()); // obtè ID
                 if (userId == null) return false;

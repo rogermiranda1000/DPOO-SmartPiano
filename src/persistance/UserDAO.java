@@ -1,4 +1,4 @@
-package model;
+package persistance;
 
 import entities.User;
 
@@ -24,11 +24,4 @@ public interface UserDAO {
      * @return Si s'ha afegit (true) o hi ha hagut algun problema (false)
      */
     boolean addVirtualUser(String nick);
-
-    /**
-     * Retorna l'ID del usuari virtual amb nick especificat
-     * @param nick Nom del usuari virtual a buscar
-     * @return ID, o null si error
-     */
-    Integer getVirtualUserId(String nick);
 }
