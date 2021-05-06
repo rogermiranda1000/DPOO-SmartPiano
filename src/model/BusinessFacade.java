@@ -2,12 +2,16 @@ package model;
 
 import entities.Song;
 import entities.User;
+import persistance.SongDAO;
+import persistance.UserDAO;
 
 public class BusinessFacade {
     private final SongDAO songManager;
     private final UserDAO userManager;
 
     private User loggedUser = null;
+
+    // TODO Llogica de si no existeix els usuaris crear-los, a fora
 
     public BusinessFacade(SongDAO songManager, UserDAO userManager) {
         this.songManager = songManager;

@@ -2,8 +2,8 @@ package controller;
 
 import entities.Song;
 import model.BusinessFacade;
-import model.SongDAO;
-import model.UserDAO;
+import persistance.SongDAO;
+import persistance.UserDAO;
 import view.Menu;
 
 public class Controller implements LoginEvent, MenuEvent, SongNotifier {
