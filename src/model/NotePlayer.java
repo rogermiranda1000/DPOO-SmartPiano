@@ -10,7 +10,6 @@ import javax.sound.midi.Synthesizer;
 import java.util.ArrayList;
 
 public class NotePlayer extends Thread {
-    private static NotePlayer globalNotePlayer = new NotePlayer();
     private static final int INSTRUMENT = 0;
     private static final int SPEED = 1;
 
@@ -75,10 +74,6 @@ public class NotePlayer extends Thread {
         this.closeSynth();
     }
 
-    public static void closeSinglePlayer() {
-        NotePlayer.globalNotePlayer.closeSynth();
-    }
-
     @Override
     @SuppressWarnings("BusyWait")
     public void run() {
@@ -113,9 +108,5 @@ public class NotePlayer extends Thread {
         } else {
             this.channels[INSTRUMENT].noteOff(note.getId(), note.getVelocity());
         }
-    }
-
-    public static void executeSingleNote(SongNote note) {
-         NotePlayer.globalNotePlayer.executeNote(note);
     }
 }
