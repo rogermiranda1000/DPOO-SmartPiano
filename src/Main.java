@@ -40,6 +40,11 @@ public class Main {
             }
         };
 
-        Menu f = new Menu(e,m);
+
+        SongsEvent se = new SongsEvent() {
+
+        };
+
+        Menu f = new Menu(e,m,se);
     }
 }

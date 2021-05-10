@@ -10,32 +10,49 @@ public class Menu extends JFrame implements ActionListener {
     private JButton songsButton, playlistButton, pianoButton, rankingButton, settingsButton,exitButton;
     private JLabel playingSong;
     private MenuEvent event;
+    private JFrame window;
+    private JPanel mainContent;
+    private CardLayout cl;
 
-
-
-    JFrame window;
-
-    Menu(LoginEvent loginE, MenuEvent menuE ){
+    Menu(LoginEvent loginE, MenuEvent menuE, SongsEvent songsE ){
+        // Main view configuration
         this.event = menuE;
         window = new JFrame("Piano TIME!");
         ImageIcon img = new ImageIcon("images\\icon.jpg");
         window.setIconImage(img.getImage());
         window.setVisible(false);
 
+        // Login / Register view init //TODO fix
         LogIn l = new LogIn(loginE, window);
         if (/* TODO: Controller.getUser*/ false) {
             window.dispose();
             return;
         }
 
+        // Show main view
         window.setSize(WIDTH,HEIGHT);
         window.setLocationRelativeTo(null);
         window.setResizable(false);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setVisible(true);
 
+        // Add static top & bot panels
         window.add(botPanel(), BorderLayout.SOUTH);
         window.add(topPanel(), BorderLayout.NORTH);
+
+        // Adding layouts
+        mainContent = new JPanel(new CardLayout());
+        mainContent.add(new SongsView(songsE), "songs");
+        mainContent.add(new PlaylistView(), "playlists");
+        mainContent.add(new PianoView(), "piano");
+        mainContent.add(new RankingView(), "ranking");
+        mainContent.add(new SettingsView(), "settings");
+        window.add(mainContent);
+        cl = (CardLayout) (mainContent.getLayout());
+        /* DEFAULT VIEW */
+        cl.show(mainContent, ("songs"));
+        songsButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
+
+        window.setVisible(true);
     }
 
     public JPanel topPanel(){
@@ -48,7 +65,7 @@ public class Menu extends JFrame implements ActionListener {
         songsButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
         songsButton.setFont(new Font("Arial", Font.BOLD,20));
 
-        playlistButton = new JButton("Playlist");
+        playlistButton = new JButton("Playlists");
         playlistButton.setBackground(ColorConstants.BUTTON.getColor());
         playlistButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
         playlistButton.setFont(new Font("Arial", Font.BOLD,20));
@@ -121,32 +138,38 @@ public class Menu extends JFrame implements ActionListener {
 
     public JPanel songPlayerMenu(){
         JPanel panel = new JPanel();
+        Font f = new Font(null, Font.PLAIN, 15);
         panel.setBackground(ColorConstants.MENU.getColor());
 
         loopButton = new JButton(Icon.LOOP.getIcon());
         loopButton.setBackground(ColorConstants.BUTTON.getColor());
         loopButton.setForeground(Color.LIGHT_GRAY);
         loopButton.setVisible(true);
+        loopButton.setFont(f);
 
         backButton = new JButton(Icon.BACK.getIcon());
         backButton.setBackground(ColorConstants.BUTTON.getColor());
         backButton.setForeground(Color.LIGHT_GRAY);
         backButton.setVisible(true);
+        backButton.setFont(f);
 
         playButton = new JButton(Icon.PAUSE.getIcon());
         playButton.setBackground(ColorConstants.BUTTON.getColor());
         playButton.setForeground(Color.LIGHT_GRAY);
         playButton.setVisible(true);
+        playButton.setFont(f);
 
         nextButton = new JButton(Icon.NEXT.getIcon());
         nextButton.setBackground(ColorConstants.BUTTON.getColor());
         nextButton.setForeground(Color.LIGHT_GRAY);
         nextButton.setVisible(true);
+        nextButton.setFont(f);
 
         shuffleButton = new JButton(Icon.SHUFFLE.getIcon());
         shuffleButton.setBackground(ColorConstants.BUTTON.getColor());
         shuffleButton.setForeground(Color.LIGHT_GRAY);
         shuffleButton.setVisible(true);
+        shuffleButton.setFont(f);
 
         loopButton.addActionListener(this);
         backButton.addActionListener(this);
@@ -206,27 +229,27 @@ public class Menu extends JFrame implements ActionListener {
                 playingSong.setText("next" /*TODO : player.getPlayingSongTitle() + - + player.getPlayingSongArtist*/);
             }
         } else if (e.getSource() == songsButton) {
-            //TODO: showSongList
+            cl.show(mainContent, ("songs"));
 
             resetButtonsColors();
             songsButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == playlistButton) {
-            //TODO: showPlaylistList
+            cl.show(mainContent, ("playlists"));
 
             resetButtonsColors();
             playlistButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == pianoButton) {
-            //TODO: showPiano
+            cl.show(mainContent, ("piano"));
 
             resetButtonsColors();
             pianoButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == rankingButton) {
-            //TODO: showRanking
+            cl.show(mainContent, ("ranking"));
 
             resetButtonsColors();
             rankingButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == settingsButton) {
-            //TODO: showSettings
+            cl.show(mainContent, ("settings"));
 
             resetButtonsColors();
             settingsButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
