@@ -1,3 +1,8 @@
+package view;
+
+import controller.LoginEvent;
+import controller.MenuEvent;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,8 +19,10 @@ public class Menu extends JFrame implements ActionListener {
     private JPanel mainContent;
     private CardLayout cl;
 
-    Menu(LoginEvent loginE, MenuEvent menuE, SongsEvent songsE ){
-        // Main view configuration
+
+    JFrame window;
+
+    Menu(LoginEvent loginE, MenuEvent menuE ){
         this.event = menuE;
         window = new JFrame("Piano TIME!");
         ImageIcon img = new ImageIcon("images\\icon.jpg");

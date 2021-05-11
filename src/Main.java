@@ -1,3 +1,13 @@
+import controller.Controller;
+import persistance.Config;
+import persistance.DDBBAccess;
+import persistance.SongDDBBDAO;
+import persistance.UserDDBBDAO;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.sql.SQLException;
+
 public class Main {
     public static void main (String[] args) {
         System.out.println( "╔══╦═╦═╦══╦═╦══╗╔═╦══╦══╦═╦╦═╗\n" +
@@ -40,11 +50,6 @@ public class Main {
             }
         };
 
-
-        SongsEvent se = new SongsEvent() {
-
-        };
-
-        Menu f = new Menu(e,m,se);
+        Menu f = new Menu(e,m);
     }
 }
