@@ -1,11 +1,16 @@
+package view;
+
+import controller.SongsEvent;
+
 import javax.swing.*;
+import javax.swing.Icon;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class SongsView extends JPanel implements ActionListener {
+public class Songs extends JPanel implements ActionListener {
     private DefaultTableModel songs = new DefaultTableModel();
     private DefaultTableModel playlists = new DefaultTableModel();
     private SongsEvent event;
@@ -15,7 +20,7 @@ public class SongsView extends JPanel implements ActionListener {
     private JPanel mainContent;
     private CardLayout cl;
 
-    SongsView(SongsEvent songE) {
+    Songs(SongsEvent songE) {
         this.event = songE;
 
         //TODO: borrar aquest TODO.
@@ -98,7 +103,7 @@ public class SongsView extends JPanel implements ActionListener {
         JPanel panel = new JPanel();
         panel.setBackground(ColorConstants.MENU.getColor());
 
-        backToSongsButton = new JButton(Icon.GOBACK.getIcon());
+        backToSongsButton = new JButton(view.Icon.GOBACK.getIcon());
         backToSongsButton.setBackground(ColorConstants.BUTTON.getColor());
         backToSongsButton.setForeground(Color.LIGHT_GRAY);
         backToSongsButton.setVisible(true);
@@ -129,7 +134,7 @@ public class SongsView extends JPanel implements ActionListener {
         JPanel panel = new JPanel();
         panel.setBackground(ColorConstants.MENU.getColor());
 
-        playSongButton = new JButton(Icon.PLAY.getIcon());
+        playSongButton = new JButton(view.Icon.PLAY.getIcon());
         playSongButton.setBackground(ColorConstants.BUTTON.getColor());
         playSongButton.setForeground(Color.LIGHT_GRAY);
         playSongButton.setVisible(true);
