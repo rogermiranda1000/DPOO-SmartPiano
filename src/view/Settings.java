@@ -1,3 +1,5 @@
+package view;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -5,12 +7,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class SettingsView extends JPanel {
+public class Settings extends JPanel {
 
     public static final int HEIGHT = 900;
     public static final int WIDTH  = 1600;
 
-    SettingsView() {
+    Settings() {
 
         this.setBackground(ColorConstants.BACKGROUND.getColor());
 

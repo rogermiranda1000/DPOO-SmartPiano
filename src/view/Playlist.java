@@ -1,8 +1,13 @@
+package view;
+
+import controller.SongsEvent;
+
 import javax.swing.*;
+import javax.swing.Icon;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-public class PlaylistView extends JPanel {
+public class Playlist extends JPanel {
     private SongsEvent event;
     private DefaultListModel playlistName = new DefaultListModel();
     private JList playlistList = new JList(playlistName);
@@ -42,7 +47,7 @@ public class PlaylistView extends JPanel {
         JPanel panel = new JPanel();
         panel.setBackground(ColorConstants.MENU.getColor());
 
-        playPlaylistButton = new JButton(Icon.PLAY.getIcon());
+        playPlaylistButton = new JButton(view.Icon.PLAY.getIcon());
         playPlaylistButton.setBackground(ColorConstants.BUTTON.getColor());
         playPlaylistButton.setForeground(Color.LIGHT_GRAY);
         playPlaylistButton.setVisible(true);
@@ -81,7 +86,7 @@ public class PlaylistView extends JPanel {
     }
 
 
-    PlaylistView() {
+    Playlist() {
         this.setBackground(ColorConstants.BACKGROUND.getColor());
         JPanel playlistView = new JPanel();
 

@@ -2,6 +2,7 @@ package view;
 
 import controller.LoginEvent;
 import controller.MenuEvent;
+import controller.SongsEvent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,10 +20,7 @@ public class Menu extends JFrame implements ActionListener {
     private JPanel mainContent;
     private CardLayout cl;
 
-
-    JFrame window;
-
-    Menu(LoginEvent loginE, MenuEvent menuE ){
+    public Menu(LoginEvent loginE, MenuEvent menuE, SongsEvent songsE){
         this.event = menuE;
         window = new JFrame("Piano TIME!");
         ImageIcon img = new ImageIcon("images\\icon.jpg");
@@ -48,11 +46,11 @@ public class Menu extends JFrame implements ActionListener {
 
         // Adding layouts
         mainContent = new JPanel(new CardLayout());
-        mainContent.add(new SongsView(songsE), "songs");
-        mainContent.add(new PlaylistView(), "playlists");
-        mainContent.add(new PianoView(), "piano");
-        mainContent.add(new RankingView(), "ranking");
-        mainContent.add(new SettingsView(), "settings");
+        mainContent.add(new Songs(songsE), "songs");
+        mainContent.add(new Playlist(), "playlists");
+        mainContent.add(new Piano(), "piano");
+        mainContent.add(new Ranking(), "ranking");
+        mainContent.add(new Settings(), "settings");
         window.add(mainContent);
         cl = (CardLayout) (mainContent.getLayout());
         /* DEFAULT VIEW */

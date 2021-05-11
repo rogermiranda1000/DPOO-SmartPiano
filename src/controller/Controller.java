@@ -6,7 +6,7 @@ import model.SongDAO;
 import model.UserDAO;
 import view.Menu;
 
-public class Controller implements LoginEvent, MenuEvent, SongNotifier {
+public class Controller implements LoginEvent, MenuEvent, SongsEvent,SongNotifier {
     private final Menu view;
     private final BusinessFacade model;
     private final SongDownloader scrapper;
@@ -17,7 +17,7 @@ public class Controller implements LoginEvent, MenuEvent, SongNotifier {
         this.scrapper = new SongDownloader(this, scrappingTime);
         this.scrapper.start();
 
-        this.view = new Menu(this, this);
+        this.view = new Menu(this, this, this);
     }
 
 

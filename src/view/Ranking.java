@@ -1,9 +1,11 @@
+package view;
+
 import javax.swing.*;
 import java.awt.*;
 
-public class RankingView extends JPanel {
+public class Ranking extends JPanel {
 
-    RankingView(){
+    Ranking(){
 
 
         this.setBackground(Color.red);
