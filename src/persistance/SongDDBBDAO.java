@@ -80,8 +80,8 @@ public class SongDDBBDAO implements SongDAO {
 
     private Integer getSongId(Song song) {
         try {
-            ResultSet rs = this.ddbb.getSentence("SELECT id FROM Songs WHERE name = ? AND author IN (SELECT id FROM Users WHERE username = ?) AND date = ?;", // TODO 'IN'?! >:(
-                    song.getName(), song.getArtist(), song.getDate());
+            ResultSet rs = this.ddbb.getSentence("SELECT id FROM Songs JOIN Users ON username = ? WHERE name = ? AND date = ?;",
+                    song.getArtist(), song.getName(), song.getDate());
 
             if (!rs.next()) return null; // no hi ha coincidencies
             return rs.getInt(1);
