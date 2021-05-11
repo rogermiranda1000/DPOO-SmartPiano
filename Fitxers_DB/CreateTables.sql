@@ -1,49 +1,64 @@
 -- Delete all tables
-DROP TABLE IF EXISTS SongNote CASCADE;
+DROP TABLE IF EXISTS SongNotes CASCADE;
 DROP TABLE IF EXISTS ListSongs CASCADE;
 DROP TABLE IF EXISTS Listen CASCADE;
 DROP TABLE IF EXISTS Ranking CASCADE;
-DROP TABLE IF EXISTS List CASCADE;
+DROP TABLE IF EXISTS Lists CASCADE;
 DROP TABLE IF EXISTS Songs CASCADE;
 DROP TABLE IF EXISTS PianoKeys CASCADE;
+DROP TABLE IF EXISTS VirtualUsers CASCADE;
+DROP TABLE IF EXISTS RegisteredUsers CASCADE;
 DROP TABLE IF EXISTS Users CASCADE;
 
 -- Update all tables
 CREATE TABLE Users (
    id MEDIUMINT NOT NULL AUTO_INCREMENT,
-   username VARCHAR(255) UNIQUE,
+   username VARCHAR(255),
+   PRIMARY KEY (id, username)
+);
+CREATE TABLE RegisteredUsers (
+   id MEDIUMINT NOT NULL,
    email VARCHAR(255) UNIQUE,
    password CHAR(32),
    octave_mode ENUM('Single', 'Full'),
    volume_piano FLOAT,  -- Volume of the notes played in the piano (1 = max volume, 0 = silenced)
    volume_song FLOAT,   -- Volume of the song in the player (1 = max volume, 0 = silenced)
-   PRIMARY KEY (id)
+   PRIMARY KEY (id),
+   FOREIGN KEY (id)
+   REFERENCES Users(id)
+);
+CREATE TABLE VirtualUsers (
+   id MEDIUMINT NOT NULL,
+   PRIMARY KEY (id),
+   FOREIGN KEY (id)
+   REFERENCES Users(id)
 );
 CREATE TABLE PianoKeys (
-   note ENUM('Do1', 'Do#1', 'Re1', 'Re#1', 'Mi1', 'Fa1', 'Fa#1', 'Sol', 'Sol#1', 'La1', 'La#1', 'Si1', 'Do2', 'Do#2', 'Re2', 'Re#2', 'Mi2', 'Fa2', 'Fa#2', 'Sol2', 'Sol#2', 'La2', 'La#2', 'Si2') NOT NULL, -- Note of the piano this represents
+   note ENUM('Do', 'Do#', 'Re', 'Re#', 'Mi', 'Fa', 'Fa#', 'Sol', 'Sol#', 'La', 'La#', 'Si') NOT NULL, -- Note of the piano this represents
    user MEDIUMINT,      -- User that configured these settings
    keyboard CHAR(1),    -- Character/key related to the note
    PRIMARY KEY (note),
    FOREIGN KEY (user)
-   REFERENCES Users(id)
+   REFERENCES RegisteredUsers(id)
 );
 CREATE TABLE Songs (
    id MEDIUMINT NOT NULL AUTO_INCREMENT,
    public BINARY(1),    -- 1 = public, 0 = private
    name VARCHAR(255),
-   date DATETIME DEFAULT CURRENT_TIMESTAMP, -- Moment when the song was published, default value = row creation date
+   date DATE DEFAULT CURRENT_TIMESTAMP, -- Day when the song was published, default value = row creation date
    author MEDIUMINT,
+   tick_length DOUBLE,
    PRIMARY KEY (id),
    FOREIGN KEY (author)
    REFERENCES Users(id)
 );
-CREATE TABLE List (
+CREATE TABLE Lists (
    id MEDIUMINT NOT NULL AUTO_INCREMENT,
    name VARCHAR(255),
    author MEDIUMINT,
    PRIMARY KEY (id),
    FOREIGN KEY (author)
-   REFERENCES Users(id)
+   REFERENCES RegisteredUsers(id)
 );
 CREATE TABLE Ranking (
    user MEDIUMINT NOT NULL,
@@ -51,7 +66,7 @@ CREATE TABLE Ranking (
    points MEDIUMINT,
    PRIMARY KEY (user, song),
    FOREIGN KEY (user)
-   REFERENCES Users(id),
+   REFERENCES RegisteredUsers(id),
    FOREIGN KEY (song)
    REFERENCES Songs(id)
 );
@@ -62,7 +77,7 @@ CREATE TABLE Listen (
    seconds_listened MEDIUMINT,  -- How many seconds the user listened to the song that specific moment
    PRIMARY KEY (date, user, song),
    FOREIGN KEY (user)
-   REFERENCES Users(id),
+   REFERENCES RegisteredUsers(id),
    FOREIGN KEY (song)
    REFERENCES Songs(id)
 );
@@ -71,14 +86,14 @@ CREATE TABLE ListSongs (
    song MEDIUMINT NOT NULL,
    PRIMARY KEY (list, song),
    FOREIGN KEY (list)
-   REFERENCES List(id),
+   REFERENCES Lists(id),
    FOREIGN KEY (song)
    REFERENCES Songs(id)
 );
-CREATE TABLE SongNote (
+CREATE TABLE SongNotes (
     -- Table that stores the info about a note press or release in a specific song
-    note ENUM('Do1', 'Do#1', 'Re1', 'Re#1', 'Mi1', 'Fa1', 'Fa#1', 'Sol', 'Sol#1', 'La1', 'La#1', 'Si1', 'Do2', 'Do#2', 'Re2', 'Re#2', 'Mi2', 'Fa2', 'Fa#2', 'Sol2', 'Sol#2', 'La2', 'La#2', 'Si2') NOT NULL,
-    tick INT NOT NULL,              -- Moment when the event happened
+    note ENUM('Do', 'Do#', 'Re', 'Re#', 'Mi', 'Fa', 'Fa#', 'Sol', 'Sol#', 'La', 'La#', 'Si') NOT NULL,
+    tick BIGINT NOT NULL,           -- Moment when the event happened
     pressed BINARY(1) NOT NULL,     -- 1 = the key was pressed, 0 = the key was released
     song MEDIUMINT NOT NULL,
     velocity TINYINT,               -- Volume of the note. 0 = silent, 127 = max volume

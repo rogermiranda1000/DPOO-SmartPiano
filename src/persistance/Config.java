@@ -1,5 +1,8 @@
+package persistance;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import entities.DDBBInfo;
 
 import java.io.*;
 import java.util.Scanner;
@@ -22,7 +25,7 @@ public class Config {
         this.scrapping = scrapping;
     }
 
-    public DDBB readConfig() throws FileNotFoundException {
+    public DDBBInfo readConfig() throws FileNotFoundException {
         if (!this.configFile.exists()) throw new FileNotFoundException("The file don't exists");
 
         // llegim el fitxer; la seva informació queda guardada a 'sb'
@@ -34,6 +37,6 @@ public class Config {
         fileResult = sb.toString();
 
         this.setScrapping(Config.gson.fromJson(fileResult, JsonObject.class).get("scrapping").getAsInt());
-        return Config.gson.fromJson(fileResult, DDBB.class);
+        return Config.gson.fromJson(fileResult, DDBBInfo.class);
     }
 }
