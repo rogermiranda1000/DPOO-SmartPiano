@@ -2,20 +2,21 @@ package model;
 
 import entities.Song;
 import entities.User;
+import persistance.LoggedUserDAO;
 import persistance.SongDAO;
 import persistance.UserDAO;
 
 public class BusinessFacade {
     private final SongDAO songManager;
     private final UserDAO userManager;
+    private final LoggedUserDAO loggedUserManager;
 
     private User loggedUser = null;
 
-    // TODO Llogica de si no existeix els usuaris crear-los, a fora
-
-    public BusinessFacade(SongDAO songManager, UserDAO userManager) {
+    public BusinessFacade(SongDAO songManager, UserDAO userManager, LoggedUserDAO loggedUserManager) {
         this.songManager = songManager;
         this.userManager = userManager;
+        this.loggedUserManager = loggedUserManager;
     }
 
     /**
@@ -63,7 +64,7 @@ public class BusinessFacade {
      * @return Si s'ha obtingut (true) o no (false) l'usuari
      */
     public boolean login(String nick, String password) {
-        this.loggedUser = this.userManager.getUser(nick, password);
+        this.loggedUser = this.loggedUserManager.getUser(nick, password);
         return this.loggedUser != null;
     }
 }

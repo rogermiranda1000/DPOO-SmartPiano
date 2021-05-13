@@ -2,6 +2,7 @@ package controller;
 
 import entities.Song;
 import model.BusinessFacade;
+import persistance.LoggedUserDAO;
 import persistance.SongDAO;
 import persistance.UserDAO;
 import view.Menu;
@@ -11,8 +12,8 @@ public class Controller implements LoginEvent, MenuEvent, SongNotifier {
     private final BusinessFacade model;
     private final SongDownloader scrapper;
 
-    public Controller(int scrappingTime, SongDAO songManager, UserDAO userManager) {
-        this.model = new BusinessFacade(songManager, userManager);
+    public Controller(int scrappingTime, SongDAO songManager, UserDAO userManager, LoggedUserDAO loggedUserManager) {
+        this.model = new BusinessFacade(songManager, userManager, loggedUserManager);
 
         this.scrapper = new SongDownloader(this, scrappingTime);
         this.scrapper.start();

@@ -3,10 +3,7 @@ package model;
 import entities.Note;
 import entities.Song;
 import entities.SongNote;
-import persistance.Config;
-import persistance.DDBBAccess;
-import persistance.SongDDBBDAO;
-import persistance.UserDDBBDAO;
+import persistance.*;
 
 import javax.sound.midi.*;
 import java.io.File;
@@ -93,7 +90,7 @@ public class MIDIFactory {
     public static void main(String[] args) throws Exception {
         DDBBAccess d = new DDBBAccess(new Config(new File("config.json")).readConfig());
         Song s = MIDIFactory.getSong("name", "author", new Date(), new URL("https://www.mutopiaproject.org/ftp/AscherJ/alice/alice.mid"));
-        new BusinessFacade(new SongDDBBDAO(d), new UserDDBBDAO(d)).addDownloadedSong(s);
+        new BusinessFacade(new SongDDBBDAO(d), new UserDDBBDAO(d), new LoggedUserDDBBDAO(d)).addDownloadedSong(s);
         //System.out.println(dao.existsSong(s));
         //dao.deleteSong(s);
     }
