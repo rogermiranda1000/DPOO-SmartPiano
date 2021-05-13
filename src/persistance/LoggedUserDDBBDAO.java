@@ -23,4 +23,6 @@ public class LoggedUserDDBBDAO implements LoggedUserDAO {
             return null;
         }
     }
+
+
 }
