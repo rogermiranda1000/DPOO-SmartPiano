@@ -3,17 +3,25 @@ package view;
 import controller.SongsEvent;
 
 import javax.swing.*;
-import javax.swing.Icon;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Playlist extends JPanel {
+public class Playlist extends JPanel implements ActionListener, ListSelectionListener {
     private SongsEvent event;
     private DefaultListModel playlistName = new DefaultListModel();
     private JList playlistList = new JList(playlistName);
-    private DefaultListModel songsName = new DefaultListModel();
+    private DefaultListModel<String> songsName = new DefaultListModel<>();
     private JList songsList = new JList(songsName);
-    private JButton playPlaylistButton, removeSongButton, removePlaylistButton;
+    private JButton playPlaylistButton;
+    private JButton removeSongButton;
+    private JButton removePlaylistButton;
+    private List selectedValuesList;
 
 
     public JPanel playlistList() {
@@ -24,23 +32,23 @@ public class Playlist extends JPanel {
         playlistList.setVisibleRowCount(25);
         playlistList.setFixedCellWidth(200);
         playlistList.setFixedCellHeight(25);
-        JScrollPane fruitListScrollPane = new JScrollPane(playlistList);
+        JScrollPane playlistScrollPane = new JScrollPane(playlistList);
 
+        playlistList.addListSelectionListener(this);
 
         songsList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         songsList.setSelectedIndex(0);
         songsList.setVisibleRowCount(25);
         songsList.setFixedCellWidth(200);
         songsList.setFixedCellHeight(25);
-        JScrollPane vegListScrollPane = new JScrollPane(songsList);
+        JScrollPane songsListScrollPane = new JScrollPane(songsList);
 
-        r.add(fruitListScrollPane);
-        r.add(vegListScrollPane);
+        r.add(playlistScrollPane);
+        r.add(songsListScrollPane);
 
         r.setVisible(true);
         return r;
     }
-
 
     public JPanel playlistBotPanel() {
         Font f = new Font(null, Font.BOLD, 20);
@@ -69,11 +77,9 @@ public class Playlist extends JPanel {
         removeSongButton.setFocusable(false);
         removeSongButton.setVisible(false);
 
-        /*
         playPlaylistButton.addActionListener(this);
         removePlaylistButton.addActionListener(this);
         removeSongButton.addActionListener(this);
-        */
 
         panel.add(playPlaylistButton);
         panel.add(removePlaylistButton);
@@ -85,6 +91,15 @@ public class Playlist extends JPanel {
         return panel;
     }
 
+    protected void updateSongsList(String playlist) {
+        ArrayList<String> songs = new ArrayList<String>();
+        songsName.clear();
+        //TODO: agafar el llistat de cançons de la llista de la base de dades songs = cotroller.getSongsPlaylist(playlist)
+        songs.add(String.valueOf(selectedValuesList.get(0)));
+        for (String song : songs) {
+            songsName.addElement(song);
+        }
+    }
 
     Playlist() {
         this.setBackground(ColorConstants.BACKGROUND.getColor());
@@ -96,11 +111,31 @@ public class Playlist extends JPanel {
         playlistView.add(playlistList());
         playlistView.add(playlistBotPanel());
 
-        for(int i = 0; i < 50; i++) {
+        //TODO: ADD PLAYLISTS
+        for (int i = 0; i < 50; i++) {
             playlistName.addElement(i);
-            songsName.addElement(i);
         }
 
         this.add(playlistView);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == playPlaylistButton) {
+            // TODO: controller.playPlaylist(String.valueOf(selectedValuesList.get(0));
+        } else if (e.getSource() == removePlaylistButton) {
+            // TODO: controller.deletePlaylist(String.valueOf(selectedValuesList.get(0));
+        } else if (e.getSource() == removeSongButton) {
+            // TODO: controller.deleteSongsFromPlaylist(String.valueOf(selectedValuesList.get(0), selectedSongs);
+        }
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        if (!e.getValueIsAdjusting()) {
+            selectedValuesList = playlistList.getSelectedValuesList();
+            updateSongsList(String.valueOf(selectedValuesList.get(0)));
+            removeSongButton.setVisible(true);
+        }
     }
 }
