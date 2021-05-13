@@ -87,16 +87,4 @@ public class UserDDBBDAO implements UserDAO {
             return false;
         }
     }
-
-    @Override
-    public User getUser(String match, String password) {
-        try {
-            ResultSet rs = this.ddbb.getSentence("SELECT username,email FROM Users JOIN RegisteredUsers ON Users.id = RegisteredUsers.id WHERE (username = ? OR email = ?) AND password=MD5(?);",
-                    match, match, password);
-            if (!rs.next()) return null; // no hi ha coincidencies
-            return new User(rs.getString(1), rs.getString(2));
-        } catch (SQLException ex) {
-            return null;
-        }
-    }
 }

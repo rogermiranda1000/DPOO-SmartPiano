@@ -14,8 +14,6 @@ public interface UserDAO {
      */
     Boolean existsUser(String nick);
 
-    User getUser(String nick, String password);
-
     /* VIRTUAL USERS */
 
     /**
