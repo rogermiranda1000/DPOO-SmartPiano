@@ -10,14 +10,14 @@ public class Song {
     /**
      * Temps [us] per tick
      */
-    private final double tickLenght;
+    private final double tickLength;
     private final String songName;
     private final String author;
     private final Date creationDate;
 
-    public Song(String songName, String author, Date creationDate, double tickLenght) {
+    public Song(String songName, String author, Date creationDate, double tickLength) {
         this.notes = new ArrayList<>();
-        this.tickLenght = tickLenght;
+        this.tickLength = tickLength;
         this.songName = songName;
         this.author = author;
         this.creationDate = creationDate;
@@ -45,5 +45,13 @@ public class Song {
 
     public Date getDate() {
         return creationDate;
+    }
+
+    public ArrayList<SongNote> getNotes() {
+        return this.notes;
+    }
+
+    public double getTickLength() {
+        return this.tickLength;
     }
 }
