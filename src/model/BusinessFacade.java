@@ -1,10 +1,13 @@
 package model;
 
+import entities.List;
 import entities.Song;
 import entities.User;
 import persistance.PlaylistDAO;
 import persistance.SongDAO;
 import persistance.UserDAO;
+
+import java.util.ArrayList;
 
 public class BusinessFacade {
     private final SongDAO songManager;
@@ -17,11 +20,14 @@ public class BusinessFacade {
         this.songManager = songManager;
         this.userManager = userManager;
         this.playlistManager = playlistManager;
+    }
 
-        // TODO debug
-        /*User u = this.userManager.getUser("uwu", "uwu");
-        u.addAllPlaylist(this.playlistManager.getPlaylist(u));
-        System.out.println();*/
+    public ArrayList<List> getPlaylist(User u) {
+        ArrayList<List> playlists = this.playlistManager.getPlaylist(u);
+        for (List p: playlists) {
+            for (Song s: p.getSongs()) this.songManager.updateSong(s);
+        }
+        return playlists;
     }
 
     /**

@@ -95,7 +95,7 @@ public class SongDDBBDAO implements SongDAO {
                     songId);
 
             while (songNotes.next()) {
-                song.addNote(new SongNote(songNotes.getLong(1), songNotes.getBoolean(2), songNotes.getByte(3), songNotes.getByte(4), Note.valueOf(songNotes.getString(5))));
+                song.addNote(new SongNote(songNotes.getLong(1), songNotes.getBoolean(2), songNotes.getByte(3), songNotes.getByte(4), Note.valueOf(songNotes.getString(5).replaceAll("#$", "X"))));
             }
             return true;
         } catch (SQLException ex) {
