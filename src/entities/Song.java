@@ -49,8 +49,8 @@ public class Song {
         return new SimpleDateFormat("yyyy-MM-dd").format(this.creationDate);
     }
 
-    public SongNote[] getNotes() {
-        return this.notes.toArray(new SongNote[0]);
+    public ArrayList<SongNote> getNotes() {
+        return this.notes;
     }
 
     public double getTickLength() {
