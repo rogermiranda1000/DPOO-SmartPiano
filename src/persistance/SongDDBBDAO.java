@@ -43,7 +43,7 @@ public class SongDDBBDAO implements SongDAO {
     private boolean addSongGivenId(int id, Song song) {
         try {
             if (this.ddbb.runSentence("INSERT INTO Songs(public, name, date, author, tick_length) VALUES (?,?,?,?,?);",
-                    song.getPublic(), song.getName(), song.getDate(), id, song.getTickLength()) > 0) {
+                    song.getPublic(), song.getName(), song.getDate() == null ? "CURRENT_DATE()" : song.getDate(), id, song.getTickLength()) > 0) {
                 // obté l'últim ID insertat (el de Songs)
                 ResultSet rs = this.ddbb.getSentence("SELECT LAST_INSERT_ID();");
                 if (!rs.next()) return false;
