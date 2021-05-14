@@ -22,8 +22,10 @@ public class BusinessFacade {
         this.playlistManager = playlistManager;
     }
 
-    public ArrayList<List> getPlaylist(User u) {
-        ArrayList<List> playlists = this.playlistManager.getPlaylist(u);
+    public ArrayList<List> getPlaylists() {
+        if (this.loggedUser == null) return new ArrayList<>(); // empty array
+
+        ArrayList<List> playlists = this.playlistManager.getPlaylists(this.loggedUser);
         for (List p: playlists) {
             for (Song s: p.getSongs()) this.songManager.updateSong(s);
         }
