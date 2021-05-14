@@ -2,21 +2,21 @@ package model;
 
 import entities.Song;
 import entities.User;
-import persistance.LoggedUserDAO;
+import persistance.PlaylistDAO;
 import persistance.SongDAO;
 import persistance.UserDAO;
 
 public class BusinessFacade {
     private final SongDAO songManager;
     private final UserDAO userManager;
-    private final LoggedUserDAO loggedUserManager;
+    private final PlaylistDAO playlistManager;
 
     private User loggedUser = null;
 
-    public BusinessFacade(SongDAO songManager, UserDAO userManager, LoggedUserDAO loggedUserManager) {
+    public BusinessFacade(SongDAO songManager, UserDAO userManager, PlaylistDAO playlistManager) {
         this.songManager = songManager;
         this.userManager = userManager;
-        this.loggedUserManager = loggedUserManager;
+        this.playlistManager = playlistManager;
     }
 
     /**
@@ -64,7 +64,10 @@ public class BusinessFacade {
      * @return Si s'ha obtingut (true) o no (false) l'usuari
      */
     public boolean login(String nick, String password) {
-        this.loggedUser = this.loggedUserManager.getUser(nick, password);
-        return this.loggedUser != null;
+        this.loggedUser = this.userManager.getUser(nick, password);
+        if (this.loggedUser == null) return false;
+
+        //this.loggedUser.addPlaylist();
+        return true;
     }
 }

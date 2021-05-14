@@ -86,12 +86,4 @@ public class MIDIFactory {
 
         synth.close();
     }
-
-    public static void main(String[] args) throws Exception {
-        DDBBAccess d = new DDBBAccess(new Config(new File("config.json")).readConfig());
-        Song s = MIDIFactory.getSong("name", "author", new Date(), new URL("https://www.mutopiaproject.org/ftp/AscherJ/alice/alice.mid"));
-        new BusinessFacade(new SongDDBBDAO(d), new UserDDBBDAO(d), new LoggedUserDDBBDAO(d)).addDownloadedSong(s);
-        //System.out.println(dao.existsSong(s));
-        //dao.deleteSong(s);
-    }
 }

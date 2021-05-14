@@ -16,7 +16,7 @@ public class Main {
         try {
             Config c = new Config(new File("config.json"));
             DDBBAccess ddbb = new DDBBAccess(c.readConfig());
-            new Controller(c.getScrapping(), new SongDDBBDAO(ddbb), new UserDDBBDAO(ddbb), new LoggedUserDDBBDAO(ddbb));
+            new Controller(c.getScrapping(), new SongDDBBDAO(ddbb), new UserDDBBDAO(ddbb), new PlaylistDDBBDAO(ddbb));
         } catch (FileNotFoundException | SQLException ex) {
             ex.printStackTrace();
         }
