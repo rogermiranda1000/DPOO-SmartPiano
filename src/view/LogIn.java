@@ -233,7 +233,7 @@ public class LogIn extends JDialog implements ActionListener {
         return container;
     }
 
-    public boolean checkPass() {
+    private boolean checkPass() {
         return String.valueOf(passwordRegister.getPassword()).equals(String.valueOf(confirmPasswordRegister.getPassword()));
     }
 
@@ -241,11 +241,11 @@ public class LogIn extends JDialog implements ActionListener {
         JOptionPane.showMessageDialog(this, "Wrong password. Try it again ( ͡❛ ︹ ͡❛)");
     }
 
-    private void wrongLogin() {
+    public void wrongLogin() {
         JOptionPane.showMessageDialog(this, "Wrong LogIn. Try it again ( ͡❛ ︹ ͡❛)");
     }
 
-    private void userCreated() {
+    public void userCreated() {
         JOptionPane.showMessageDialog(this, "User created successfully ¯\\_( ͡❛ ‿‿ ͡❛)_/¯");
     }
 
@@ -254,31 +254,14 @@ public class LogIn extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == loginButton) {
-            if (event.requestLogin(usernameInput.getText(), String.valueOf(passwordInput.getPassword()))) {
-                this.dispose();
-            } else {
-                wrongLogin();
-                usernameInput.setText("");
-                passwordInput.setText("");
-            }
+            event.requestLogin(usernameInput.getText(), String.valueOf(passwordInput.getPassword()));
         } else if (e.getSource() == registerButton) {
             cl.show(mainContent, ("register"));
         } else if (e.getSource() == backButton) {
             cl.show(mainContent, ("login"));
         } else if (e.getSource() == pushResgisterButton) {
-            if (event.requestRegister(usernameRegister.getText(), emailRegister.getText(), String.valueOf(passwordRegister.getPassword())) && checkPass()) {
-                userCreated();
-                usernameRegister.setText("");
-                emailRegister.setText("");
-                passwordRegister.setText("");
-                cl.show(mainContent, ("login"));
-            } else {
-                wrongPass();
-                usernameRegister.setText("");
-                passwordRegister.setText("");
-                confirmPasswordRegister.setText("");
-                emailRegister.setText("");
-            }
+            if (this.checkPass()) this.event.requestRegister(usernameRegister.getText(), emailRegister.getText(), String.valueOf(passwordRegister.getPassword()));
+            else this.wrongPass();
         }
     }
 }
