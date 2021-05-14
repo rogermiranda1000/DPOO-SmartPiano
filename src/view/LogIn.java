@@ -40,8 +40,6 @@ public class LogIn extends JDialog implements ActionListener {
         this.add(mainContent);
         cl = (CardLayout) (mainContent.getLayout());
         cl.show(mainContent, ("login"));
-
-        this.setVisible(true);
     }
 
     public JPanel buildLogin() {
