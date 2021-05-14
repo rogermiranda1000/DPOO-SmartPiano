@@ -12,7 +12,7 @@ public class Settings extends JPanel {
     public static final int HEIGHT = 900;
     public static final int WIDTH  = 1600;
 
-    Settings() {
+    public Settings() {
 
         this.setBackground(ColorConstants.BACKGROUND.getColor());
 

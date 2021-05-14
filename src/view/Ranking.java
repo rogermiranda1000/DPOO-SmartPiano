@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class Ranking extends JPanel {
 
-    Ranking(){
+    public Ranking(){
 
 
         this.setBackground(Color.red);
