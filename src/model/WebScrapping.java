@@ -1,6 +1,6 @@
 package model;
 
-import entities.Song;
+import controller.SongNotifier;
 import org.jsoup.Jsoup;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -8,13 +8,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.security.InvalidParameterException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WebScrapping {
-    public static final String ANONYMOUS_USER = "Anonymous";
+    public static final Pattern USER_PATTERN = Pattern.compile("^(?:by )?(.+?)(?: \\(\\d{4}.\\d{4}\\))?$"); // RegEx time \o.0/
     private static final String LINK = "https://www.mutopiaproject.org/cgibin/make-table.cgi?Instrument=Piano&startat=%d";
     private static final int FILES_PER_LINK = 10;
 
@@ -23,9 +25,19 @@ public class WebScrapping {
     private static final String PATH_MIDI = "body > div.container > div > div > table > tbody > tr:nth-child(%d) > td > table > tbody > tr:nth-child(4) > td:nth-child(2) > a";
     private static final String PATH_DATE = "body > div.container > div > div > table > tbody > tr:nth-child(%d) > td > table > tbody > tr:nth-child(3) > td:nth-child(4)";
 
-    public static Song[] getSongs() {
-        ArrayList<Song> r = new ArrayList<>();
+    /**
+     * S'elimina el 'by' i la data de naixement/mort del usuari. Si no ho té es deixa tal qual.
+     * @param complete String a segmentar
+     * @return String segmentada
+     */
+    private static synchronized String getMatch(String complete) {
+        // se elimina el 'by' y la fecha de nacimiento/muerte del usuario, si no lo tiene se queda igual
+        Matcher matcher = WebScrapping.USER_PATTERN.matcher(complete);
+        if (!matcher.matches()) return ""; // ???
+        return matcher.group(1);
+    }
 
+    public static void getSongs(SongNotifier sn) {
         int desfase = 0;
         boolean end = false;
         while (!end) {
@@ -40,7 +52,7 @@ public class WebScrapping {
                         URL midi = new URL(Jsoup.parse(webContent).selectFirst(String.format(WebScrapping.PATH_MIDI, x)).attr("href"));
                         Date date = new SimpleDateFormat("yyyy/MM/dd").parse(Jsoup.parse(webContent).selectFirst(String.format(WebScrapping.PATH_DATE, x)).text());
 
-                        r.add(MIDIFactory.getSong(song, author.equalsIgnoreCase(WebScrapping.ANONYMOUS_USER) ? "" : author, date, midi));
+                        sn.addSong(MIDIFactory.getSong(song, WebScrapping.getMatch(author), date, midi));
                     } catch (ParseException e) {
                         e.printStackTrace();
                     } catch (InvalidMidiDataException | IOException ex) {
@@ -54,8 +66,6 @@ public class WebScrapping {
                 desfase += WebScrapping.FILES_PER_LINK;
             }
         }
-
-        return r.toArray(new Song[0]);
     }
 
     private static String getURLContent(String url) {
