@@ -11,16 +11,21 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class Songs extends JPanel implements ActionListener {
-    private DefaultTableModel songs = new DefaultTableModel();
-    private DefaultTableModel playlists = new DefaultTableModel();
-    private SongsEvent event;
-    private JTable songsTable = new JTable(songs);
-    private JTable playlistsTable = new JTable(playlists);
+    private final DefaultTableModel songs;
+    private final DefaultTableModel playlists;
+    private final SongsEvent event;
+    private final JTable songsTable;
+    private final JTable playlistsTable;
     private JButton playSongButton, addSongButton, removeSongButton, backToSongsButton, addToPlaylistButton;
-    private JPanel mainContent;
-    private CardLayout cl;
+    private final JPanel mainContent;
+    private final CardLayout cl;
 
-    Songs(SongsEvent songE) {
+    public Songs(SongsEvent songE) {
+        this.songs = new DefaultTableModel();
+        this.playlists = new DefaultTableModel();
+        this.songsTable = new JTable(this.songs);
+        this.playlistsTable = new JTable(this.playlists);
+
         this.event = songE;
 
         //TODO: borrar aquest TODO.

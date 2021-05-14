@@ -14,15 +14,37 @@ import java.util.List;
 
 public class Playlist extends JPanel implements ActionListener, ListSelectionListener {
     private SongsEvent event;
-    private DefaultListModel playlistName = new DefaultListModel();
-    private JList playlistList = new JList(playlistName);
-    private DefaultListModel<String> songsName = new DefaultListModel<>();
-    private JList songsList = new JList(songsName);
+    private final DefaultListModel playlistName;
+    private final JList playlistList;
+    private final DefaultListModel<String> songsName;
+    private final JList songsList;
     private JButton playPlaylistButton;
     private JButton removeSongButton;
     private JButton removePlaylistButton;
     private List selectedValuesList;
 
+    public Playlist() {
+        this.playlistName = new DefaultListModel<>();
+        this.playlistList = new JList(playlistName);
+        this.songsName = new DefaultListModel<>();
+        this.songsList = new JList(songsName);
+
+        this.setBackground(ColorConstants.BACKGROUND.getColor());
+        JPanel playlistView = new JPanel();
+
+        playlistView.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+        playlistView.setBackground(ColorConstants.BACKGROUND.getColor());
+        playlistView.setLayout(new BoxLayout(playlistView, BoxLayout.Y_AXIS));
+        playlistView.add(playlistList());
+        playlistView.add(playlistBotPanel());
+
+        //TODO: ADD PLAYLISTS
+        for (int i = 0; i < 50; i++) {
+            playlistName.addElement(i);
+        }
+
+        this.add(playlistView);
+    }
 
     public JPanel playlistList() {
         JPanel r = new JPanel();
@@ -99,24 +121,6 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
         for (String song : songs) {
             songsName.addElement(song);
         }
-    }
-
-    Playlist() {
-        this.setBackground(ColorConstants.BACKGROUND.getColor());
-        JPanel playlistView = new JPanel();
-
-        playlistView.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
-        playlistView.setBackground(ColorConstants.BACKGROUND.getColor());
-        playlistView.setLayout(new BoxLayout(playlistView, BoxLayout.Y_AXIS));
-        playlistView.add(playlistList());
-        playlistView.add(playlistBotPanel());
-
-        //TODO: ADD PLAYLISTS
-        for (int i = 0; i < 50; i++) {
-            playlistName.addElement(i);
-        }
-
-        this.add(playlistView);
     }
 
     @Override

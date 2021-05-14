@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Piano extends JPanel {
-    Piano(){
+    public Piano(){
         this.setBackground(Color.magenta);
     }
 }
