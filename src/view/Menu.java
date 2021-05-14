@@ -20,7 +20,9 @@ public class Menu extends JFrame implements ActionListener {
     private JPanel mainContent;
     private CardLayout cl;
 
-    public Menu(LoginEvent loginE, MenuEvent menuE, SongsEvent songsE){
+    private LogIn login;
+
+    public Menu(LoginEvent loginE, MenuEvent menuE, SongsEvent songsE) {
         this.event = menuE;
         window = new JFrame("Piano TIME!");
         ImageIcon img = new ImageIcon("images\\icon.jpg");
@@ -28,11 +30,7 @@ public class Menu extends JFrame implements ActionListener {
         window.setVisible(false);
 
         // Login / Register view init //TODO fix
-        LogIn l = new LogIn(loginE, window);
-        if (/* TODO: Controller.getUser*/ false) {
-            window.dispose();
-            return;
-        }
+        this.login = new LogIn(loginE, window);
 
         // Show main view
         window.setSize(WIDTH,HEIGHT);
@@ -57,6 +55,14 @@ public class Menu extends JFrame implements ActionListener {
         cl.show(mainContent, ("songs"));
         songsButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
 
+    }
+
+    public void start() {
+        this.login.setVisible(true);
+        if (/* TODO: Controller.getUser*/ false) {
+            window.dispose();
+            return;
+        }
         window.setVisible(true);
     }
 
@@ -261,5 +267,22 @@ public class Menu extends JFrame implements ActionListener {
         } else if (e.getSource() == exitButton) {
             window.dispose();
         }
+    }
+
+    /* LOGIN/REGISTER FUNCTIONS */
+    public void disposeLogin() {
+        this.login.dispose();
+    }
+
+    public void wrongLogin() {
+        this.login.wrongLogin();
+    }
+
+    public void userCreated() {
+
+    }
+
+    public void wrongCreation() {
+
     }
 }

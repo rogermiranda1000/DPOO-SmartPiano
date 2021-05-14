@@ -19,19 +19,20 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent,SongNotifie
         this.scrapper.start();
 
         this.view = new Menu(this, this, this);
+        this.view.start();
     }
 
 
     @Override
     public void requestLogin(String user, String password) {
-        /*if (this.model.login(user, password)) this.view.dispose();
-        else this.view.wrongLogin();*/ // TODO
+        if (this.model.login(user, password)) this.view.disposeLogin();
+        else this.view.wrongLogin();
     }
 
     @Override
     public void requestRegister(String user, String email, String password) {
-        /*if (this.model.addUser(user, email, password)) this.view.userCreated();
-        else this.view.wrongPass();*/ // TODO
+        if (this.model.addUser(user, email, password)) this.view.userCreated();
+        else this.view.wrongCreation();
     }
 
     @Override
