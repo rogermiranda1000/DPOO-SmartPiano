@@ -43,7 +43,7 @@ public class SongDDBBDAO implements SongDAO {
     private boolean addSongGivenId(int id, Song song) {
         try {
             if (this.ddbb.runSentence("INSERT INTO Songs(public, name, date, author, tick_length) VALUES (?,?,?,?,?);",
-                    song.getPublic(), song.getName(), song.getDate(), id, song.getTickLength()) > 0) {
+                    song.getPublic(), song.getName(), song.getDate() == null ? "CURRENT_DATE()" : song.getDate(), id, song.getTickLength()) > 0) {
                 // obté l'últim ID insertat (el de Songs)
                 ResultSet rs = this.ddbb.getSentence("SELECT LAST_INSERT_ID();");
                 if (!rs.next()) return false;
@@ -95,7 +95,7 @@ public class SongDDBBDAO implements SongDAO {
                     songId);
 
             while (songNotes.next()) {
-                song.addNote(new SongNote(songNotes.getLong(1), songNotes.getBoolean(2), songNotes.getByte(3), songNotes.getByte(4), Note.valueOf(songNotes.getString(5))));
+                song.addNote(new SongNote(songNotes.getLong(1), songNotes.getBoolean(2), songNotes.getByte(3), songNotes.getByte(4), Note.valueOf(songNotes.getString(5).replaceAll("#$", "X"))));
             }
             return true;
         } catch (SQLException ex) {
@@ -106,7 +106,7 @@ public class SongDDBBDAO implements SongDAO {
 
     private Integer getSongId(Song song) {
         try {
-            ResultSet rs = this.ddbb.getSentence("SELECT id FROM Songs JOIN Users ON Users.id = Songs.author WHERE name = ? AND username = ? AND date = ?;",
+            ResultSet rs = this.ddbb.getSentence("SELECT Songs.id FROM Songs JOIN Users ON Users.id = Songs.author WHERE name = ? AND username = ? AND date = ?;",
                     song.getName(), song.getArtist(), song.getDate());
 
             if (!rs.next()) return null; // no hi ha coincidencies
