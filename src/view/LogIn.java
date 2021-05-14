@@ -14,13 +14,15 @@ import java.io.IOException;
 public class LogIn extends JDialog implements ActionListener {
     private static final int WIDTH = 400;
     private static final int HEIGHT = 400;
+    private static final int TXT_WIDTH = 120;
+    private static final int TXT_HEIGHT = 20;
 
     private JButton loginButton, registerButton, backButton, pushResgisterButton;
     private TextField usernameInput, emailRegister, usernameRegister;
-    private JPasswordField passwordInput, passwordRegister;
-    private LoginEvent event;
-    JPanel mainContent;
-    CardLayout cl;
+    private JPasswordField passwordInput, passwordRegister, confirmPasswordRegister;
+    private final LoginEvent event;
+    private final JPanel mainContent;
+    private final CardLayout cl;
 
     public LogIn(LoginEvent event, Frame frame) {
         super(frame, true);
@@ -69,10 +71,10 @@ public class LogIn extends JDialog implements ActionListener {
         username.setMaximumSize(new Dimension(WIDTH, 45));
 
         Label usernameTxt = new Label("Username :");
-        usernameTxt.setPreferredSize(new Dimension(75, 20));
+        usernameTxt.setPreferredSize(new Dimension(75, TXT_HEIGHT));
 
         usernameInput = new TextField();
-        usernameInput.setPreferredSize(new Dimension(180, 20));
+        usernameInput.setPreferredSize(new Dimension(180, TXT_HEIGHT));
 
         username.add(usernameTxt);
         username.add(usernameInput);
@@ -84,10 +86,10 @@ public class LogIn extends JDialog implements ActionListener {
         password.setMaximumSize(new Dimension(WIDTH, 45));
 
         Label passwordTxt = new Label("Password :");
-        passwordTxt.setPreferredSize(new Dimension(75, 20));
+        passwordTxt.setPreferredSize(new Dimension(75, TXT_HEIGHT));
 
         passwordInput = new JPasswordField();
-        passwordInput.setPreferredSize(new Dimension(180, 20));
+        passwordInput.setPreferredSize(new Dimension(180, TXT_HEIGHT));
 
         password.add(passwordTxt);
         password.add(passwordInput);
@@ -148,10 +150,10 @@ public class LogIn extends JDialog implements ActionListener {
         username.setMaximumSize(new Dimension(WIDTH, 45));
 
         Label usernameTxt = new Label("Username :");
-        usernameTxt.setPreferredSize(new Dimension(75, 20));
+        usernameTxt.setPreferredSize(new Dimension(TXT_WIDTH, TXT_HEIGHT));
 
         usernameRegister = new TextField();
-        usernameRegister.setPreferredSize(new Dimension(180, 20));
+        usernameRegister.setPreferredSize(new Dimension(TXT_WIDTH, TXT_HEIGHT));
 
         username.add(usernameTxt);
         username.add(usernameRegister);
@@ -163,10 +165,10 @@ public class LogIn extends JDialog implements ActionListener {
         email.setMaximumSize(new Dimension(WIDTH, 45));
 
         Label emailTxt = new Label("Email :");
-        emailTxt.setPreferredSize(new Dimension(75, 20));
+        emailTxt.setPreferredSize(new Dimension(TXT_WIDTH, 20));
 
         emailRegister = new TextField();
-        emailRegister.setPreferredSize(new Dimension(180, 20));
+        emailRegister.setPreferredSize(new Dimension(TXT_WIDTH, TXT_HEIGHT));
 
         email.add(emailTxt);
         email.add(emailRegister);
@@ -178,13 +180,27 @@ public class LogIn extends JDialog implements ActionListener {
         password.setMaximumSize(new Dimension(WIDTH, 45));
 
         Label passwordTxt = new Label("Password :");
-        passwordTxt.setPreferredSize(new Dimension(75, 20));
+        passwordTxt.setPreferredSize(new Dimension(TXT_WIDTH, TXT_HEIGHT));
 
         passwordRegister = new JPasswordField();
-        passwordRegister.setPreferredSize(new Dimension(180, 20));
+        passwordRegister.setPreferredSize(new Dimension(TXT_WIDTH, TXT_HEIGHT));
 
         password.add(passwordTxt);
         password.add(passwordRegister);
+
+        // Confirm password
+        JPanel confirmPassword = new JPanel();
+        confirmPassword.setBackground(ColorConstants.BACKGROUND.getColor());
+        confirmPassword.setVisible(true);
+        confirmPassword.setMaximumSize(new Dimension(WIDTH, 45));
+
+        Label confirmPasswordTxt = new Label("Confirm Password :");
+        confirmPasswordTxt.setPreferredSize(new Dimension(TXT_WIDTH, TXT_HEIGHT));
+        confirmPasswordRegister = new JPasswordField();
+        confirmPasswordRegister.setPreferredSize(new Dimension(TXT_WIDTH, TXT_HEIGHT));
+
+        confirmPassword.add(confirmPasswordTxt);
+        confirmPassword.add(confirmPasswordRegister);
 
         // Buttons
         JPanel buttons = new JPanel();
@@ -202,6 +218,7 @@ public class LogIn extends JDialog implements ActionListener {
         container.add(header, BorderLayout.CENTER);
         container.add(username, BorderLayout.CENTER);
         container.add(password, BorderLayout.CENTER);
+        container.add(confirmPassword, BorderLayout.CENTER);
         container.add(email, BorderLayout.CENTER);
         container.add(buttons, BorderLayout.CENTER);
 
@@ -216,41 +233,35 @@ public class LogIn extends JDialog implements ActionListener {
         return container;
     }
 
-    private void wrongPass() {
-        JOptionPane.showMessageDialog(this, "Wrong combination. Try it again ( ͡❛ ︹ ͡❛)");
+    private boolean checkPass() {
+        return String.valueOf(passwordRegister.getPassword()).equals(String.valueOf(confirmPasswordRegister.getPassword()));
     }
 
-    private void userCreated() {
+    private void wrongPass() {
+        JOptionPane.showMessageDialog(this, "Wrong password. Try it again ( ͡❛ ︹ ͡❛)");
+    }
+
+    public void wrongLogin() {
+        JOptionPane.showMessageDialog(this, "Wrong LogIn. Try it again ( ͡❛ ︹ ͡❛)");
+    }
+
+    public void userCreated() {
         JOptionPane.showMessageDialog(this, "User created successfully ¯\\_( ͡❛ ‿‿ ͡❛)_/¯");
     }
 
+    //TODO: que es pugui accedir tant amb el nom d'usuari o el mail.
+    //TODO: dir exactament quin camp està malament si no s'accepta password.
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == loginButton) {
-            if (event.requestLogin(usernameInput.getText(), String.valueOf(passwordInput.getPassword()))) {
-                this.dispose();
-            } else {
-                wrongPass();
-                usernameInput.setText("");
-                passwordInput.setText("");
-            }
+            event.requestLogin(usernameInput.getText(), String.valueOf(passwordInput.getPassword()));
         } else if (e.getSource() == registerButton) {
             cl.show(mainContent, ("register"));
         } else if (e.getSource() == backButton) {
             cl.show(mainContent, ("login"));
         } else if (e.getSource() == pushResgisterButton) {
-            if (event.requestRegister(usernameRegister.getText(), emailRegister.getText(), String.valueOf(passwordRegister.getPassword()))) {
-                userCreated();
-                usernameRegister.setText("");
-                emailRegister.setText("");
-                passwordRegister.setText("");
-                cl.show(mainContent, ("login"));
-            } else {
-                wrongPass();
-                usernameRegister.setText("");
-                passwordRegister.setText("");
-                emailRegister.setText("");
-            }
+            if (this.checkPass()) this.event.requestRegister(usernameRegister.getText(), emailRegister.getText(), String.valueOf(passwordRegister.getPassword()));
+            else this.wrongPass();
         }
     }
 }

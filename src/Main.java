@@ -1,8 +1,12 @@
 import controller.Controller;
+import controller.LoginEvent;
+import controller.MenuEvent;
+import controller.SongsEvent;
 import persistance.Config;
 import persistance.DDBBAccess;
 import persistance.SongDDBBDAO;
 import persistance.UserDDBBDAO;
+import view.Menu;
 
 import java.io.File;
 import java.io.FileNotFoundException;
