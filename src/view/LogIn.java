@@ -206,7 +206,7 @@ public class LogIn extends JDialog implements ActionListener {
         buttons.setVisible(true);
         buttons.setMaximumSize(new Dimension(WIDTH, 100));
 
-        backButton = new JButton("Back to view.LogIn");
+        backButton = new JButton("Back to view LogIn");
         pushResgisterButton = new JButton("Register");
 
         buttons.add(backButton, BorderLayout.CENTER);
@@ -247,6 +247,10 @@ public class LogIn extends JDialog implements ActionListener {
         JOptionPane.showMessageDialog(this, "User created successfully ¯\\_( ͡❛ ‿‿ ͡❛)_/¯");
     }
 
+    public void wrongCreation() {
+        JOptionPane.showMessageDialog(this, "This user is already taken. Try it again ( ͡❛ ︹ ͡❛)");
+    }
+
     //TODO: que es pugui accedir tant amb el nom d'usuari o el mail.
     //TODO: dir exactament quin camp està malament si no s'accepta password.
     @Override
@@ -258,6 +262,7 @@ public class LogIn extends JDialog implements ActionListener {
         } else if (e.getSource() == backButton) {
             cl.show(mainContent, ("login"));
         } else if (e.getSource() == pushResgisterButton) {
+            // TODO email contains '@' and '.'
             if (this.checkPass()) this.event.requestRegister(usernameRegister.getText(), emailRegister.getText(), String.valueOf(passwordRegister.getPassword()));
             else this.wrongPass();
         }

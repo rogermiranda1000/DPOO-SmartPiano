@@ -279,10 +279,10 @@ public class Menu extends JFrame implements ActionListener {
     }
 
     public void userCreated() {
-
+        this.login.userCreated();
     }
 
     public void wrongCreation() {
-
+        this.login.wrongCreation();
     }
 }
