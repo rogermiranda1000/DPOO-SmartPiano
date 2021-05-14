@@ -17,6 +17,11 @@ public class BusinessFacade {
         this.songManager = songManager;
         this.userManager = userManager;
         this.playlistManager = playlistManager;
+
+        // TODO debug
+        User u = this.userManager.getUser("uwu", "uwu");
+        u.addAllPlaylist(this.playlistManager.getPlaylist(u));
+        System.out.println();
     }
 
     /**
