@@ -9,11 +9,11 @@ public class Song {
     /**
      * Temps [us] per tick
      */
-    private final double tickLength;
+    private double tickLength;
     private final String songName;
     private final String author;
     private final Date creationDate;
-    private final boolean isPublic;
+    private boolean isPublic;
     private final ArrayList<SongNote> notes;
 
     public Song(String songName, String author, Date creationDate, double tickLength, boolean isPublic) {
@@ -23,6 +23,10 @@ public class Song {
         this.author = author;
         this.creationDate = creationDate;
         this.isPublic = isPublic;
+    }
+
+    public Song(String songName, String author, Date creationDate) {
+        this(songName, author, creationDate, -1, false);
     }
 
     /**
@@ -59,5 +63,13 @@ public class Song {
 
     public boolean getPublic() {
         return this.isPublic;
+    }
+
+    public void setTickLength(double tickLength) {
+        this.tickLength = tickLength;
+    }
+
+    public void setPublic(boolean isPublic) {
+        this.isPublic = isPublic;
     }
 }

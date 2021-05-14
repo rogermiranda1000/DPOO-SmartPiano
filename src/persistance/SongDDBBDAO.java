@@ -1,5 +1,6 @@
 package persistance;
 
+import entities.Note;
 import entities.SongNote;
 import entities.Song;
 
@@ -50,8 +51,8 @@ public class SongDDBBDAO implements SongDAO {
 
                 for (SongNote sn : song.getNotes()) {
                     // hi han cançons que començen/acaben 2 tecles idéntiques al mateix moment (?); ignorem aquestes
-                    this.ddbb.runSentence("INSERT IGNORE INTO SongNotes(note, tick, pressed, song, velocity) VALUES (?,?,?,?,?);",
-                            sn.getNote().toString().replaceAll("X$", "#"), sn.getTick(), sn.isPressed(), songId, sn.getVelocity());
+                    this.ddbb.runSentence("INSERT IGNORE INTO SongNotes(note, tick, pressed, song, velocity, octave) VALUES (?,?,?,?,?,?);",
+                            sn.getNote().toString().replaceAll("X$", "#"), sn.getTick(), sn.isPressed(), songId, sn.getVelocity(), sn.getOctave());
                 }
                 return true;
             }
@@ -78,10 +79,35 @@ public class SongDDBBDAO implements SongDAO {
         return (this.getSongId(song) != null);
     }
 
+    @Override
+    public boolean updateSong(Song song) {
+        try {
+            ResultSet rs = this.ddbb.getSentence("SELECT Songs.id,public,tick_length FROM Songs JOIN Users ON Users.id = Songs.author WHERE name = ? AND username = ? AND date = ?;",
+                    song.getName(), song.getArtist(), song.getDate());
+
+            if (!rs.next()) return false;
+
+            int songId = rs.getInt(1);
+            song.setPublic(rs.getBoolean(2));
+            song.setTickLength(rs.getLong(3));
+
+            ResultSet songNotes = this.ddbb.getSentence("SELECT tick, pressed, velocity, octave, note FROM SongNotes WHERE song = ?;",
+                    songId);
+
+            while (songNotes.next()) {
+                song.addNote(new SongNote(songNotes.getLong(1), songNotes.getBoolean(2), songNotes.getByte(3), songNotes.getByte(4), Note.valueOf(songNotes.getString(5))));
+            }
+            return true;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
     private Integer getSongId(Song song) {
         try {
-            ResultSet rs = this.ddbb.getSentence("SELECT id FROM Songs JOIN Users ON username = ? WHERE name = ? AND date = ?;",
-                    song.getArtist(), song.getName(), song.getDate());
+            ResultSet rs = this.ddbb.getSentence("SELECT id FROM Songs JOIN Users ON Users.id = Songs.author WHERE name = ? AND username = ? AND date = ?;",
+                    song.getName(), song.getArtist(), song.getDate());
 
             if (!rs.next()) return null; // no hi ha coincidencies
             return rs.getInt(1);
