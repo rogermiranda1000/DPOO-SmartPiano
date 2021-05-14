@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class LogIn extends JDialog implements ActionListener {
+public class LogIn extends JDialog implements ActionListener, LogInNotifier {
     private static final int WIDTH = 400;
     private static final int HEIGHT = 400;
     private static final int TXT_WIDTH = 120;
@@ -239,14 +239,22 @@ public class LogIn extends JDialog implements ActionListener {
         JOptionPane.showMessageDialog(this, "Wrong password. Try it again ( ͡❛ ︹ ͡❛)");
     }
 
+    @Override
+    public void disposeLogin() {
+        this.dispose();
+    }
+
+    @Override
     public void wrongLogin() {
         JOptionPane.showMessageDialog(this, "Wrong LogIn. Try it again ( ͡❛ ︹ ͡❛)");
     }
 
+    @Override
     public void userCreated() {
         JOptionPane.showMessageDialog(this, "User created successfully ¯\\_( ͡❛ ‿‿ ͡❛)_/¯");
     }
 
+    @Override
     public void wrongCreation() {
         JOptionPane.showMessageDialog(this, "This user is already taken. Try it again ( ͡❛ ︹ ͡❛)");
     }
