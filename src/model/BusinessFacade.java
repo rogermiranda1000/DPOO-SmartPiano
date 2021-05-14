@@ -19,9 +19,9 @@ public class BusinessFacade {
         this.playlistManager = playlistManager;
 
         // TODO debug
-        User u = this.userManager.getUser("uwu", "uwu");
+        /*User u = this.userManager.getUser("uwu", "uwu");
         u.addAllPlaylist(this.playlistManager.getPlaylist(u));
-        System.out.println();
+        System.out.println();*/
     }
 
     /**
@@ -35,11 +35,12 @@ public class BusinessFacade {
     }
 
     /**
-     * Afegeix una canço som autor VirtualUser
+     * Afegeix una canço som autor VirtualUser.
+     * Accessible des del fil principal i des de SongDownloader (ha de ser syncronized)
      * @param song Canço a afegir
      * @return Si s'ha afegit (true) o hi ha hagut un error (false)
      */
-    public boolean addDownloadedSong(Song song) {
+    public synchronized boolean addDownloadedSong(Song song) {
         if (!this.userManager.existsVirtualUser(song.getArtist())) {
             if (!this.userManager.addVirtualUser(song.getArtist())) return false;
         }
