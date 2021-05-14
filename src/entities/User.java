@@ -17,6 +17,10 @@ public class User {
         this.playlists.add(playlist);
     }
 
+    public void addAllPlaylist(ArrayList<List> playlists) {
+        this.playlists.addAll(playlists);
+    }
+
     public int getPlaylistLenght() {
         return this.playlists.size();
     }
