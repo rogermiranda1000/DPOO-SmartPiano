@@ -108,19 +108,8 @@ public class Songs extends JPanel implements ActionListener {
         JPanel panel = new JPanel();
         panel.setBackground(ColorConstants.MENU.getColor());
 
-        backToSongsButton = new JButton(view.Icon.GOBACK.getIcon());
-        backToSongsButton.setBackground(ColorConstants.BUTTON.getColor());
-        backToSongsButton.setForeground(Color.LIGHT_GRAY);
-        backToSongsButton.setVisible(true);
-        backToSongsButton.setFont(f);
-        backToSongsButton.setFocusable(false);
-
-        addToPlaylistButton = new JButton("+");
-        addToPlaylistButton.setBackground(ColorConstants.BUTTON.getColor());
-        addToPlaylistButton.setForeground(Color.LIGHT_GRAY);
-        addToPlaylistButton.setVisible(true);
-        addToPlaylistButton.setFont(f);
-        addToPlaylistButton.setFocusable(false);
+        backToSongsButton = new GenericButton(view.Icon.GOBACK.getIcon());
+        addToPlaylistButton = new GenericButton("+");
 
         backToSongsButton.addActionListener(this);
         addToPlaylistButton.addActionListener(this);
@@ -139,26 +128,9 @@ public class Songs extends JPanel implements ActionListener {
         JPanel panel = new JPanel();
         panel.setBackground(ColorConstants.MENU.getColor());
 
-        playSongButton = new JButton(view.Icon.PLAY.getIcon());
-        playSongButton.setBackground(ColorConstants.BUTTON.getColor());
-        playSongButton.setForeground(Color.LIGHT_GRAY);
-        playSongButton.setVisible(true);
-        playSongButton.setFont(f);
-        playSongButton.setFocusable(false);
-
-        addSongButton = new JButton("+");
-        addSongButton.setBackground(ColorConstants.BUTTON.getColor());
-        addSongButton.setForeground(Color.LIGHT_GRAY);
-        addSongButton.setVisible(true);
-        addSongButton.setFont(f);
-        addSongButton.setFocusable(false);
-
-        removeSongButton = new JButton("x");
-        removeSongButton.setBackground(ColorConstants.BUTTON.getColor());
-        removeSongButton.setForeground(Color.LIGHT_GRAY);
-        removeSongButton.setVisible(true);
-        removeSongButton.setFont(f);
-        removeSongButton.setFocusable(false);
+        playSongButton = new GenericButton(view.Icon.PLAY.getIcon());
+        addSongButton = new GenericButton("+");
+        removeSongButton = new GenericButton("x");
 
         playSongButton.addActionListener(this);
         addSongButton.addActionListener(this);

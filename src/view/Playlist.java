@@ -73,31 +73,12 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
     }
 
     public JPanel playlistBotPanel() {
-        Font f = new Font(null, Font.BOLD, 20);
         JPanel panel = new JPanel();
         panel.setBackground(ColorConstants.MENU.getColor());
 
-        playPlaylistButton = new JButton(view.Icon.PLAY.getIcon());
-        playPlaylistButton.setBackground(ColorConstants.BUTTON.getColor());
-        playPlaylistButton.setForeground(Color.LIGHT_GRAY);
-        playPlaylistButton.setVisible(true);
-        playPlaylistButton.setFont(f);
-        playPlaylistButton.setFocusable(false);
-
-        removePlaylistButton = new JButton("X");
-        removePlaylistButton.setBackground(ColorConstants.BUTTON.getColor());
-        removePlaylistButton.setForeground(Color.LIGHT_GRAY);
-        removePlaylistButton.setVisible(true);
-        removePlaylistButton.setFont(f);
-        removePlaylistButton.setFocusable(false);
-
-        removeSongButton = new JButton("X");
-        removeSongButton.setBackground(ColorConstants.BUTTON.getColor());
-        removeSongButton.setForeground(Color.LIGHT_GRAY);
-        removeSongButton.setVisible(true);
-        removeSongButton.setFont(new Font(null, Font.PLAIN, 20));
-        removeSongButton.setFocusable(false);
-        removeSongButton.setVisible(false);
+        playPlaylistButton = new GenericButton(view.Icon.PLAY.getIcon());
+        removePlaylistButton = new GenericButton("X");
+        removeSongButton = new GenericButton("X", new Font(null, Font.PLAIN, 20));
 
         playPlaylistButton.addActionListener(this);
         removePlaylistButton.addActionListener(this);

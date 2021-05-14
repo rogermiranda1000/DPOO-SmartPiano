@@ -20,9 +20,9 @@ public class LogIn extends JDialog implements ActionListener {
     private JButton loginButton, registerButton, backButton, pushResgisterButton;
     private TextField usernameInput, emailRegister, usernameRegister;
     private JPasswordField passwordInput, passwordRegister, confirmPasswordRegister;
-    private LoginEvent event;
-    private JPanel mainContent;
-    private CardLayout cl;
+    private final LoginEvent event;
+    private final JPanel mainContent;
+    private final CardLayout cl;
 
     public LogIn(LoginEvent event, Frame frame) {
         super(frame, true);
