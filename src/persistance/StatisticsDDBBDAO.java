@@ -13,11 +13,11 @@ public class StatisticsDDBBDAO implements StatisticsDAO {
     }
 
     public int[] getSongStatistics() {
-        return getStatistics("SELECT COUNT(l.song) AS times, DAY(l.date) AS day, HOUR(l.date) AS hour, HOUR(NOW()) AS hour_now FROM Listen AS l WHERE DATEDIFF(NOW(),l.date) <= 1 GROUP BY day, hour ORDER BY day, hour ASC;");
+        return getStatistics("SELECT COUNT(l.song) AS times, DAY(l.date) AS day, HOUR(l.date) AS hour, HOUR(NOW()) AS hour_now FROM Listen AS l WHERE DATE_SUB(NOW(),INTERVAL 23 HOUR) < l.date GROUP BY day, hour ORDER BY day, hour ASC;");
     }
 
     public int[] getTimeStatistics() {
-        return getStatistics("SELECT SUM(l.seconds_listened) AS seconds, DAY(l.date) AS day, HOUR(l.date) AS hour, HOUR(NOW()) AS hour_now FROM Listen AS l WHERE DATEDIFF(NOW(),l.date) <= 1 GROUP BY day, hour ORDER BY day, hour ASC;");
+        return getStatistics("SELECT SUM(l.seconds_listened) AS seconds, DAY(l.date) AS day, HOUR(l.date) AS hour, HOUR(NOW()) AS hour_now FROM Listen AS l WHERE DATE_SUB(NOW(),INTERVAL 23 HOUR) < l.date GROUP BY day, hour ORDER BY day, hour ASC;");
     }
 
     private int[] getStatistics(String query) {
@@ -30,23 +30,26 @@ public class StatisticsDDBBDAO implements StatisticsDAO {
                 // ddbb falla?
                 return null;
             }
-            r[24] = h.getInt(0);    // El valor 25 dona l'hora actual
+            int now = h.getInt(1);
+            r[24] = now;    // El valor 25 dona l'hora actual
             if (!rs.next()) {
                 // No hi ha reproduccions
                 return r;
             }
 
             int i = 0;
-            int hour = (rs.getInt(2)-1+24)%24;
+            int target;
+            int hour = (r[24]+1+24)%24;
             do {
-                int target = rs.getInt(1);
-                while (target != hour) {
+                target = rs.getInt(3);
+                while (hour != target) {
                     hour = (hour+1)%24;
                     i++;
                 }
-                r[i++] = rs.getInt(0);
+                hour = (hour+1)%24;
+                r[i++] = rs.getInt(1);
 
-            } while (rs.next());
+            } while (rs.next() & i < 24);
 
             return r;
 
