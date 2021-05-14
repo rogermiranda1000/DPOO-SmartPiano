@@ -22,14 +22,15 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent,SongNotifie
 
 
     @Override
-    public boolean requestLogin(String user, String password) {
-        return this.model.login(user, password);
+    public void requestLogin(String user, String password) {
+        /*if (this.model.login(user, password)) this.view.dispose();
+        else this.view.wrongLogin();*/ // TODO
     }
 
     @Override
-    public boolean requestRegister(String user, String email, String password) {
-        // TODO: Check no empty fields [view]
-        return this.model.addUser(user, email, password);
+    public void requestRegister(String user, String email, String password) {
+        /*if (this.model.addUser(user, email, password)) this.view.userCreated();
+        else this.view.wrongPass();*/ // TODO
     }
 
     @Override

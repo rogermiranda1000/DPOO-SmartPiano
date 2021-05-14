@@ -1,6 +1,6 @@
 package controller;
 
 public interface LoginEvent {
-    boolean requestLogin(String user, String password);
-    boolean requestRegister(String user, String email, String password);
+    void requestLogin(String user, String password);
+    void requestRegister(String user, String email, String password);
 }
