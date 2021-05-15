@@ -20,6 +20,7 @@ public interface SongDAO {
 
     /**
      * Obtè les cançons del usuari i les públiques
+     * /!\ La informació de les cançons és la bàsica (no hi ha tecles)
      * @param loggedUser Usuari
      * @return Cançons visibles per l'usuari
      */

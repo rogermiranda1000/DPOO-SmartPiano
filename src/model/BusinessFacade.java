@@ -43,6 +43,7 @@ public class BusinessFacade {
 
     /**
      * Obtè les cançons del usuari loguejat i les públiques
+     * /!\ La informació de les cançons és la bàsica (no hi ha tecles)
      * @return Cançons visibles per l'usuari loguejat
      */
     public ArrayList<Song> getSongs() {
