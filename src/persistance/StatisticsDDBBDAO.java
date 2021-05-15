@@ -1,11 +1,10 @@
 package persistance;
 
 import entities.Song;
-import entities.User;
 
+import java.security.InvalidParameterException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -65,15 +64,36 @@ public class StatisticsDDBBDAO implements StatisticsDAO {
     }
 
     @Override
-    public boolean addListen(Song song, int seconds) {
+    public boolean addListen(String nick, Song song, int seconds) {
         try {
-            ResultSet rs = this.ddbb.getSentence("SELECT RegisteredUsers.id FROM RegisteredUsers JOIN RegisteredUsers ON Users.id = RegisteredUsers.id WHERE username = ?;",
-                    song.getArtist());
-
-            if (!rs.next()) return false; // no hi ha coincidencies
-            return addSongGivenId(rs.getInt(1), song);
+            return this.ddbb.runSentence("INSERT INTO Listen (user, song, seconds_listened) VALUES ( " +
+                            "(SELECT Users.id FROM Users JOIN RegisteredUsers ON Users.id = RegisteredUsers.id WHERE username = ?)," +
+                            "(SELECT Songs.id FROM Songs WHERE Songs.name = ? AND Songs.date = ? AND (SELECT Users.id FROM Users WHERE Users.username = ?))," +
+                            "?);",
+                    nick, song.getName(), song.getDate(), song.getArtist(), seconds)
+                    > 0;
         } catch (SQLException ex) {
             return false;
+        }
+    }
+
+    @Override
+    public Song[] getTop5(int[] plays) {
+        try {
+            if (plays == null || plays.length != 5) {
+                throw new InvalidParameterException();
+            }
+            Arrays.fill(plays, -1);
+            Song[] top = new Song[5];
+            ResultSet rs = this.ddbb.getSentence("SELECT COUNT(*) AS plays, s.name, (SELECT Users.username FROM Users WHERE Users.id = s.author), s.date FROM Songs AS s JOIN Listen AS l ON s.id = l.song GROUP BY s.id ORDER BY plays DESC LIMIT 5;");
+            for (int i = 0; i < 5 && rs.next(); i++) {
+                plays[i] = rs.getInt(1);
+                top[i] = new Song(rs.getString(2), rs.getString(3), rs.getDate(4));
+            }
+
+            return top;
+        } catch (SQLException ex) {
+            return null;
         }
     }
 }
