@@ -38,7 +38,7 @@ CREATE TABLE PianoKeys (
     keyboard CHAR(1),    -- Character/key related to the note
     PRIMARY KEY (note),
     FOREIGN KEY (user)
-    REFERENCES Users(id)
+    REFERENCES RegisteredUsers(id)
 );
 CREATE TABLE Songs (
     id MEDIUMINT NOT NULL AUTO_INCREMENT,
@@ -57,7 +57,7 @@ CREATE TABLE Lists (
     author MEDIUMINT,
     PRIMARY KEY (id),
     FOREIGN KEY (author)
-    REFERENCES Users(id)
+    REFERENCES RegisteredUsers(id)
 );
 CREATE TABLE Ranking (
     user MEDIUMINT NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE Ranking (
     points MEDIUMINT,
     PRIMARY KEY (user, song),
     FOREIGN KEY (user)
-    REFERENCES Users(id),
+    REFERENCES RegisteredUsers(id),
     FOREIGN KEY (song)
     REFERENCES Songs(id)
 );
@@ -76,7 +76,7 @@ CREATE TABLE Listen (
     seconds_listened MEDIUMINT,  -- How many seconds the user listened to the song that specific moment
     PRIMARY KEY (date, user, song),
     FOREIGN KEY (user)
-    REFERENCES Users(id),
+    REFERENCES RegisteredUsers(id),
     FOREIGN KEY (song)
     REFERENCES Songs(id)
 );
