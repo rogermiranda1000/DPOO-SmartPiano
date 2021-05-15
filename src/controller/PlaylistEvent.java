@@ -16,5 +16,5 @@ public interface PlaylistEvent {
      * @param playlist Nom de la playlist a buscar
      * @return Cançons formant playlist
      */
-    ArrayList<Song> getSongs(String playlist);
+    ArrayList<Song> getPlaylistSongs(String playlist);
 }

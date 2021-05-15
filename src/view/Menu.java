@@ -245,7 +245,9 @@ public class Menu extends JFrame implements ActionListener {
                 playingSong.setText("next" /*TODO : player.getPlayingSongTitle() + - + player.getPlayingSongArtist*/);
             }
         } else if (e.getSource() == songsButton) {
-            this.songs.reloadSongs(); // s'entrarà a songs -> recargar
+            // s'entrarà a songs -> recargar
+            this.songs.reloadSongs();
+            this.songs.reloadPlaylists();
             cl.show(mainContent, ("songs"));
 
             resetButtonsColors();
