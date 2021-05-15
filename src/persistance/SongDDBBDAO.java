@@ -42,20 +42,22 @@ public class SongDDBBDAO implements SongDAO {
 
     private boolean addSongGivenId(int id, Song song) {
         try {
-            if (this.ddbb.runSentence("INSERT INTO Songs(public, name, date, author, tick_length) VALUES (?,?,?,?,?);",
-                    song.getPublic(), song.getName(), song.getDate() == null ? "CURRENT_DATE()" : song.getDate(), id, song.getTickLength()) > 0) {
+            int songId;
+            synchronized (this) {
+                if (this.ddbb.runSentence("INSERT INTO Songs(public, name, date, author, tick_length) VALUES (?,?,?,?,?);",
+                    song.getPublic(), song.getName(), song.getDate() == null ? "CURRENT_DATE()" : song.getDate(), id, song.getTickLength()) == 0) return false;
                 // obté l'últim ID insertat (el de Songs)
                 ResultSet rs = this.ddbb.getSentence("SELECT LAST_INSERT_ID();");
                 if (!rs.next()) return false;
-                int songId = rs.getInt(1);
-
-                for (SongNote sn : song.getNotes()) {
-                    // hi han cançons que començen/acaben 2 tecles idéntiques al mateix moment (?); ignorem aquestes
-                    this.ddbb.runSentence("INSERT IGNORE INTO SongNotes(note, tick, pressed, song, velocity, octave) VALUES (?,?,?,?,?,?);",
-                            sn.getNote().toString().replaceAll("X$", "#"), sn.getTick(), sn.isPressed(), songId, sn.getVelocity(), sn.getOctave());
-                }
-                return true;
+                songId = rs.getInt(1);
             }
+
+            for (SongNote sn : song.getNotes()) {
+                // hi han cançons que començen/acaben 2 tecles idéntiques al mateix moment (?); ignorem aquestes
+                this.ddbb.runSentence("INSERT IGNORE INTO SongNotes(note, tick, pressed, song, velocity, octave) VALUES (?,?,?,?,?,?);",
+                        sn.getNote().toString().replaceAll("X$", "#"), sn.getTick(), sn.isPressed(), songId, sn.getVelocity(), sn.getOctave());
+            }
+            return true;
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
