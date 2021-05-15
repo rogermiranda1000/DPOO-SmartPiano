@@ -19,7 +19,7 @@ public class UserDDBBDAO implements UserDAO {
         try {
             Integer id = this.addUserAndGetId(user.getName());
             if (id == null) return false;
-            return (this.ddbb.runSentence("INSERT INTO RegisteredUsers(id, email, password, octave_mode, volume_piano, volume_song) VALUES (?,?,MD5(?),'Single',1,1);",
+            return (this.ddbb.runSentence("INSERT INTO RegisteredUsers(id, email, password, volume_piano, volume_song) VALUES (?,?,MD5(?),1,1);",
                     id, user.getEmail(), password)) > 0;
         } catch (SQLException ex) {
             return false;

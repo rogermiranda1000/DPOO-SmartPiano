@@ -54,7 +54,7 @@ public class PlaylistDDBBDAO implements PlaylistDAO {
     }
 
     @Override
-    public ArrayList<List> getPlaylist(User user) {
+    public ArrayList<List> getPlaylists(User user) {
         ArrayList<List> retorn = new ArrayList<>();
 
         try {

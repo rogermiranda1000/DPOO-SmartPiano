@@ -72,4 +72,9 @@ public class Song {
     public void setPublic(boolean isPublic) {
         this.isPublic = isPublic;
     }
+
+    @Override
+    public String toString() {
+        return this.songName + ", per " + this.author;
+    }
 }

@@ -19,5 +19,5 @@ public interface PlaylistDAO {
      * @param user Usuari a consultar les playlist
      * @return Playlist del usuari
      */
-    ArrayList<List> getPlaylist(User user);
+    ArrayList<List> getPlaylists(User user);
 }
