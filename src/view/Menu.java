@@ -2,6 +2,7 @@ package view;
 
 import controller.LoginEvent;
 import controller.MenuEvent;
+import controller.PlaylistEvent;
 import controller.SongsEvent;
 
 import javax.swing.*;
@@ -20,7 +21,10 @@ public class Menu extends JFrame implements ActionListener {
     private JPanel mainContent;
     private CardLayout cl;
 
-    public Menu(LoginEvent loginE, MenuEvent menuE, SongsEvent songsE){
+    private final LogIn login;
+    private final Playlist playlist;
+
+    public Menu(LoginEvent loginE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE) {
         this.event = menuE;
         window = new JFrame("Piano TIME!");
         ImageIcon img = new ImageIcon("images\\icon.jpg");
@@ -28,11 +32,7 @@ public class Menu extends JFrame implements ActionListener {
         window.setVisible(false);
 
         // Login / Register view init //TODO fix
-        LogIn l = new LogIn(loginE, window);
-        if (/* TODO: Controller.getUser*/ false) {
-            window.dispose();
-            return;
-        }
+        this.login = new LogIn(loginE, window);
 
         // Show main view
         window.setSize(WIDTH,HEIGHT);
@@ -45,9 +45,10 @@ public class Menu extends JFrame implements ActionListener {
         window.add(topPanel(), BorderLayout.NORTH);
 
         // Adding layouts
+        this.playlist = new Playlist(playlistE);
         mainContent = new JPanel(new CardLayout());
         mainContent.add(new Songs(songsE), "songs");
-        mainContent.add(new Playlist(), "playlists");
+        mainContent.add(this.playlist, "playlists");
         mainContent.add(new Piano(), "piano");
         mainContent.add(new Ranking(), "ranking");
         mainContent.add(new Settings(), "settings");
@@ -57,6 +58,14 @@ public class Menu extends JFrame implements ActionListener {
         cl.show(mainContent, ("songs"));
         songsButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
 
+    }
+
+    public void start() {
+        this.login.setVisible(true);
+        if (/* TODO: Controller.getUser*/ false) {
+            window.dispose();
+            return;
+        }
         window.setVisible(true);
     }
 
@@ -239,6 +248,7 @@ public class Menu extends JFrame implements ActionListener {
             resetButtonsColors();
             songsButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == playlistButton) {
+            this.playlist.reloadPlaylists(); // s'entrarà a playlists -> recargar
             cl.show(mainContent, ("playlists"));
 
             resetButtonsColors();
@@ -261,5 +271,22 @@ public class Menu extends JFrame implements ActionListener {
         } else if (e.getSource() == exitButton) {
             window.dispose();
         }
+    }
+
+    /* LOGIN/REGISTER FUNCTIONS */
+    public void disposeLogin() {
+        this.login.disposeLogin();
+    }
+
+    public void wrongLogin() {
+        this.login.wrongLogin();
+    }
+
+    public void userCreated() {
+        this.login.userCreated();
+    }
+
+    public void wrongCreation() {
+        this.login.wrongCreation();
     }
 }
