@@ -88,12 +88,21 @@ public class SongDDBBDAO implements SongDAO {
 
             if (!rs.next()) return false;
 
-            int songId = rs.getInt(1);
             song.setPublic(rs.getBoolean(2));
             song.setTickLength(rs.getLong(3));
+            song.setScore(0); // TODO
 
+            return (this.updateSongNotes(song, rs.getInt(1)));
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+    private boolean updateSongNotes(Song song, int id) {
+        try {
             ResultSet songNotes = this.ddbb.getSentence("SELECT tick, pressed, velocity, octave, note FROM SongNotes WHERE song = ?;",
-                    songId);
+                    id);
 
             while (songNotes.next()) {
                 song.addNote(new SongNote(songNotes.getLong(1), songNotes.getBoolean(2), songNotes.getByte(3), songNotes.getByte(4), Note.valueOf(songNotes.getString(5).replaceAll("#$", "X"))));
@@ -107,11 +116,21 @@ public class SongDDBBDAO implements SongDAO {
 
     @Override
     public ArrayList<Song> getAccessibleSongs(String loggedUser) {
-        ArrayList<Song> r = new ArrayList<>();
+        try {
+            ResultSet rs = this.ddbb.getSentence("SELECT Songs.id, Songs.name, (SELECT Users.username FROM Users WHERE Songs.author = Users.id) AS creator, Songs.date, Songs.tick_length, Songs.public FROM Songs WHERE Songs.author = (SELECT Users.id FROM Users JOIN RegisteredUsers RU ON RU.id = Users.id WHERE Users.username = ?) OR Songs.public = true;",
+                    loggedUser);
 
-
-
-        return r;
+            ArrayList<Song> r = new ArrayList<>();
+            while (rs.next()) {
+                Song current = new Song(rs.getString(2), rs.getString(3), rs.getDate(4), rs.getDouble(5), rs.getBoolean(6), 0.f); // TODO score
+                if (!this.updateSongNotes(current, rs.getInt(1))) return null;
+                r.add(current);
+            }
+            return r;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 
     private Integer getSongId(Song song) {

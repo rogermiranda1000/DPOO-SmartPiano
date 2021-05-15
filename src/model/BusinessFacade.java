@@ -40,6 +40,11 @@ public class BusinessFacade {
         return this.loggedUserPlaylists;
     }
 
+
+    /**
+     * Obtè les cançons del usuari loguejat i les públiques
+     * @return Cançons visibles per l'usuari loguejat
+     */
     public ArrayList<Song> getSongs() {
         if (this.loggedUser == null) return new ArrayList<>(); // empty array
 

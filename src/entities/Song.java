@@ -14,8 +14,8 @@ public class Song {
     private final String author;
     private final Date creationDate;
     private boolean isPublic;
+    private Float score;
     private final ArrayList<SongNote> notes;
-    private final Float score;
 
     public Song(String songName, String author, Date creationDate, double tickLength, boolean isPublic, Float score) {
         this.notes = new ArrayList<>();
@@ -71,10 +71,18 @@ public class Song {
         this.tickLength = tickLength;
     }
 
+    public void setScore(float score) {
+        this.score = score;
+    }
+
     public void setPublic(boolean isPublic) {
         this.isPublic = isPublic;
     }
 
+    /**
+     * Obté la puntuació de la canço
+     * @return Mitjana de les puntuacions [@Nullable]
+     */
     public Float getScore() {
         return this.score;
     }

@@ -23,6 +23,7 @@ public class Menu extends JFrame implements ActionListener {
 
     private final LogIn login;
     private final Playlist playlist;
+    private final Songs songs;
 
     public Menu(LoginEvent loginE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE) {
         this.event = menuE;
@@ -46,8 +47,9 @@ public class Menu extends JFrame implements ActionListener {
 
         // Adding layouts
         this.playlist = new Playlist(playlistE);
+        this.songs = new Songs(songsE);
         mainContent = new JPanel(new CardLayout());
-        mainContent.add(new Songs(songsE), "songs");
+        mainContent.add(this.songs, "songs");
         mainContent.add(this.playlist, "playlists");
         mainContent.add(new Piano(), "piano");
         mainContent.add(new Ranking(), "ranking");
@@ -243,6 +245,7 @@ public class Menu extends JFrame implements ActionListener {
                 playingSong.setText("next" /*TODO : player.getPlayingSongTitle() + - + player.getPlayingSongArtist*/);
             }
         } else if (e.getSource() == songsButton) {
+            this.songs.reloadSongs(); // s'entrarà a songs -> recargar
             cl.show(mainContent, ("songs"));
 
             resetButtonsColors();

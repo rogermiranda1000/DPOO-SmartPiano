@@ -51,9 +51,6 @@ public class Songs extends JPanel implements ActionListener {
         songs.addColumn("Duration");
         songs.addColumn("Punctuation");
 
-        //TODO: Update songs
-        for (Song s : this.event.getUserSongs()) addSongToTable(s);
-
         songsTable.setBounds(30, 40, 80, 90);
         songsTable.setFont(f);
         Dimension dim = new Dimension(20, 2);
@@ -69,6 +66,10 @@ public class Songs extends JPanel implements ActionListener {
         songsList.add(songsBotPanel());
         songsList.setBackground(ColorConstants.BACKGROUND.getColor());
         return songsList;
+    }
+
+    public void reloadSongs() {
+        for (Song s : this.event.getUserSongs()) addSongToTable(s);
     }
 
     public JPanel addToPlaylist(){
