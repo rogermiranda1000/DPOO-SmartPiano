@@ -39,7 +39,7 @@ public class DDBBAccess {
      * @return ResultSet de la consulta
      * @throws SQLException No s'ha pogut executar la sentència
      */
-    public ResultSet getSentence(String sql, Object... params) throws SQLException {
+    public synchronized ResultSet getSentence(String sql, Object... params) throws SQLException {
         PreparedStatement stmt = this.ddbb.prepareStatement(sql);
         int x;
         for (x = 0; x < params.length; x++) stmt.setObject(x+1, params[x]);
@@ -57,7 +57,7 @@ public class DDBBAccess {
      * @return Nº files afectades
      * @throws SQLException No s'ha pogut executar la sentència
      */
-    public int runSentence(String sql, Object... params) throws SQLException {
+    public synchronized int runSentence(String sql, Object... params) throws SQLException {
         PreparedStatement stmt = this.ddbb.prepareStatement(sql);
         int x;
         for (x = 0; x < params.length; x++) stmt.setObject(x+1, params[x]);
