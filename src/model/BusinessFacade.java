@@ -14,22 +14,30 @@ public class BusinessFacade {
     private final UserDAO userManager;
     private final PlaylistDAO playlistManager;
 
-    private User loggedUser = null;
+    private User loggedUser;
+    private ArrayList<List> loggedUserPlaylists;
 
     public BusinessFacade(SongDAO songManager, UserDAO userManager, PlaylistDAO playlistManager) {
         this.songManager = songManager;
         this.userManager = userManager;
         this.playlistManager = playlistManager;
+
+        this.loggedUser = null;
+        this.loggedUserPlaylists = null;
+    }
+
+    private void updatePlaylists() {
+        if (this.loggedUser == null) this.loggedUserPlaylists = null; // empty array
+
+        this.loggedUserPlaylists = this.playlistManager.getPlaylists(this.loggedUser);
+        for (List p: this.loggedUserPlaylists) {
+            for (Song s: p.getSongs()) this.songManager.updateSong(s);
+        }
     }
 
     public ArrayList<List> getPlaylists() {
-        if (this.loggedUser == null) return new ArrayList<>(); // empty array
-
-        ArrayList<List> playlists = this.playlistManager.getPlaylists(this.loggedUser);
-        for (List p: playlists) {
-            for (Song s: p.getSongs()) this.songManager.updateSong(s);
-        }
-        return playlists;
+        if (this.loggedUserPlaylists == null) this.updatePlaylists();
+        return this.loggedUserPlaylists;
     }
 
     /**
