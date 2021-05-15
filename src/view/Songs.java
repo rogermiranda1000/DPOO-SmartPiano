@@ -1,7 +1,6 @@
 package view;
 
 import controller.SongsEvent;
-import entities.List;
 import entities.Song;
 
 import javax.swing.*;
@@ -70,10 +69,12 @@ public class Songs extends JPanel implements ActionListener {
     }
 
     public void reloadSongs() {
-        for (Song s : this.event.getUserSongs()) addSongToTable(s);
+        this.clearSongsTable();
+        for (Song s : this.event.getUserSongs()) this.addSongToTable(s);
     }
 
     public void reloadPlaylists() {
+        this.clearPlaylistTable();
         for (String l : this.event.getPlaylists()) this.addPlaylistToTable(l);
     }
 
@@ -151,19 +152,24 @@ public class Songs extends JPanel implements ActionListener {
         songs.addRow(new Object[]{song.getName(), song.getArtist(), song.getDuration(), song.getScore()});
     }
 
-    private void clearSongs() {
-        int count;
-
-        count = this.songs.getRowCount();
+    private void clearSongsTable() {
+        int count = this.songs.getRowCount();
         while (count > 0){
             this.songs.removeRow(count-1);
-
             count = this.songs.getRowCount();
         }
     }
 
     private void addPlaylistToTable(String title) {
         playlists.addRow(new Object[]{title});
+    }
+
+    private void clearPlaylistTable() {
+        int rowCount = this.playlists.getRowCount();
+        while (rowCount > 0) {
+            this.playlists.removeRow(rowCount - 1);
+            rowCount = this.playlists.getRowCount();
+        }
     }
 
     private void removeSongFromTable(int rowNum) {
