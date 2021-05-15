@@ -48,7 +48,7 @@ public class BusinessFacade {
      * @param song Canço a afegir
      * @return Si s'ha afegit (true) o hi ha hagut un error (false)
      */
-    public synchronized boolean addDownloadedSong(Song song) {
+    public boolean addDownloadedSong(Song song) {
         if (!this.userManager.existsVirtualUser(song.getArtist())) {
             if (!this.userManager.addVirtualUser(song.getArtist())) return false;
         }
@@ -59,7 +59,7 @@ public class BusinessFacade {
         return this.songManager.deleteSong(song);
     }
 
-    public boolean existsSong(Song song) {
+    public synchronized boolean existsSong(Song song) {
         return this.songManager.existsSong(song);
     }
 
