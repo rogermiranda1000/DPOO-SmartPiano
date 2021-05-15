@@ -40,7 +40,7 @@ public class SongDDBBDAO implements SongDAO {
         }
     }
 
-    private boolean addSongGivenId(int id, Song song) {
+    private synchronized boolean addSongGivenId(int id, Song song) {
         try {
             if (this.ddbb.runSentence("INSERT INTO Songs(public, name, date, author, tick_length) VALUES (?,?,?,?,?);",
                     song.getPublic(), song.getName(), song.getDate() == null ? "CURRENT_DATE()" : song.getDate(), id, song.getTickLength()) > 0) {
