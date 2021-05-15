@@ -1,9 +1,13 @@
 package persistance;
 
+import entities.Song;
+import entities.User;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 public class StatisticsDDBBDAO implements StatisticsDAO {
     private final DDBBAccess ddbb;
@@ -12,10 +16,12 @@ public class StatisticsDDBBDAO implements StatisticsDAO {
         this.ddbb = ddbb;
     }
 
+    @Override
     public int[] getSongStatistics() {
         return getStatistics("SELECT COUNT(l.song) AS times, DAY(l.date) AS day, HOUR(l.date) AS hour, HOUR(NOW()) AS hour_now FROM Listen AS l WHERE DATE_SUB(NOW(),INTERVAL 23 HOUR) < l.date GROUP BY day, hour ORDER BY day, hour ASC;");
     }
 
+    @Override
     public int[] getTimeStatistics() {
         return getStatistics("SELECT SUM(l.seconds_listened) AS seconds, DAY(l.date) AS day, HOUR(l.date) AS hour, HOUR(NOW()) AS hour_now FROM Listen AS l WHERE DATE_SUB(NOW(),INTERVAL 23 HOUR) < l.date GROUP BY day, hour ORDER BY day, hour ASC;");
     }
@@ -55,6 +61,19 @@ public class StatisticsDDBBDAO implements StatisticsDAO {
 
         } catch (SQLException ex) {
             return null;
+        }
+    }
+
+    @Override
+    public boolean addListen(Song song, int seconds) {
+        try {
+            ResultSet rs = this.ddbb.getSentence("SELECT RegisteredUsers.id FROM RegisteredUsers JOIN RegisteredUsers ON Users.id = RegisteredUsers.id WHERE username = ?;",
+                    song.getArtist());
+
+            if (!rs.next()) return false; // no hi ha coincidencies
+            return addSongGivenId(rs.getInt(1), song);
+        } catch (SQLException ex) {
+            return false;
         }
     }
 }
