@@ -1,6 +1,7 @@
 package view;
 
 import controller.SongsEvent;
+import entities.List;
 import entities.Song;
 
 import javax.swing.*;
@@ -72,6 +73,10 @@ public class Songs extends JPanel implements ActionListener {
         for (Song s : this.event.getUserSongs()) addSongToTable(s);
     }
 
+    public void reloadPlaylists() {
+        for (String l : this.event.getPlaylists()) this.addPlaylistToTable(l);
+    }
+
     public JPanel addToPlaylist(){
         JPanel playlistsList = new JPanel();
         Font f = new Font(null, Font.PLAIN, 16);
@@ -80,9 +85,6 @@ public class Songs extends JPanel implements ActionListener {
 
         // Create columns
         playlists.addColumn("Playlist");
-
-        //TODO: add Playlists from database
-        for (int i = 0; i < 100; i++) addPlaylistToTable(String.valueOf(i));
 
         playlistsTable.setBounds(30, 40, 80, 90);
         playlistsTable.setFont(f);
