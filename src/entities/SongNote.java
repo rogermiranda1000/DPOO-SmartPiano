@@ -7,11 +7,11 @@ public class SongNote implements Comparable<SongNote> {
     private final byte octave;
     private final Note note;
 
-    public SongNote(long tick, boolean pressed, byte velocity, byte octava, Note note) {
+    public SongNote(long tick, boolean pressed, byte velocity, byte octave, Note note) {
         this.tick = tick;
         this.pressed = pressed;
         this.velocity = velocity;
-        this.octave = octava;
+        this.octave = octave;
         this.note = note;
     }
 

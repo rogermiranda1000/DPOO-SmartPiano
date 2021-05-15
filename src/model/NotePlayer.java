@@ -46,7 +46,7 @@ public class NotePlayer extends Thread {
      * Constructor del singleton
      */
     public NotePlayer() {
-        this(new Song("","",null, 1));
+        this(new Song("","",null, 1, false));
     }
 
     /**
