@@ -1,6 +1,9 @@
 package persistance;
 
 import entities.Song;
+import entities.User;
+
+import java.util.ArrayList;
 
 public interface SongDAO {
     boolean addSong(Song song);
@@ -14,4 +17,11 @@ public interface SongDAO {
      * @return Si s'ha realitzat exitosament (true), o no (false)
      */
     boolean updateSong(Song song);
+
+    /**
+     * Obtè les cançons del usuari i les públiques
+     * @param loggedUser Usuari
+     * @return Cançons visibles per l'usuari
+     */
+    ArrayList<Song> getAccessibleSongs(String loggedUser);
 }

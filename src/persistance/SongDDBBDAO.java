@@ -6,6 +6,7 @@ import entities.Song;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class SongDDBBDAO implements SongDAO {
     private final DDBBAccess ddbb;
@@ -102,6 +103,15 @@ public class SongDDBBDAO implements SongDAO {
             ex.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public ArrayList<Song> getAccessibleSongs(String loggedUser) {
+        ArrayList<Song> r = new ArrayList<>();
+
+
+
+        return r;
     }
 
     private Integer getSongId(Song song) {
