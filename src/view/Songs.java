@@ -1,9 +1,9 @@
 package view;
 
 import controller.SongsEvent;
+import entities.Song;
 
 import javax.swing.*;
-import javax.swing.Icon;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -28,8 +28,6 @@ public class Songs extends JPanel implements ActionListener {
 
         this.event = songE;
 
-        //TODO: borrar aquest TODO.
-        // Adding layouts
         mainContent = new JPanel(new CardLayout());
         mainContent.add(songsList(), "songs");
         mainContent.add(addToPlaylist(), "playlists");
@@ -53,8 +51,8 @@ public class Songs extends JPanel implements ActionListener {
         songs.addColumn("Duration");
         songs.addColumn("Punctuation");
 
-        //TODO: Add songs from database
-        for (int i = 0; i < 300; i++) addSongToTable(String.valueOf(i), "a", "a", "a");
+        //TODO: Update songs
+        for (Song s : this.event.getUserSongs()) addSongToTable(s);
 
         songsTable.setBounds(30, 40, 80, 90);
         songsTable.setFont(f);
@@ -146,8 +144,19 @@ public class Songs extends JPanel implements ActionListener {
         return panel;
     }
 
-    private void addSongToTable(String title, String artist, String duration, String score) {
-        songs.addRow(new Object[]{title, artist, duration, score});
+    private void addSongToTable(Song song) {
+        songs.addRow(new Object[]{song.getName(), song.getArtist(), song.getDuration(), song.getScore()});
+    }
+
+    private void clearSongs() {
+        int count;
+
+        count = this.songs.getRowCount();
+        while (count > 0){
+            this.songs.removeRow(count-1);
+
+            count = this.songs.getRowCount();
+        }
     }
 
     private void addPlaylistToTable(String title) {
@@ -197,7 +206,7 @@ public class Songs extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ArrayList<String> titles = new ArrayList<String>();
+        ArrayList<String> titles = new ArrayList<>();
         int[] selectedSongs = songsTable.getSelectedRows();
         int[] selectedPlaylists = playlistsTable.getSelectedRows();
 
@@ -225,16 +234,15 @@ public class Songs extends JPanel implements ActionListener {
         } else if (e.getSource() == backToSongsButton) {
             cl.show(mainContent, ("songs"));
         } else if (e.getSource() == addToPlaylistButton) {
-            if (selectedPlaylists.length == 0) {
-                popUpNoPlaylistSelected();
-            } else {
+            if (selectedPlaylists.length == 0) this.popUpNoPlaylistSelected();
+            else {
                 for (int i = selectedPlaylists.length - 1; i >= 0; i--) {
                     // playlist
-                    for (int j = selectedSongs.length - 1; i >= 0; i--) {
+                    for (int j = selectedSongs.length - 1; j >= 0; j--) {
                         // song
                     }
                 }
-                popUpSongsAdded();
+                this.popUpSongsAdded();
                 cl.show(mainContent,("songs"));
 
                 //TODO: update database & list

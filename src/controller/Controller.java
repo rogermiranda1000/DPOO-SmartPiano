@@ -78,4 +78,9 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         }
         return null;
     }
+
+    @Override
+    public ArrayList<Song> getUserSongs() {
+        return this.model.getSongs();
+    }
 }

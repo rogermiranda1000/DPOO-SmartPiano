@@ -32,6 +32,12 @@ public class BusinessFacade {
         return playlists;
     }
 
+    public ArrayList<Song> getSongs() {
+        if (this.loggedUser == null) return new ArrayList<>(); // empty array
+
+        return this.songManager.getAccessibleSongs(this.loggedUser.getName());
+    }
+
     /**
      * Afegeix una canço som autor RegisteredUser
      * @param song Canço a afegir
