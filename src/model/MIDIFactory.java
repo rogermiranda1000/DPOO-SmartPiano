@@ -30,7 +30,7 @@ public class MIDIFactory {
 
         double tickLength = (double) sequence.getMicrosecondLength() / sequence.getTickLength();
 
-        Song r = new Song(song, author, creation, tickLength);
+        Song r = new Song(song, author, creation, tickLength, true);
 
         for (Track track : sequence.getTracks()) {
             //System.out.println("Track " + trackNumber + ": size = " + track.size());
