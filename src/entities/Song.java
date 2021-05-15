@@ -16,6 +16,7 @@ public class Song {
     private boolean isPublic;
     private Float score;
     private final ArrayList<SongNote> notes;
+    private double duration;
 
     public Song(String songName, String author, Date creationDate, double tickLength, boolean isPublic, Float score) {
         this.notes = new ArrayList<>();
@@ -25,6 +26,11 @@ public class Song {
         this.creationDate = creationDate;
         this.isPublic = isPublic;
         this.score = score;
+    }
+
+    public Song(String songName, String author, Date creationDate, Float score, double duration) {
+        this(songName, author, creationDate, -1, false, score);
+        this.duration = duration;
     }
 
     public Song(String songName, String author, Date creationDate) {
@@ -92,6 +98,7 @@ public class Song {
      * @return Segons que dura la canço
      */
     public double getDuration() {
+        if (this.notes.size() == 0) return this.duration; // no hi ha canço -> retorna la durada guardada
         // Al tenir les notes ordenades per temps, la última del array és la última en sonar
         return (this.notes.get(this.notes.size()-1).getTick() * this.tickLength) / (1000 * 1000);
     }
