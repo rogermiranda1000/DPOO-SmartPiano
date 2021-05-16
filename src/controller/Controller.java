@@ -39,9 +39,8 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     }
 
     @Override
-    public boolean toggleLoop() {
+    public void toggleLoop() {
         // TODO: Check in player if loop mode on.
-        return false;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package controller;
 
 public interface MenuEvent {
-    boolean toggleLoop();
+    void toggleLoop();
 
     int currentSongPos();
 

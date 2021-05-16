@@ -218,14 +218,10 @@ public class Menu extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        /* BOTTOM BAR BUTTONS */
         if(e.getSource() == loopButton) {
-            if(event.toggleLoop()){
-                loopButton.setForeground(Color.LIGHT_GRAY);
-                // TODO: player.setLoopState(false);
-            } else {
-                loopButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
-                // TODO: player.setLoopState(true);
-            }
+            this.loopButton.setForeground( this.loopButton.getForeground() == ColorConstants.ACTIVE_BUTTON.getColor() ? Color.LIGHT_GRAY : ColorConstants.ACTIVE_BUTTON.getColor() ); // toggle button's color
+            this.event.toggleLoop();
         } else if (e.getSource() == backButton) {
             if(event.currentSongPos() > 1){
                 //TODO: player.playBackSong();
@@ -244,7 +240,11 @@ public class Menu extends JFrame implements ActionListener {
                 //TODO: player.playNextSong();
                 playingSong.setText("next" /*TODO : player.getPlayingSongTitle() + - + player.getPlayingSongArtist*/);
             }
-        } else if (e.getSource() == songsButton) {
+        } else if (e.getSource() == this.shuffleButton) {
+
+        }
+        /* TOP BAR BUTTONS */
+        else if (e.getSource() == songsButton) {
             // s'entrarà a songs -> recargar
             this.songs.reloadSongs();
             this.songs.reloadPlaylists();
