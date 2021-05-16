@@ -5,7 +5,7 @@ import entities.Song;
 import model.NotePlayer;
 import view.PlayingSongNotifier;
 
-public class MusicController implements SongEnder, MenuEvent {
+public class MusicController implements SongEnder, PlaylistBarEvent {
     // TODO syncronized?
     private NotePlayer player;
     private boolean isPlaying;
