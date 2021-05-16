@@ -10,7 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Menu extends JFrame implements ActionListener {
+public class Menu extends JFrame implements ActionListener, PlayingSongNotifier {
     public static final int HEIGHT = 900;
     public static final int WIDTH  = 1600;
     private JButton playButton, loopButton, nextButton, backButton, shuffleButton;
@@ -27,6 +27,8 @@ public class Menu extends JFrame implements ActionListener {
 
     public Menu(LoginEvent loginE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE) {
         this.event = menuE;
+        this.event.setPlayingSongListner(this);
+
         window = new JFrame("Piano TIME!");
         ImageIcon img = new ImageIcon("images\\icon.jpg");
         window.setIconImage(img.getImage());
@@ -289,5 +291,10 @@ public class Menu extends JFrame implements ActionListener {
 
     public void wrongCreation() {
         this.login.wrongCreation();
+    }
+
+    @Override
+    public void newSongPlaying(String songName) {
+        this.playingSong.setText(songName);
     }
 }

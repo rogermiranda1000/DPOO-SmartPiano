@@ -3,6 +3,7 @@ package controller;
 import entities.List;
 import entities.Song;
 import model.NotePlayer;
+import view.PlayingSongNotifier;
 
 public class MusicController implements SongEnder, MenuEvent {
     // TODO syncronized?
@@ -13,6 +14,7 @@ public class MusicController implements SongEnder, MenuEvent {
     private float volume;
     private boolean isRandom;
     private boolean isLooping;
+    private PlayingSongNotifier notifier;
 
     public MusicController() {
         this.isPlaying = true;
@@ -45,6 +47,8 @@ public class MusicController implements SongEnder, MenuEvent {
     private void playNext() {
         this.player = new NotePlayer(this.getCurrentSong(), volume, this);
         this.player.setPlay(this.isPlaying);
+
+        if (this.notifier != null) this.notifier.newSongPlaying(this.getCurrentSong().toString());
     }
 
     @Override
@@ -86,8 +90,7 @@ public class MusicController implements SongEnder, MenuEvent {
     }
 
     @Override
-    public String getActualSong() {
-        return this.getCurrentSong().toString();
+    public void setPlayingSongListner(PlayingSongNotifier notifier) {
+        this.notifier = notifier;
     }
-
 }
