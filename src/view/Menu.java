@@ -1,58 +1,56 @@
 package view;
 
-import controller.LoginEvent;
-import controller.MenuEvent;
-import controller.PlaylistEvent;
-import controller.SongsEvent;
+import controller.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Menu extends JFrame implements ActionListener {
+public class Menu extends JFrame implements ActionListener, PlayingSongNotifier {
     public static final int HEIGHT = 900;
-    public static final int WIDTH  = 1600;
+    public static final int WIDTH = 1600;
     private JButton playButton, loopButton, nextButton, backButton, shuffleButton;
-    private JButton songsButton, playlistButton, pianoButton, rankingButton, settingsButton,exitButton;
+    private JButton songsButton, playlistButton, pianoButton, rankingButton, settingsButton, exitButton;
     private JLabel playingSong;
-    private MenuEvent event;
-    private JFrame window;
-    private JPanel mainContent;
-    private CardLayout cl;
+    private final MenuEvent event;
+    private final PlaylistBarEvent playE;
+    private final JPanel mainContent;
+    private final CardLayout cl;
 
-    private final LogIn login;
     private final Playlist playlist;
+    private final Songs songs;
 
-    public Menu(LoginEvent loginE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE) {
+    public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE) {
         this.event = menuE;
-        window = new JFrame("Piano TIME!");
-        ImageIcon img = new ImageIcon("images\\icon.jpg");
-        window.setIconImage(img.getImage());
-        window.setVisible(false);
+        this.playE = playE;
+        playE.setPlayingSongListner(this);
 
-        // Login / Register view init //TODO fix
-        this.login = new LogIn(loginE, window);
+        this.setTitle("Piano TIME!");
+        ImageIcon img = new ImageIcon("images\\icon.jpg");
+        this.setIconImage(img.getImage());
+        this.setVisible(false);
 
         // Show main view
-        window.setSize(WIDTH,HEIGHT);
-        window.setLocationRelativeTo(null);
-        window.setResizable(false);
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setSize(WIDTH, HEIGHT);
+        this.setLocationRelativeTo(null);
+        this.setResizable(false);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Add static top & bot panels
-        window.add(botPanel(), BorderLayout.SOUTH);
-        window.add(topPanel(), BorderLayout.NORTH);
+        this.add(botPanel(), BorderLayout.SOUTH);
+        this.add(topPanel(), BorderLayout.NORTH);
 
         // Adding layouts
         this.playlist = new Playlist(playlistE);
+        this.songs = new Songs(songsE, songRequestE);
         mainContent = new JPanel(new CardLayout());
-        mainContent.add(new Songs(songsE), "songs");
+        mainContent.add(this.songs, "songs");
         mainContent.add(this.playlist, "playlists");
         mainContent.add(new Piano(), "piano");
         mainContent.add(new Ranking(), "ranking");
         mainContent.add(new Settings(), "settings");
-        window.add(mainContent);
+        this.add(mainContent);
         cl = (CardLayout) (mainContent.getLayout());
         /* DEFAULT VIEW */
         cl.show(mainContent, ("songs"));
@@ -60,49 +58,40 @@ public class Menu extends JFrame implements ActionListener {
 
     }
 
-    public void start() {
-        this.login.setVisible(true);
-        if (/* TODO: Controller.getUser*/ false) {
-            window.dispose();
-            return;
-        }
-        window.setVisible(true);
-    }
-
-    public JPanel topPanel(){
+    public JPanel topPanel() {
         JPanel panel = new JPanel();
         // TODO: Upgrade
-        panel.setLayout(new GridLayout(0,6));
+        panel.setLayout(new GridLayout(0, 6));
 
         songsButton = new JButton("Songs");
         songsButton.setBackground(ColorConstants.BUTTON.getColor());
         songsButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
-        songsButton.setFont(new Font("Arial", Font.BOLD,20));
+        songsButton.setFont(new Font("Arial", Font.BOLD, 20));
 
         playlistButton = new JButton("Playlists");
         playlistButton.setBackground(ColorConstants.BUTTON.getColor());
         playlistButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
-        playlistButton.setFont(new Font("Arial", Font.BOLD,20));
+        playlistButton.setFont(new Font("Arial", Font.BOLD, 20));
 
         pianoButton = new JButton("Piano");
         pianoButton.setBackground(ColorConstants.BUTTON.getColor());
         pianoButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
-        pianoButton.setFont(new Font("Arial", Font.BOLD,20));
+        pianoButton.setFont(new Font("Arial", Font.BOLD, 20));
 
         rankingButton = new JButton("Ranking");
         rankingButton.setBackground(ColorConstants.BUTTON.getColor());
         rankingButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
-        rankingButton.setFont(new Font("Arial", Font.BOLD,20));
+        rankingButton.setFont(new Font("Arial", Font.BOLD, 20));
 
         settingsButton = new JButton("Settings");
         settingsButton.setBackground(ColorConstants.BUTTON.getColor());
         settingsButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
-        settingsButton.setFont(new Font("Arial", Font.BOLD,20));
+        settingsButton.setFont(new Font("Arial", Font.BOLD, 20));
 
-        exitButton = new JButton("Exit");
+        exitButton = new JButton("Log out");
         exitButton.setBackground(ColorConstants.BUTTON.getColor());
         exitButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
-        exitButton.setFont(new Font("Arial", Font.BOLD,20));
+        exitButton.setFont(new Font("Arial", Font.BOLD, 20));
 
         songsButton.addActionListener(this);
         playlistButton.addActionListener(this);
@@ -128,19 +117,19 @@ public class Menu extends JFrame implements ActionListener {
         return panel;
     }
 
-    public JPanel botPanel(){
+    public JPanel botPanel() {
         JPanel panel = new JPanel();
         panel.setBackground(ColorConstants.MENU.getColor());
         // TODO: Upgrade
-        panel.setLayout(new GridLayout(0,2));
+        panel.setLayout(new GridLayout(0, 2));
 
         JPanel currentSong = new JPanel();
         currentSong.setBackground(ColorConstants.MENU.getColor());
         playingSong = new JLabel("Select a song or a playlist to play - ♬ლ(▀̿Ĺ̯▀̿ ̿ლ)♬");
         JPanel playerMenu = songPlayerMenu();
 
-        currentSong.setSize(new Dimension(WIDTH/2, 150));
-        playerMenu.setSize(new Dimension(WIDTH/2, 150));
+        currentSong.setSize(new Dimension(WIDTH / 2, 150));
+        playerMenu.setSize(new Dimension(WIDTH / 2, 150));
 
         currentSong.add(playingSong, BorderLayout.CENTER);
 
@@ -150,7 +139,7 @@ public class Menu extends JFrame implements ActionListener {
         return panel;
     }
 
-    public JPanel songPlayerMenu(){
+    public JPanel songPlayerMenu() {
         JPanel panel = new JPanel();
         Font f = new Font(null, Font.PLAIN, 15);
         panel.setBackground(ColorConstants.MENU.getColor());
@@ -206,7 +195,7 @@ public class Menu extends JFrame implements ActionListener {
         return panel;
     }
 
-    private void resetButtonsColors(){
+    private void resetButtonsColors() {
         songsButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
         playlistButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
         pianoButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
@@ -216,33 +205,32 @@ public class Menu extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        /* BOTTOM BAR BUTTONS */
         if(e.getSource() == loopButton) {
-            if(event.toggleLoop()){
-                loopButton.setForeground(Color.LIGHT_GRAY);
-                // TODO: player.setLoopState(false);
-            } else {
-                loopButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
-                // TODO: player.setLoopState(true);
-            }
+            this.loopButton.setForeground( this.loopButton.getForeground().equals(ColorConstants.ACTIVE_BUTTON.getColor()) ? Color.LIGHT_GRAY : ColorConstants.ACTIVE_BUTTON.getColor() ); // toggle button's color
+            this.playE.toggleLoop();
         } else if (e.getSource() == backButton) {
-            if(event.currentSongPos() > 1){
+            /*if(event.currentSongPos() > 1){
                 //TODO: player.playBackSong();
-                playingSong.setText("back" /*TODO : player.getPlayingSongTitle() + - + player.getPlayingSongArtist*/);
-            }
+                playingSong.setText("back"); // TODO : player.getPlayingSongTitle() + - + player.getPlayingSongArtist
+            }*/
         } else if (e.getSource() == playButton) {
-            if(event.playing()){
-                playButton.setText(Icon.PAUSE.getIcon());
-                // TODO: player.pausePlay();
-            } else {
-                playButton.setText(Icon.PLAY.getIcon());
-                //TODO player.resumePlay();
-            }
+            this.playButton.setText( this.playButton.getText().equals(Icon.PAUSE.getIcon()) ? Icon.PLAY.getIcon() : Icon.PAUSE.getIcon() ); // toggle button's text
+            this.playE.togglePlaying();
         } else if (e.getSource() == nextButton) {
-            if(event.currentSongPos() < 10 /* TODO: player.playingListSize()*/){
+            /*if(event.currentSongPos() < 10){ // TODO: player.playingListSize()
                 //TODO: player.playNextSong();
-                playingSong.setText("next" /*TODO : player.getPlayingSongTitle() + - + player.getPlayingSongArtist*/);
-            }
-        } else if (e.getSource() == songsButton) {
+                playingSong.setText("next" ); // TODO : player.getPlayingSongTitle() + - + player.getPlayingSongArtist
+            }*/
+        } else if (e.getSource() == this.shuffleButton) {
+            this.shuffleButton.setForeground( this.shuffleButton.getForeground().equals(ColorConstants.ACTIVE_BUTTON.getColor()) ? Color.LIGHT_GRAY : ColorConstants.ACTIVE_BUTTON.getColor() ); // toggle button's color
+            this.playE.toggleRandom();
+        }
+        /* TOP BAR BUTTONS */
+        else if (e.getSource() == songsButton) {
+            // s'entrarà a songs -> recargar
+            this.songs.reloadSongs();
+            this.songs.reloadPlaylists();
             cl.show(mainContent, ("songs"));
 
             resetButtonsColors();
@@ -269,24 +257,12 @@ public class Menu extends JFrame implements ActionListener {
             resetButtonsColors();
             settingsButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == exitButton) {
-            window.dispose();
+            this.event.exitSession();
         }
     }
 
-    /* LOGIN/REGISTER FUNCTIONS */
-    public void disposeLogin() {
-        this.login.disposeLogin();
-    }
-
-    public void wrongLogin() {
-        this.login.wrongLogin();
-    }
-
-    public void userCreated() {
-        this.login.userCreated();
-    }
-
-    public void wrongCreation() {
-        this.login.wrongCreation();
+    @Override
+    public void newSongPlaying(String songName) {
+        this.playingSong.setText(songName);
     }
 }

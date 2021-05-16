@@ -13,6 +13,12 @@ public class Config {
         this.noteBind = new char[Note.values().length];
     }
 
+    public Config(float volumePiano, float volumeSong) {
+        this();
+        this.volumePiano = volumePiano;
+        this.volumeSong = volumeSong;
+    }
+
     public float getVolumePiano() {
         return volumePiano;
     }
