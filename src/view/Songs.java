@@ -13,19 +13,23 @@ import java.util.ArrayList;
 
 public class Songs extends JPanel implements ActionListener {
     private final DefaultTableModel songs;
+    private final JTable songsTable;
+
     private final DefaultTableModel playlists;
+    private final JTable playlistsTable;
+
     private final SongsEvent event;
     private final SongRequest requestEvent;
-    private final JTable songsTable;
-    private final JTable playlistsTable;
+
     private JButton playSongButton, addSongButton, removeSongButton, backToSongsButton, addToPlaylistButton;
     private final JPanel mainContent;
     private final CardLayout cl;
 
     public Songs(SongsEvent songE, SongRequest requestE) {
         this.songs = new DefaultTableModel();
-        this.playlists = new DefaultTableModel();
         this.songsTable = new JTable(this.songs);
+
+        this.playlists = new DefaultTableModel();
         this.playlistsTable = new JTable(this.playlists);
 
         this.event = songE;
@@ -152,7 +156,12 @@ public class Songs extends JPanel implements ActionListener {
     }
 
     private void addSongToTable(Song song) {
-        songs.addRow(new Object[]{song.getName(), song.getArtist(), song.getDuration(), song.getScore()});
+        songs.addRow(new Object[]{song /*song.getName()*/, song.getArtist(), song.getDuration(), song.getScore()});
+    }
+
+    private Song getSongFromTable(int row) {
+        // cada fila té Object[]{song, song.getArtist(), song.getDuration(), song.getScore()}
+        return (Song) this.songs.getValueAt(row, 0);
     }
 
     private void clearSongsTable() {
@@ -214,11 +223,6 @@ public class Songs extends JPanel implements ActionListener {
 
     private String getSongTitle(int pos){
         return String.valueOf(songsTable.getModel().getValueAt(pos, 0));
-    }
-
-    private Song getSongFromTable(int row) {
-        // cada fila té Object[]{song.getName(), song.getArtist(), song.getDuration(), song.getScore()}
-        return new Song((String) this.songs.getValueAt(row, 0), (String) this.songs.getValueAt(row, 1), (String)this.songs.getValueAt(row, 2));
     }
 
     @Override
