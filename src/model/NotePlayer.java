@@ -76,14 +76,11 @@ public class NotePlayer extends Thread {
         return this.alive;
     }
 
-    private void closeSynth() {
-        this.synth.close();
-    }
-
     public synchronized void closePlayer() {
-        this.alive = false;
-        this.closeSynth();
-        this.songEnder.songEnded();
+        if (this.alive) {
+            this.alive = false;
+            this.synth.close();
+        }
     }
 
     @Override
@@ -112,6 +109,7 @@ public class NotePlayer extends Thread {
             }
         }
         this.closePlayer();
+        this.songEnder.songEnded();
     }
 
     public void executeNote(SongNote note) {
