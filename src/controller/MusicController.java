@@ -5,6 +5,7 @@ import entities.Song;
 import model.NotePlayer;
 
 public class MusicController implements SongEnder, MenuEvent {
+    // TODO syncronized?
     private NotePlayer player;
     private boolean isPlaying;
     private List list;
@@ -23,7 +24,7 @@ public class MusicController implements SongEnder, MenuEvent {
 
     private void setPlaying(boolean playing) {
         this.isPlaying = playing;
-        this.player.setPlay(playing);
+        if (this.player != null) this.player.setPlay(playing);
     }
 
     public void setList(List list) {
@@ -34,7 +35,7 @@ public class MusicController implements SongEnder, MenuEvent {
     // TODO: Al carregar/canviar usuari cal cridar sempre setVolume()
     public void setVolume(float volume) {
         this.volume = volume;
-        this.player.setVolume(volume);
+        if (this.player != null) this.player.setVolume(volume);
     }
 
     private Song getCurrentSong() {
