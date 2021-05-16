@@ -48,24 +48,37 @@ public class MusicController implements SongEnder{
         return this.list;
     }
 
-    private void playNext() {
+    public void nextSong() {
+        this.advanceAndPlay(1);
+    }
+
+    public void previousSong() {
+        this.advanceAndPlay(-1);
+    }
+
+    private void playSong() {
         this.player = new NotePlayer(this.list.getSongs().get(this.songIndex), volume, this);
         this.player.setPlay(this.playing);
     }
 
     @Override
     public void songEnded() {
+        this.advanceAndPlay(1);
+    }
+
+    private void advanceAndPlay(int value) {
+        if (this.player != null) this.player.closePlayer();
         if (this.isLooping) {
-            this.playNext();
+            this.playSong();
             return;
         }
         if (this.isRandom) {
             this.songIndex = ((this.songIndex + this.getRandomNext()))%this.list.getSongs().size();
         } else {
-            this.songIndex = (this.songIndex + 1)%this.list.getSongs().size();
+            this.songIndex = ((this.songIndex + value + this.list.getSongs().size())%this.list.getSongs().size());
         }
 
-        this.playNext();
+        this.playSong();
     }
 
     /**
