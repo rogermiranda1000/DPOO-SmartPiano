@@ -14,9 +14,12 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     private final Menu view;
     private final BusinessFacade model;
     private final SongDownloader scrapper;
+    private final MusicController musicController;
 
     public Controller(int scrappingTime, SongDAO songManager, UserDAO userManager, PlaylistDAO playlistManager) {
         this.model = new BusinessFacade(songManager, userManager, playlistManager);
+
+        this.musicController = new MusicController();
 
         this.scrapper = new SongDownloader(this, scrappingTime);
         this.scrapper.start();
