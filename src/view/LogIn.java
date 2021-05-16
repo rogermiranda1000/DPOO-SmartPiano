@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class LogIn extends JDialog implements ActionListener, LogInNotifier {
+public class LogIn extends JFrame implements ActionListener, LogInNotifier {
     private static final int WIDTH = 400;
     private static final int HEIGHT = 400;
     private static final int TXT_WIDTH = 120;
@@ -24,15 +24,14 @@ public class LogIn extends JDialog implements ActionListener, LogInNotifier {
     private final JPanel mainContent;
     private final CardLayout cl;
 
-    public LogIn(LoginEvent event, Frame frame) {
-        super(frame, true);
+    public LogIn(LoginEvent event) {
         this.event = event;
 
         this.setTitle("Sign In");
         this.setSize(WIDTH, HEIGHT);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         mainContent = new JPanel(new CardLayout());
         mainContent.add(buildLogin(), "login");
@@ -240,11 +239,6 @@ public class LogIn extends JDialog implements ActionListener, LogInNotifier {
     }
 
     @Override
-    public void disposeLogin() {
-        this.dispose();
-    }
-
-    @Override
     public void wrongLogin() {
         JOptionPane.showMessageDialog(this, "Wrong LogIn. Try it again ( ͡❛ ︹ ͡❛)");
     }
@@ -271,7 +265,8 @@ public class LogIn extends JDialog implements ActionListener, LogInNotifier {
             cl.show(mainContent, ("login"));
         } else if (e.getSource() == pushResgisterButton) {
             // TODO email contains '@' and '.'
-            if (this.checkPass()) this.event.requestRegister(usernameRegister.getText(), emailRegister.getText(), String.valueOf(passwordRegister.getPassword()));
+            if (this.checkPass())
+                this.event.requestRegister(usernameRegister.getText(), emailRegister.getText(), String.valueOf(passwordRegister.getPassword()));
             else this.wrongPass();
         }
     }
