@@ -3,6 +3,7 @@ package controller;
 import entities.List;
 import entities.Song;
 import model.BusinessFacade;
+import persistance.ConfigDAO;
 import persistance.PlaylistDAO;
 import persistance.SongDAO;
 import persistance.UserDAO;
@@ -18,8 +19,8 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     private final SongDownloader scrapper;
     private final MusicController musicController;
 
-    public Controller(int scrappingTime, SongDAO songManager, UserDAO userManager, PlaylistDAO playlistManager) {
-        this.model = new BusinessFacade(songManager, userManager, playlistManager);
+    public Controller(int scrappingTime, SongDAO songManager, UserDAO userManager, PlaylistDAO playlistManager, ConfigDAO configManager) {
+        this.model = new BusinessFacade(songManager, userManager, playlistManager, configManager);
 
         this.musicController = new MusicController();
 
@@ -35,8 +36,11 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     public void requestLogin(String user, String password) {
         if (this.model.login(user, password)) {
             this.login.dispose();
+
             this.menu = new Menu(this.musicController, this, this, this);
             this.menu.setVisible(true);
+
+            this.musicController.setVolume(this.model.getSongVolume());
         } else this.login.wrongLogin();
     }
 
