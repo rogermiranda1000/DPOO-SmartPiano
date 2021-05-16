@@ -46,17 +46,11 @@ public class MusicController implements SongEnder, PlaylistBarEvent, SongRequest
         return this.list.getSongs().get(this.songIndex);
     }
 
-    public void nextSong() {
-        this.advanceAndPlay(1);
-    }
-
-    public void previousSong() {
-        this.advanceAndPlay(-1);
-    }
-
     private void playSong() {
         this.player = new NotePlayer(this.getCurrentSong(), volume, this);
         this.player.setPlay(this.isPlaying);
+        this.player.setVolume(this.volume);
+        this.player.start();
 
         if (this.notifier != null) this.notifier.newSongPlaying(this.getCurrentSong().toString());
     }
@@ -79,6 +73,16 @@ public class MusicController implements SongEnder, PlaylistBarEvent, SongRequest
      */
     private int getRandomNext() {
         return (int)Math.round(Math.random() * (this.list.getSongs().size()-2))+1;
+    }
+
+    @Override
+    public void nextSong() {
+        this.advanceAndPlay(1);
+    }
+
+    @Override
+    public void previousSong() {
+        this.advanceAndPlay(-1);
     }
 
     @Override
