@@ -1,26 +1,29 @@
 package view;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import entities.Note;
 
-public class Tecla extends JPanel implements MouseListener, KeyListener {
+import javax.swing.*;
+import javax.swing.text.JTextComponent;
+import java.awt.*;
+import java.awt.event.*;
+
+public class Tecla extends JPanel implements MouseListener, KeyListener{
 
     private JPanel tecla = new JPanel();
-    private String id;
+    private Note note;
+    private int ocataba;
     private KeyController kC;
     private String keyAssocieted;
 
-    public Tecla(Piano p, String id, boolean isWhite) {
-        this.id = id;
+    public Tecla(Piano p, Note note, boolean isWhite) {
+        this.note = note;
         this.kC = p;
+
+        MyKeyListener mKL = new MyKeyListener(p);
 
         this.setPreferredSize(new Dimension(40,200));
         this.setLayout(new BorderLayout());
-        this.add(new JLabel(id), BorderLayout.SOUTH);
+        this.add(new JLabel(note.toString()), BorderLayout.SOUTH);
 
         if(isWhite) this.setBackground(new Color(0, 0, 0));
         else this.setBackground(new Color(255, 255, 255));
@@ -29,6 +32,7 @@ public class Tecla extends JPanel implements MouseListener, KeyListener {
         p.addMouseListener(this);
         this.addKeyListener(this);
         p.addKeyListener(this);
+
     }
 
     public void setKeyAssocieted(String keyAssocieted) {
@@ -44,14 +48,14 @@ public class Tecla extends JPanel implements MouseListener, KeyListener {
     public void mousePressed(MouseEvent e) {
         if(this.contains(e.getPoint())){
             this.setBackground(new Color(255, 0, 0));
-            kC.isPressed(id);
+            kC.isPressed(note);
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         this.setBackground(new Color(0, 64, 255));
-        kC.isNotPressed(id);
+        kC.isNotPressed(note);
     }
 
     @Override

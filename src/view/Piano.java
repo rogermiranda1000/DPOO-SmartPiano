@@ -10,7 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
-public class Piano extends JPanel implements KeyController, KeyListener {
+public class Piano extends JPanel implements KeyController {
 
     public static final boolean ISWHITE = true;
 
@@ -25,7 +25,7 @@ public class Piano extends JPanel implements KeyController, KeyListener {
         drawPiano();
         //this.addMouseListener(this);
         this.setBackground(Color.magenta);
-        this.addKeyListener(this);
+        //this.addKeyListener(this);
 
     }
 
@@ -35,11 +35,13 @@ public class Piano extends JPanel implements KeyController, KeyListener {
             String nota = Note.getNote(i % 12).toString();
 
             if(nota.charAt(nota.length() - 1) == 'X'){
-                keys.add(new Tecla(this, nota, ISWHITE));
-                this.add(keys.get(i), BorderLayout.SOUTH);
+                Tecla temp = new Tecla(this, Note.getNote(i % 12), ISWHITE);
+                keys.add(temp);
+                this.add(temp, BorderLayout.SOUTH);
             }else {
-                keys.add(new Tecla(this, nota, !ISWHITE));
-                this.add(keys.get(i), BorderLayout.SOUTH);
+                Tecla temp = new Tecla(this, Note.getNote(i % 12), !ISWHITE);
+                keys.add(temp);
+                this.add(temp, BorderLayout.SOUTH);
             }
         }
     }
@@ -83,14 +85,14 @@ public class Piano extends JPanel implements KeyController, KeyListener {
 
 
     @Override
-    public boolean isPressed(String id) {
-        System.out.println("PRESSED " + id);
+    public boolean isPressed(Note note) {
+        System.out.println("PRESSED " + note.toString());
         return true;
     }
 
     @Override
-    public boolean isNotPressed(String id) {
-        System.out.println("UNPRESSED " + id);
+    public boolean isNotPressed(Note note) {
+        System.out.println("UNPRESSED " + note.toString());
         return true;
     }
 
@@ -106,11 +108,7 @@ public class Piano extends JPanel implements KeyController, KeyListener {
         return false;
     }
 
-    public void hola(){
-
-    }
-
-    @Override
+    /*@Override
     public void keyTyped(KeyEvent e) {
         System.out.println("1");
     }
@@ -123,5 +121,5 @@ public class Piano extends JPanel implements KeyController, KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         System.out.println("3");
-    }
+    }*/
 }
