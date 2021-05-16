@@ -2,13 +2,15 @@ package view;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Settings extends JPanel implements SliderController{
+public class Settings extends JPanel implements SliderController, ChangeListener {
 
     public static final int HEIGHT = 900;
     public static final int WIDTH  = 1600;
@@ -35,7 +37,7 @@ public class Settings extends JPanel implements SliderController{
         options.add(new Label("Volume"));
         options.add(bars.get(0));
 
-
+        bars.get(0).addChangeListener(this);
 
         JPanel information = new JPanel();
         information.setLayout(new BoxLayout(information, BoxLayout.Y_AXIS));
@@ -89,6 +91,10 @@ public class Settings extends JPanel implements SliderController{
         this.setVisible(true);
     }
 
+    private void addChangeListener(Settings settings) {
+        System.out.println("CANVI " + settings.getName());
+    }
+
     public JPanel options(){
         return null;
     }
@@ -96,5 +102,10 @@ public class Settings extends JPanel implements SliderController{
     @Override
     public void changeValue(int value) {
         System.out.println("CANVI " + value);
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        System.out.println("HOLA");
     }
 }
