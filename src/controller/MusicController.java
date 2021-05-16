@@ -1,27 +1,28 @@
 package controller;
 
 import entities.List;
+import entities.Song;
 import model.NotePlayer;
 
-public class MusicController implements SongEnder{
+public class MusicController implements SongEnder, MenuEvent {
     private NotePlayer player;
-    private boolean playing;
+    private boolean isPlaying;
     private List list;
     private int songIndex;
     private float volume;
-    private boolean is_random;
-    private boolean is_looping;
+    private boolean isRandom;
+    private boolean isLooping;
 
     public MusicController() {
-        this.playing = true;
+        this.isPlaying = true;
         this.songIndex = 0;
         this.volume = 1;
-        this.is_random = false;
-        this.is_looping = false;
+        this.isRandom = false;
+        this.isLooping = false;
     }
 
-    public void setPlaying(boolean playing) {
-        this.playing = playing;
+    private void setPlaying(boolean playing) {
+        this.isPlaying = playing;
         this.player.setPlay(playing);
     }
 
@@ -36,30 +37,22 @@ public class MusicController implements SongEnder{
         this.player.setVolume(volume);
     }
 
-    public void setIs_random(boolean is_random) {
-        this.is_random = is_random;
-    }
-
-    public void setIs_looping(boolean is_looping) {
-        this.is_looping = is_looping;
-    }
-
-    public List getList() {
-        return this.list;
+    private Song getCurrentSong() {
+        return this.list.getSongs().get(this.songIndex);
     }
 
     private void playNext() {
-        this.player = new NotePlayer(this.list.getSongs().get(this.songIndex), volume, this);
-        this.player.setPlay(this.playing);
+        this.player = new NotePlayer(this.getCurrentSong(), volume, this);
+        this.player.setPlay(this.isPlaying);
     }
 
     @Override
     public void songEnded() {
-        if (this.is_looping) {
+        if (this.isLooping) {
             this.playNext();
             return;
         }
-        if (this.is_random) {
+        if (this.isRandom) {
             this.songIndex = ((this.songIndex + this.getRandomNext()))%this.list.getSongs().size();
         } else {
             this.songIndex = (this.songIndex + 1)%this.list.getSongs().size();
@@ -75,4 +68,25 @@ public class MusicController implements SongEnder{
     private int getRandomNext() {
         return (int)Math.round(Math.random() * (this.list.getSongs().size()-2))+1;
     }
+
+    @Override
+    public void toggleLoop() {
+        this.isLooping = !this.isLooping;
+    }
+
+    @Override
+    public void toggleRandom() {
+        this.isRandom = !this.isRandom;
+    }
+
+    @Override
+    public void togglePlaying() {
+        this.setPlaying(!this.isPlaying);
+    }
+
+    @Override
+    public String getActualSong() {
+        return this.getCurrentSong().toString();
+    }
+
 }

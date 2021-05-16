@@ -10,7 +10,7 @@ import view.Menu;
 
 import java.util.ArrayList;
 
-public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier {
+public class Controller implements LoginEvent, SongsEvent, PlaylistEvent, SongNotifier {
     private final Menu view;
     private final BusinessFacade model;
     private final SongDownloader scrapper;
@@ -24,7 +24,7 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         this.scrapper = new SongDownloader(this, scrappingTime);
         this.scrapper.start();
 
-        this.view = new Menu(this, this, this, this);
+        this.view = new Menu(this, this.musicController, this, this);
         this.view.start();
     }
 
@@ -39,23 +39,6 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     public void requestRegister(String user, String email, String password) {
         if (this.model.addUser(user, email, password)) this.view.userCreated();
         else this.view.wrongCreation();
-    }
-
-    @Override
-    public void toggleLoop() {
-        // TODO: Check in player if loop mode on.
-    }
-
-    @Override
-    public int currentSongPos() {
-        // TODO: check current song position on playing list
-        return 0;
-    }
-
-    @Override
-    public boolean playing() {
-        // TODO: Check if a song is playing
-        return false;
     }
 
     @Override
@@ -74,7 +57,6 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     @Override
     public ArrayList<Song> getPlaylistSongs(String playlist) {
         ArrayList<List> l = this.model.getPlaylists();
-        ArrayList<String> r = new ArrayList<>();
         for (List list: l) {
             if (list.getName().equals(playlist)) return list.getSongs();
         }
