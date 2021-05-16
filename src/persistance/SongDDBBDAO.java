@@ -53,11 +53,36 @@ public class SongDDBBDAO implements SongDAO {
                 songId = rs.getInt(1);
             }
 
-            for (SongNote sn : song.getNotes()) {
+            // v1.0
+            /*for (SongNote sn : song.getNotes()) {
                 // hi han cançons que començen/acaben 2 tecles idéntiques al mateix moment (?); ignorem aquestes
                 this.ddbb.runSentence("INSERT IGNORE INTO SongNotes(note, tick, pressed, song, velocity, octave) VALUES (?,?,?,?,?,?);",
                         sn.getNote().toString().replaceAll("X$", "#"), sn.getTick(), sn.isPressed(), songId, sn.getVelocity(), sn.getOctave());
+            }*/
+
+            // v2.0 aka. SQL Injection
+            StringBuilder sb = new StringBuilder();
+            // hi han cançons que començen/acaben 2 tecles idéntiques al mateix moment (?); ignorem aquestes
+            sb.append("INSERT IGNORE INTO SongNotes(note, tick, pressed, song, velocity, octave) VALUES ");
+            for (SongNote sn : song.getNotes()) {
+                sb.append("('");
+                sb.append(sn.getNote().toString().replaceAll("X$", "#"));
+                sb.append("',");
+                sb.append(sn.getTick());
+                sb.append(',');
+                sb.append(sn.isPressed());
+                sb.append(',');
+                sb.append(songId);
+                sb.append(',');
+                sb.append(sn.getVelocity());
+                sb.append(',');
+                sb.append(sn.getOctave());
+                sb.append("),");
             }
+            sb.setLength(sb.length()-1); // eliminem la ',' final
+            sb.append(';');
+            this.ddbb.runSentence(sb.toString());
+
             return true;
         } catch (SQLException ex) {
             ex.printStackTrace();
