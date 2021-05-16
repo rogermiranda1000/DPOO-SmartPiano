@@ -38,6 +38,11 @@ public class BusinessFacade {
         }
     }
 
+    public Song getSong(Song s) {
+        this.songManager.updateSong(s);
+        return s;
+    }
+
     public ArrayList<List> getPlaylists() {
         if (this.loggedUserPlaylists == null) this.updatePlaylists();
         return this.loggedUserPlaylists;

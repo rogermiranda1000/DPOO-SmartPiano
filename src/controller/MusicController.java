@@ -5,7 +5,7 @@ import entities.Song;
 import model.NotePlayer;
 import view.PlayingSongNotifier;
 
-public class MusicController implements SongEnder, PlaylistBarEvent {
+public class MusicController implements SongEnder, PlaylistBarEvent, SongRequest, PlaylistRequest {
     // TODO syncronized?
     private NotePlayer player;
     private boolean isPlaying;
@@ -32,6 +32,8 @@ public class MusicController implements SongEnder, PlaylistBarEvent {
     public void setList(List list) {
         this.list = list;
         this.songIndex = 0;
+
+        this.playNext();
     }
 
     // TODO: Al actualitzar el volum cal cridar sempre setVolume()
@@ -92,5 +94,15 @@ public class MusicController implements SongEnder, PlaylistBarEvent {
     @Override
     public void setPlayingSongListner(PlayingSongNotifier notifier) {
         this.notifier = notifier;
+    }
+
+    @Override
+    public void requestPlaylist(List list) {
+        this.setList(list);
+    }
+
+    @Override
+    public void requestSong(Song song) {
+        this.setList(new List().addSong(song));
     }
 }

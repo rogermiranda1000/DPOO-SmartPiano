@@ -1,5 +1,6 @@
 package view;
 
+import controller.SongRequest;
 import controller.SongsEvent;
 import entities.Song;
 
@@ -14,19 +15,21 @@ public class Songs extends JPanel implements ActionListener {
     private final DefaultTableModel songs;
     private final DefaultTableModel playlists;
     private final SongsEvent event;
+    private final SongRequest requestEvent;
     private final JTable songsTable;
     private final JTable playlistsTable;
     private JButton playSongButton, addSongButton, removeSongButton, backToSongsButton, addToPlaylistButton;
     private final JPanel mainContent;
     private final CardLayout cl;
 
-    public Songs(SongsEvent songE) {
+    public Songs(SongsEvent songE, SongRequest requestE) {
         this.songs = new DefaultTableModel();
         this.playlists = new DefaultTableModel();
         this.songsTable = new JTable(this.songs);
         this.playlistsTable = new JTable(this.playlists);
 
         this.event = songE;
+        this.requestEvent = requestE;
 
         mainContent = new JPanel(new CardLayout());
         mainContent.add(songsList(), "songs");
@@ -213,6 +216,11 @@ public class Songs extends JPanel implements ActionListener {
         return String.valueOf(songsTable.getModel().getValueAt(pos, 0));
     }
 
+    private Song getSongFromTable(int row) {
+        // cada fila té Object[]{song.getName(), song.getArtist(), song.getDuration(), song.getScore()}
+        return new Song((String) this.songs.getValueAt(row, 0), (String) this.songs.getValueAt(row, 1), (String)this.songs.getValueAt(row, 2));
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         ArrayList<String> titles = new ArrayList<>();
@@ -220,7 +228,11 @@ public class Songs extends JPanel implements ActionListener {
         int[] selectedPlaylists = playlistsTable.getSelectedRows();
 
         if (e.getSource() == playSongButton) {
-
+            if (selectedSongs.length == 0) {
+                popUpNoSongSelected();
+            } else {
+                this.requestEvent.requestSong(this.getSongFromTable(selectedSongs[0])); // TODO multiple
+            }
         } else if (e.getSource() == addSongButton) {
             if (selectedSongs.length == 0) {
                 popUpNoSongSelected();
