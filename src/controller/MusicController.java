@@ -33,7 +33,7 @@ public class MusicController implements SongEnder, PlaylistBarEvent, SongRequest
         this.list = list;
         this.songIndex = 0;
 
-        this.playNext();
+        this.playSong();
     }
 
     // TODO: Al actualitzar el volum cal cridar sempre setVolume()
@@ -61,23 +61,13 @@ public class MusicController implements SongEnder, PlaylistBarEvent, SongRequest
         if (this.notifier != null) this.notifier.newSongPlaying(this.getCurrentSong().toString());
     }
 
-    @Override
-    public void songEnded() {
-        if (this.isLooping) {
-            this.playNext();
-        this.advanceAndPlay(1);
-    }
-
     private void advanceAndPlay(int value) {
         if (this.player != null) this.player.closePlayer();
-        if (this.isLooping) {
-            this.playSong();
-            return;
-        }
-        if (this.isRandom) {
-            this.songIndex = ((this.songIndex + this.getRandomNext()))%this.list.getSongs().size();
-        } else {
-            this.songIndex = ((this.songIndex + value + this.list.getSongs().size())%this.list.getSongs().size());
+
+        if (this.isLooping) this.playSong();
+        else {
+            if (this.isRandom) this.songIndex = ((this.songIndex + this.getRandomNext())) % this.list.getSongs().size();
+            else this.songIndex = (this.songIndex + value + this.list.getSongs().size()) % this.list.getSongs().size();
         }
 
         this.playSong();
@@ -89,6 +79,11 @@ public class MusicController implements SongEnder, PlaylistBarEvent, SongRequest
      */
     private int getRandomNext() {
         return (int)Math.round(Math.random() * (this.list.getSongs().size()-2))+1;
+    }
+
+    @Override
+    public void songEnded() {
+        this.nextSong();
     }
 
     @Override
