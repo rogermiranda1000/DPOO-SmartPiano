@@ -2,7 +2,7 @@ package controller;
 
 import view.PlayingSongNotifier;
 
-public interface MenuEvent {
+public interface PlaylistBarEvent {
     void toggleLoop();
 
     void toggleRandom();
