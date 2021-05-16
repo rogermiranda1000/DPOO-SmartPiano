@@ -1,6 +1,7 @@
 package view;
 
 import controller.MenuEvent;
+import controller.PlaylistBarEvent;
 import controller.PlaylistEvent;
 import controller.SongsEvent;
 
@@ -15,17 +16,18 @@ public class Menu extends JFrame implements ActionListener, PlayingSongNotifier 
     private JButton playButton, loopButton, nextButton, backButton, shuffleButton;
     private JButton songsButton, playlistButton, pianoButton, rankingButton, settingsButton, exitButton;
     private JLabel playingSong;
-    private MenuEvent event;
-    private PlaylistBarEvent event;
-    private JPanel mainContent;
-    private CardLayout cl;
+    private final MenuEvent event;
+    private final PlaylistBarEvent playE;
+    private final JPanel mainContent;
+    private final CardLayout cl;
 
     private final Playlist playlist;
     private final Songs songs;
 
     public Menu(PlaylistBarEvent playE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE) {
         this.event = menuE;
-        this.event.setPlayingSongListner(this);
+        this.playE = playE;
+        playE.setPlayingSongListner(this);
 
         this.setTitle("Piano TIME!");
         ImageIcon img = new ImageIcon("images\\icon.jpg");
@@ -209,7 +211,7 @@ public class Menu extends JFrame implements ActionListener, PlayingSongNotifier 
         /* BOTTOM BAR BUTTONS */
         if(e.getSource() == loopButton) {
             this.loopButton.setForeground( this.loopButton.getForeground().equals(ColorConstants.ACTIVE_BUTTON.getColor()) ? Color.LIGHT_GRAY : ColorConstants.ACTIVE_BUTTON.getColor() ); // toggle button's color
-            this.event.toggleLoop();
+            this.playE.toggleLoop();
         } else if (e.getSource() == backButton) {
             /*if(event.currentSongPos() > 1){
                 //TODO: player.playBackSong();
@@ -217,7 +219,7 @@ public class Menu extends JFrame implements ActionListener, PlayingSongNotifier 
             }*/
         } else if (e.getSource() == playButton) {
             this.playButton.setText( this.playButton.getText().equals(Icon.PAUSE.getIcon()) ? Icon.PLAY.getIcon() : Icon.PAUSE.getIcon() ); // toggle button's text
-            this.event.togglePlaying();
+            this.playE.togglePlaying();
         } else if (e.getSource() == nextButton) {
             /*if(event.currentSongPos() < 10){ // TODO: player.playingListSize()
                 //TODO: player.playNextSong();
@@ -225,7 +227,7 @@ public class Menu extends JFrame implements ActionListener, PlayingSongNotifier 
             }*/
         } else if (e.getSource() == this.shuffleButton) {
             this.shuffleButton.setForeground( this.shuffleButton.getForeground().equals(ColorConstants.ACTIVE_BUTTON.getColor()) ? Color.LIGHT_GRAY : ColorConstants.ACTIVE_BUTTON.getColor() ); // toggle button's color
-            this.event.toggleRandom();
+            this.playE.toggleRandom();
         }
         /* TOP BAR BUTTONS */
         else if (e.getSource() == songsButton) {
@@ -258,7 +260,7 @@ public class Menu extends JFrame implements ActionListener, PlayingSongNotifier 
             resetButtonsColors();
             settingsButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == exitButton) {
-            event.exitSession();
+            this.event.exitSession();
         }
     }
 

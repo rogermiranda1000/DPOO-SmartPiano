@@ -11,7 +11,7 @@ import view.Menu;
 
 import java.util.ArrayList;
 
-public class Controller implements LoginEvent, SongsEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier {
+public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier {
     private Menu menu;
     private LogIn login;
     private final BusinessFacade model;
@@ -35,7 +35,7 @@ public class Controller implements LoginEvent, SongsEvent, MenuEvent, SongsEvent
     public void requestLogin(String user, String password) {
         if (this.model.login(user, password)) {
             this.login.dispose();
-            this.menu = new Menu(this, this, this);
+            this.menu = new Menu(this.musicController, this, this, this);
             this.menu.setVisible(true);
         } else this.login.wrongLogin();
     }
