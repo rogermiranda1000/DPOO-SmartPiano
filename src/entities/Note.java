@@ -24,4 +24,5 @@ public enum Note {
         index %= r.length;
         return r[index];
     }
+
 }

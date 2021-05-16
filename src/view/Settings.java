@@ -16,7 +16,7 @@ public class Settings extends JPanel {
 
         this.setBackground(ColorConstants.BACKGROUND.getColor());
 
-        String[] labels = {"Octaves", "Piano", "Reproductor", "Eliminar"};
+        String[] labelsConfig = {"Octaves", "Piano", "Reproductor", "Eliminar"};
         JPanel panel = new JPanel();
 
         panel.setMinimumSize(new Dimension(1000, 700));
@@ -31,6 +31,12 @@ public class Settings extends JPanel {
 
 
         JPanel information = new JPanel();
+        information.setLayout(new BoxLayout(information, BoxLayout.Y_AXIS));
+
+        JPanel logoSubPanel = new JPanel();
+        JPanel infoSubPanel = new JPanel();
+
+        //infoSubPanel.setLayout(new BoxLayout(information, BoxLayout.Y_AXIS));
 
         String LOGO_PATH = "images\\default-user.png";
 
@@ -42,15 +48,36 @@ public class Settings extends JPanel {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        /*
+        try {
+            BufferedImage img = ImageIO.read(new File(LOGO_PATH));
+            ImageIcon icon = new ImageIcon(img);
+            Image a = icon.getImage().getScaledInstance(28, 28,Image.SCALE_DEFAULT);
 
-        information.add(new Label("[USER NAME]"));
-        information.add(new Label("[EMAIL]"));
-        information.add(new Label("[DATE]"));
-        information.add(new Label("[POINTS]"));
+            JLabel logoLabel = new JLabel(icon);
+            information.add(logoLabel, BorderLayout.CENTER);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+
+        //information.add(logoSubPanel);
+
+        String[] labelsInfo = {"[USER NAME]","[EMAIL]","[DATE]","[POINTS]"};
+
+        for (int i = 0; i < labelsInfo.length; i++) {
+            JPanel temp = new JPanel();
+            temp.add(new JLabel(labelsInfo[i]), BorderLayout.CENTER);
+            information.add(temp, BorderLayout.CENTER);
+        }
+        /*infoSubPanel.add(new JLabel("[USER NAME]"), BorderLayout.CENTER);
+        infoSubPanel.add(new JLabel("[EMAIL]"), BorderLayout.CENTER);
+        infoSubPanel.add(new JLabel("[DATE]"), BorderLayout.CENTER);
+        infoSubPanel.add(new JLabel("[POINTS]"), BorderLayout.CENTER);*/
+
+        //information.add(infoSubPanel);
 
         //options.setPreferredSize(new Dimension(100, 100));
         //information.setPreferredSize(new Dimension(100, 100));
-        information.setLayout(new BoxLayout(information, BoxLayout.Y_AXIS));
         options.setBackground(new Color(1, 1, 1));
         information.setBackground(new Color(200, 200, 200));
 
