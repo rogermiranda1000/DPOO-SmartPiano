@@ -23,7 +23,7 @@ public class NotePlayer extends Thread {
     private boolean alive;
     private float volume;
 
-    private SongEnder songEnder;
+    private final SongEnder songEnder;
     private final Object notified; //Utilitzat per fer el notify
 
     public NotePlayer(Song song, float volume, SongEnder songEnder) {
@@ -80,11 +80,7 @@ public class NotePlayer extends Thread {
      * Força l'eliminació del thread
      */
     public synchronized void closePlayer() {
-        if (this.alive) {
-            this.alive = false;
-            this.synth.close();
-            this.songEnder = null;
-        }
+        this.alive = false;
     }
 
     @Override
@@ -115,9 +111,10 @@ public class NotePlayer extends Thread {
 
         // es tanca & notifica
         if (this.getAlive()) {
-            this.synth.close();
+            // si ja s'ha tancat vol dir que ha sigut forçat -> no notifiquis
             if (this.songEnder != null) this.songEnder.songEnded();
         }
+        this.synth.close();
     }
 
     public void executeNote(SongNote note) {
