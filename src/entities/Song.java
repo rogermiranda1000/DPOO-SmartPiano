@@ -1,5 +1,6 @@
 package entities;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,6 +38,14 @@ public class Song {
         this(songName, author, creationDate, -1, false, null);
     }
 
+    public Song(String songName, String author, String creationDate) {
+        this(songName, author, Song.parseDate(creationDate), -1, false, null);
+    }
+
+    public Song() {
+        this(null, null, null, -1, false, null);
+    }
+
     /**
      * Afegeix una nota al arraylist
      * @param note Nota a afegir
@@ -59,6 +68,14 @@ public class Song {
 
     public String getDate() {
         return new SimpleDateFormat("yyyy-MM-dd").format(this.creationDate);
+    }
+
+    private static Date parseDate(String date) {
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd").parse(date);
+        } catch (ParseException e) {
+            return null;
+        }
     }
 
     public ArrayList<SongNote> getNotes() {

@@ -1,9 +1,6 @@
 package view;
 
-import controller.MenuEvent;
-import controller.PlaylistBarEvent;
-import controller.PlaylistEvent;
-import controller.SongsEvent;
+import controller.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +21,7 @@ public class Menu extends JFrame implements ActionListener, PlayingSongNotifier 
     private final Playlist playlist;
     private final Songs songs;
 
-    public Menu(PlaylistBarEvent playE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE) {
+    public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE) {
         this.event = menuE;
         this.playE = playE;
         playE.setPlayingSongListner(this);
@@ -46,7 +43,7 @@ public class Menu extends JFrame implements ActionListener, PlayingSongNotifier 
 
         // Adding layouts
         this.playlist = new Playlist(playlistE);
-        this.songs = new Songs(songsE);
+        this.songs = new Songs(songsE, songRequestE);
         mainContent = new JPanel(new CardLayout());
         mainContent.add(this.songs, "songs");
         mainContent.add(this.playlist, "playlists");

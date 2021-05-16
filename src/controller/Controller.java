@@ -12,7 +12,7 @@ import view.Menu;
 
 import java.util.ArrayList;
 
-public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier {
+public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest {
     private Menu menu;
     private LogIn login;
     private final BusinessFacade model;
@@ -37,7 +37,7 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         if (this.model.login(user, password)) {
             this.login.dispose();
 
-            this.menu = new Menu(this.musicController, this, this, this);
+            this.menu = new Menu(this.musicController, this, this, this, this);
             this.menu.setVisible(true);
 
             this.musicController.setVolume(this.model.getSongVolume());
@@ -82,5 +82,10 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         this.menu.dispose();
         this.login = new LogIn(this);
         this.login.setVisible(true);
+    }
+
+    @Override
+    public void requestSong(Song song) {
+        this.musicController.requestSong(this.model.getSong(song));
     }
 }
