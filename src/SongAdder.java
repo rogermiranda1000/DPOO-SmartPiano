@@ -14,8 +14,10 @@ public class SongAdder {
     private static final String []SONG = {"L'himne del Carbassot 100% oficial 1 sol link mega", "https://www.midiworld.com/download/5023"};
     private static final String []SONG = {"Mii Channel", "https://www.midiworld.com/download/5037"};
     private static final String []SONG = {"L'himne d'Espanya", "https://www.midiworld.com/download/4163"};
-    private static final String []SONG = {"All star", "https://www.midiworld.com/download/854"};*/
+    private static final String []SONG = {"All star", "https://www.midiworld.com/download/854"};
     private static final String []SONG = {"Windows startup", "https://www.midiworld.com/download/4806"};
+    private static final String []SONG = {"Living la Vida Loca", "https://www.midiworld.com/download/800"};*/
+    private static final String []SONG = {"River flows in you", "https://bitmidi.com/uploads/112145.mid"};
 
     public static void main (String[] args) {
         try {
