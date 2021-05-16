@@ -9,15 +9,15 @@ public class MusicController implements SongEnder{
     private List list;
     private int songIndex;
     private float volume;
-    private boolean is_random;
-    private boolean is_looping;
+    private boolean isRandom;
+    private boolean isLooping;
 
     public MusicController() {
         this.playing = true;
         this.songIndex = 0;
         this.volume = 1;
-        this.is_random = false;
-        this.is_looping = false;
+        this.isRandom = false;
+        this.isLooping = false;
     }
 
     public void setPlaying(boolean playing) {
@@ -36,12 +36,12 @@ public class MusicController implements SongEnder{
         this.player.setVolume(volume);
     }
 
-    public void setIs_random(boolean is_random) {
-        this.is_random = is_random;
+    public void setIsRandom(boolean is_random) {
+        this.isRandom = is_random;
     }
 
-    public void setIs_looping(boolean is_looping) {
-        this.is_looping = is_looping;
+    public void setIsLooping(boolean isLooping) {
+        this.isLooping = isLooping;
     }
 
     public List getList() {
@@ -55,11 +55,11 @@ public class MusicController implements SongEnder{
 
     @Override
     public void songEnded() {
-        if (this.is_looping) {
+        if (this.isLooping) {
             this.playNext();
             return;
         }
-        if (this.is_random) {
+        if (this.isRandom) {
             this.songIndex = ((this.songIndex + this.getRandomNext()))%this.list.getSongs().size();
         } else {
             this.songIndex = (this.songIndex + 1)%this.list.getSongs().size();
