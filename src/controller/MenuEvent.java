@@ -3,7 +3,9 @@ package controller;
 public interface MenuEvent {
     void toggleLoop();
 
-    int currentSongPos();
+    void toggleRandom();
 
-    boolean playing();
+    void togglePlaying();
+
+    String getActualSong();
 }
