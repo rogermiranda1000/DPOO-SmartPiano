@@ -47,6 +47,8 @@ public class MusicController implements SongEnder, PlaylistBarEvent, SongRequest
     }
 
     private void playSong() {
+        if (this.player != null) this.player.closePlayer();
+
         this.player = new NotePlayer(this.getCurrentSong(), volume, this);
         this.player.setPlay(this.isPlaying);
         this.player.setVolume(this.volume);
@@ -56,10 +58,7 @@ public class MusicController implements SongEnder, PlaylistBarEvent, SongRequest
     }
 
     private void advanceAndPlay(int value) {
-        if (this.player != null) this.player.closePlayer();
-
-        if (this.isLooping) this.playSong();
-        else {
+        if (!this.isLooping) {
             if (this.isRandom) this.songIndex = ((this.songIndex + this.getRandomNext())) % this.list.getSongs().size();
             else this.songIndex = (this.songIndex + value + this.list.getSongs().size()) % this.list.getSongs().size();
         }
