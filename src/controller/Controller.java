@@ -6,12 +6,14 @@ import model.BusinessFacade;
 import persistance.PlaylistDAO;
 import persistance.SongDAO;
 import persistance.UserDAO;
+import view.LogIn;
 import view.Menu;
 
 import java.util.ArrayList;
 
 public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier {
-    private final Menu view;
+    private Menu menu;
+    private LogIn login;
     private final BusinessFacade model;
     private final SongDownloader scrapper;
 
@@ -21,21 +23,25 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         this.scrapper = new SongDownloader(this, scrappingTime);
         this.scrapper.start();
 
-        this.view = new Menu(this, this, this, this);
-        this.view.start();
+
+        this.login = new LogIn(this);
+        this.login.setVisible(true);
     }
 
 
     @Override
     public void requestLogin(String user, String password) {
-        if (this.model.login(user, password)) this.view.disposeLogin();
-        else this.view.wrongLogin();
+        if (this.model.login(user, password)) {
+            this.login.dispose();
+            this.menu = new Menu(this, this, this);
+            this.menu.setVisible(true);
+        } else this.login.wrongLogin();
     }
 
     @Override
     public void requestRegister(String user, String email, String password) {
-        if (this.model.addUser(user, email, password)) this.view.userCreated();
-        else this.view.wrongCreation();
+        if (this.model.addUser(user, email, password)) this.login.userCreated();
+        else this.login.wrongCreation();
     }
 
     @Override
@@ -65,7 +71,7 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     public ArrayList<String> getPlaylists() {
         ArrayList<List> l = this.model.getPlaylists();
         ArrayList<String> r = new ArrayList<>();
-        for (List list: l) r.add(list.getName());
+        for (List list : l) r.add(list.getName());
         return r;
     }
 
@@ -73,9 +79,16 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     public ArrayList<Song> getSongs(String playlist) {
         ArrayList<List> l = this.model.getPlaylists();
         ArrayList<String> r = new ArrayList<>();
-        for (List list: l) {
+        for (List list : l) {
             if (list.getName().equals(playlist)) return list.getSongs();
         }
         return null;
+    }
+
+    @Override
+    public void exitSession() {
+        this.menu.dispose();
+        this.login = new LogIn(this);
+        this.login.setVisible(true);
     }
 }
