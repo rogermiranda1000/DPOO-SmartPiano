@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.sql.SQLException;
 
 public class Main {
+    private static final int MAX_DDBB_ACCESS = 2;
+
     public static void main (String[] args) {
         System.out.println( "╔══╦═╦═╦══╦═╦══╗╔═╦══╦══╦═╦╦═╗\n" +
                             "║══╣║║║║╔╗║╬╠╗╔╝║╬╠║║╣╔╗║║║║║║\n" +
@@ -15,7 +17,7 @@ public class Main {
 
         try {
             Config c = new Config(new File("config.json"));
-            DDBBAccess ddbb = new DDBBAccess(c.readConfig());
+            DDBBAccess ddbb = new DDBBAccess(c.readConfig(), Main.MAX_DDBB_ACCESS);
             new Controller(c.getScrapping(), new SongDDBBDAO(ddbb), new UserDDBBDAO(ddbb), new PlaylistDDBBDAO(ddbb));
         } catch (FileNotFoundException | SQLException ex) {
             ex.printStackTrace();

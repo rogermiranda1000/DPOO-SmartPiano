@@ -37,7 +37,7 @@ public class UserDDBBDAO implements UserDAO {
         }
     }
 
-    private Integer addUserAndGetId(String nick) {
+    private synchronized Integer addUserAndGetId(String nick) {
         try {
             if (this.ddbb.runSentence("INSERT INTO Users(username) VALUES (?);", nick) > 0) {
                 ResultSet rs = this.ddbb.getSentence("SELECT MAX(id) FROM Users WHERE username = ?;",
