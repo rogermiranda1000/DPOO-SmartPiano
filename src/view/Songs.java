@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class Songs extends JPanel implements ActionListener {
@@ -55,6 +56,7 @@ public class Songs extends JPanel implements ActionListener {
         // Create columns
         songs.addColumn("Title");
         songs.addColumn("Artist");
+        songs.addColumn("Date");
         songs.addColumn("Duration");
         songs.addColumn("Punctuation");
 
@@ -156,12 +158,12 @@ public class Songs extends JPanel implements ActionListener {
     }
 
     private void addSongToTable(Song song) {
-        songs.addRow(new Object[]{song /*song.getName()*/, song.getArtist(), song.getDuration(), song.getScore()});
+        songs.addRow(new Object[]{song.getName(), song.getArtist(), song.getDate(), (int)Math.floor(song.getDuration()), String.format("%.1f", song.getScore())});
     }
 
     private Song getSongFromTable(int row) {
-        // cada fila té Object[]{song, song.getArtist(), song.getDuration(), song.getScore()}
-        return (Song) this.songs.getValueAt(row, 0);
+        // cada fila té Object[]{song, song.getArtist(), song.getDate(), song.getDuration(), song.getScore()}
+        return new Song((String) this.songs.getValueAt(row, 0), (String) this.songs.getValueAt(row, 1), (String) this.songs.getValueAt(row, 2));
     }
 
     private void clearSongsTable() {
@@ -197,24 +199,27 @@ public class Songs extends JPanel implements ActionListener {
     }
 
     private void popUpSongsDeleted(ArrayList<String> titles) {
-        String msg = "";
-        for(int i = 0; titles.size() > i ; i++ ){
-            msg = msg + titles.get(i);
-            if(i == 5){
-                msg = msg + " and " + String.valueOf((titles.size() - 4)) + " more songs";
+        StringBuilder sb = new StringBuilder();
+
+        for(int i = 0; titles.size() > i ; i++) {
+            sb.append(titles.get(i));
+            sb.append(", ");
+            if(i == 4) {
+                sb.append("and ");
+                sb.append(titles.size() - 5);
+                sb.append(" more songs");
                 break;
-            } else {
-                msg = msg + ", ";
             }
         }
+
+        sb.setLength(sb.length()-2); // eliminem el ", "
         if(titles.size() == 1){
-            msg = msg + " was";
-            msg = msg.replace(",", "");
-        } else {
-            msg = msg + " were";
+            sb.append(" was");
         }
-        msg = msg + " deleted.";
-        JOptionPane.showMessageDialog(this, msg);
+        else sb.append(" were");
+        sb.append(" deleted.");
+
+        JOptionPane.showMessageDialog(this, sb.toString());
     }
 
     public void popUpSongsAdded() {
