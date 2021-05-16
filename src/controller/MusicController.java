@@ -34,7 +34,7 @@ public class MusicController implements SongEnder, PlaylistBarEvent {
         this.songIndex = 0;
     }
 
-    // TODO: Al carregar/canviar usuari cal cridar sempre setVolume()
+    // TODO: Al actualitzar el volum cal cridar sempre setVolume()
     public void setVolume(float volume) {
         this.volume = volume;
         if (this.player != null) this.player.setVolume(volume);
