@@ -6,8 +6,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
-public class Settings extends JPanel {
+public class Settings extends JPanel implements SliderController{
 
     public static final int HEIGHT = 900;
     public static final int WIDTH  = 1600;
@@ -26,8 +27,14 @@ public class Settings extends JPanel {
         //panel.setLayout(new BorderLayout.CENTER);
 
         JPanel options = new JPanel();
+        ArrayList<Bars> bars = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            bars.add(new Bars(this));
+        }
 
-        options.add(new Label("Octaves"));
+        options.add(new Label("Volume"));
+        options.add(bars.get(0));
+
 
 
         JPanel information = new JPanel();
@@ -48,19 +55,6 @@ public class Settings extends JPanel {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        /*
-        try {
-            BufferedImage img = ImageIO.read(new File(LOGO_PATH));
-            ImageIcon icon = new ImageIcon(img);
-            Image a = icon.getImage().getScaledInstance(28, 28,Image.SCALE_DEFAULT);
-
-            JLabel logoLabel = new JLabel(icon);
-            information.add(logoLabel, BorderLayout.CENTER);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
-        //information.add(logoSubPanel);
 
         String[] labelsInfo = {"[USER NAME]","[EMAIL]","[DATE]","[POINTS]"};
 
@@ -76,6 +70,10 @@ public class Settings extends JPanel {
 
         //information.add(infoSubPanel);
 
+        //OPTIONS
+        JPanel temp = new JPanel();
+
+
         //options.setPreferredSize(new Dimension(100, 100));
         //information.setPreferredSize(new Dimension(100, 100));
         options.setBackground(new Color(1, 1, 1));
@@ -87,10 +85,16 @@ public class Settings extends JPanel {
         this.add(panel, BorderLayout.CENTER);
 
 
+
         this.setVisible(true);
     }
 
     public JPanel options(){
         return null;
+    }
+
+    @Override
+    public void changeValue(int value) {
+        System.out.println("CANVI " + value);
     }
 }
