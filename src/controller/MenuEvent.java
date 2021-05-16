@@ -1,5 +1,7 @@
 package controller;
 
+import view.PlayingSongNotifier;
+
 public interface MenuEvent {
     void toggleLoop();
 
@@ -7,5 +9,5 @@ public interface MenuEvent {
 
     void togglePlaying();
 
-    String getActualSong();
+    void setPlayingSongListner(PlayingSongNotifier notifier);
 }
