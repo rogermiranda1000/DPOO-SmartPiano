@@ -8,7 +8,8 @@ public enum Icon {
     PLAY("▶"),
     NEXT("⏩"),
     SHUFFLE("\uD83D\uDD00"),
-    GOBACK("←");
+    GOBACK("←"),
+    ADD("+");
 
     private String icon;
 
