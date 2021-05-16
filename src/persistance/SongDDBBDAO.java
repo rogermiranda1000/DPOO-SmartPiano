@@ -128,7 +128,7 @@ public class SongDDBBDAO implements SongDAO {
 
     private boolean updateSongNotes(Song song, int id) {
         try {
-            ResultSet songNotes = this.ddbb.getSentence("SELECT tick, pressed, velocity, octave, note FROM SongNotes WHERE song = ?;",
+            ResultSet songNotes = this.ddbb.getSentence("SELECT tick, pressed, velocity, octave, note FROM SongNotes WHERE song = ? ORDER BY tick ASC;",
                     id);
 
             while (songNotes.next()) {
