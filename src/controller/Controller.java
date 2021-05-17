@@ -1,36 +1,47 @@
 package controller;
 
+import entities.List;
 import entities.Song;
 import model.BusinessFacade;
-import model.SongDAO;
-import model.UserDAO;
+import persistance.PlaylistDAO;
+import persistance.SongDAO;
+import persistance.UserDAO;
+import view.LogIn;
 import view.Menu;
 
-public class Controller implements LoginEvent, MenuEvent, SongsEvent,SongNotifier {
-    private final Menu view;
+import java.util.ArrayList;
+
+public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier {
+    private Menu menu;
+    private LogIn login;
     private final BusinessFacade model;
     private final SongDownloader scrapper;
 
-    public Controller(int scrappingTime, SongDAO songManager, UserDAO userManager) {
-        this.model = new BusinessFacade(songManager, userManager);
+    public Controller(int scrappingTime, SongDAO songManager, UserDAO userManager, PlaylistDAO playlistManager) {
+        this.model = new BusinessFacade(songManager, userManager, playlistManager);
 
         this.scrapper = new SongDownloader(this, scrappingTime);
         this.scrapper.start();
 
-        this.view = new Menu(this, this, this);
+
+        this.login = new LogIn(this);
+        this.login.setVisible(true);
     }
 
 
     @Override
     public void requestLogin(String user, String password) {
-        /*if (this.model.login(user, password)) this.view.dispose();
-        else this.view.wrongLogin();*/ // TODO
+        if (this.model.login(user, password)) {
+            this.login.dispose();
+            this.menu = new Menu(this, this, this);
+            this.menu.setVisible(true);
+        } else this.login.wrongLogin();
     }
 
     @Override
     public void requestRegister(String user, String email, String password) {
-        /*if (this.model.addUser(user, email, password)) this.view.userCreated();
-        else this.view.wrongPass();*/ // TODO
+        if (this.model.addUser(user, email, password)) this.login.userCreated();
+        else this.login.wrongCreation();
     }
 
     @Override
@@ -53,6 +64,31 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent,SongNotifie
 
     @Override
     public void addSong(Song song) {
-        if (!this.model.existsSong(song)) this.model.addSong(song);
+        if (!this.model.existsSong(song)) this.model.addDownloadedSong(song);
+    }
+
+    @Override
+    public ArrayList<String> getPlaylists() {
+        ArrayList<List> l = this.model.getPlaylists();
+        ArrayList<String> r = new ArrayList<>();
+        for (List list : l) r.add(list.getName());
+        return r;
+    }
+
+    @Override
+    public ArrayList<Song> getSongs(String playlist) {
+        ArrayList<List> l = this.model.getPlaylists();
+        ArrayList<String> r = new ArrayList<>();
+        for (List list : l) {
+            if (list.getName().equals(playlist)) return list.getSongs();
+        }
+        return null;
+    }
+
+    @Override
+    public void exitSession() {
+        this.menu.dispose();
+        this.login = new LogIn(this);
+        this.login.setVisible(true);
     }
 }

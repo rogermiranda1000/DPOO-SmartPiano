@@ -1,26 +1,32 @@
 package entities;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
 public class Song {
-    private final ArrayList<SongNote> notes;
-
     /**
      * Temps [us] per tick
      */
-    private final double tickLenght;
+    private double tickLength;
     private final String songName;
     private final String author;
     private final Date creationDate;
+    private boolean isPublic;
+    private final ArrayList<SongNote> notes;
 
-    public Song(String songName, String author, Date creationDate, double tickLenght) {
+    public Song(String songName, String author, Date creationDate, double tickLength, boolean isPublic) {
         this.notes = new ArrayList<>();
-        this.tickLenght = tickLenght;
+        this.tickLength = tickLength;
         this.songName = songName;
         this.author = author;
         this.creationDate = creationDate;
+        this.isPublic = isPublic;
+    }
+
+    public Song(String songName, String author, Date creationDate) {
+        this(songName, author, creationDate, -1, false);
     }
 
     /**
@@ -43,7 +49,32 @@ public class Song {
         return author;
     }
 
-    public Date getDate() {
-        return creationDate;
+    public String getDate() {
+        return new SimpleDateFormat("yyyy-MM-dd").format(this.creationDate);
+    }
+
+    public ArrayList<SongNote> getNotes() {
+        return this.notes;
+    }
+
+    public double getTickLength() {
+        return this.tickLength;
+    }
+
+    public boolean getPublic() {
+        return this.isPublic;
+    }
+
+    public void setTickLength(double tickLength) {
+        this.tickLength = tickLength;
+    }
+
+    public void setPublic(boolean isPublic) {
+        this.isPublic = isPublic;
+    }
+
+    @Override
+    public String toString() {
+        return this.songName + ", per " + this.author;
     }
 }

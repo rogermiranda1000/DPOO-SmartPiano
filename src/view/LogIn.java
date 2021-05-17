@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class LogIn extends JDialog implements ActionListener {
+public class LogIn extends JFrame implements ActionListener, LogInNotifier {
     private static final int WIDTH = 400;
     private static final int HEIGHT = 400;
     private static final int TXT_WIDTH = 120;
@@ -24,15 +24,14 @@ public class LogIn extends JDialog implements ActionListener {
     private final JPanel mainContent;
     private final CardLayout cl;
 
-    public LogIn(LoginEvent event, Frame frame) {
-        super(frame, true);
+    public LogIn(LoginEvent event) {
         this.event = event;
 
         this.setTitle("Sign In");
         this.setSize(WIDTH, HEIGHT);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         mainContent = new JPanel(new CardLayout());
         mainContent.add(buildLogin(), "login");
@@ -40,8 +39,6 @@ public class LogIn extends JDialog implements ActionListener {
         this.add(mainContent);
         cl = (CardLayout) (mainContent.getLayout());
         cl.show(mainContent, ("login"));
-
-        this.setVisible(true);
     }
 
     public JPanel buildLogin() {
@@ -208,7 +205,7 @@ public class LogIn extends JDialog implements ActionListener {
         buttons.setVisible(true);
         buttons.setMaximumSize(new Dimension(WIDTH, 100));
 
-        backButton = new JButton("Back to view.LogIn");
+        backButton = new JButton("Back to view LogIn");
         pushResgisterButton = new JButton("Register");
 
         buttons.add(backButton, BorderLayout.CENTER);
@@ -241,12 +238,19 @@ public class LogIn extends JDialog implements ActionListener {
         JOptionPane.showMessageDialog(this, "Wrong password. Try it again ( ͡❛ ︹ ͡❛)");
     }
 
+    @Override
     public void wrongLogin() {
         JOptionPane.showMessageDialog(this, "Wrong LogIn. Try it again ( ͡❛ ︹ ͡❛)");
     }
 
+    @Override
     public void userCreated() {
         JOptionPane.showMessageDialog(this, "User created successfully ¯\\_( ͡❛ ‿‿ ͡❛)_/¯");
+    }
+
+    @Override
+    public void wrongCreation() {
+        JOptionPane.showMessageDialog(this, "This user is already taken. Try it again ( ͡❛ ︹ ͡❛)");
     }
 
     //TODO: que es pugui accedir tant amb el nom d'usuari o el mail.
@@ -260,7 +264,9 @@ public class LogIn extends JDialog implements ActionListener {
         } else if (e.getSource() == backButton) {
             cl.show(mainContent, ("login"));
         } else if (e.getSource() == pushResgisterButton) {
-            if (this.checkPass()) this.event.requestRegister(usernameRegister.getText(), emailRegister.getText(), String.valueOf(passwordRegister.getPassword()));
+            // TODO email contains '@' and '.'
+            if (this.checkPass())
+                this.event.requestRegister(usernameRegister.getText(), emailRegister.getText(), String.valueOf(passwordRegister.getPassword()));
             else this.wrongPass();
         }
     }

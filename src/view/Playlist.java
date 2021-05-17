@@ -1,29 +1,32 @@
 package view;
 
-import controller.SongsEvent;
+import controller.PlaylistEvent;
+import entities.Song;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Playlist extends JPanel implements ActionListener, ListSelectionListener {
-    private SongsEvent event;
     private final DefaultListModel<String> playlistName;
     private final JList<String> playlistList;
-    private final DefaultListModel<String> songsName;
-    private final JList<String> songsList;
+    private final DefaultListModel<Song> songsName;
+    private final JList<Song> songsList;
     private JButton playPlaylistButton;
     private JButton removeSongButton;
     private JButton removePlaylistButton;
+    private JButton createPlaylistButton;
     private List<String> selectedValuesList;
 
-    public Playlist() {
+    private final PlaylistEvent event;
+
+    public Playlist(PlaylistEvent playlistE) {
+        this.event = playlistE;
+
         this.playlistName = new DefaultListModel<>();
         this.playlistList = new JList<>(playlistName);
         this.songsName = new DefaultListModel<>();
@@ -38,12 +41,12 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
         playlistView.add(playlistList());
         playlistView.add(playlistBotPanel());
 
-        //TODO: ADD PLAYLISTS
-        for (int i = 0; i < 50; i++) {
-            playlistName.addElement(String.valueOf(i));
-        }
-
         this.add(playlistView);
+    }
+
+    public void reloadPlaylists() {
+        this.playlistName.clear();
+        this.playlistName.addAll(this.event.getPlaylists());
     }
 
     public JPanel playlistList() {
@@ -76,6 +79,7 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
         JPanel panel = new JPanel();
         panel.setBackground(ColorConstants.MENU.getColor());
 
+        createPlaylistButton = new GenericButton(view.Icon.ADD.getIcon());
         playPlaylistButton = new GenericButton(view.Icon.PLAY.getIcon());
         removePlaylistButton = new GenericButton("X");
         removeSongButton = new GenericButton("X", new Font(null, Font.PLAIN, 20));
@@ -83,7 +87,9 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
         playPlaylistButton.addActionListener(this);
         removePlaylistButton.addActionListener(this);
         removeSongButton.addActionListener(this);
+        createPlaylistButton.addActionListener(this);
 
+        panel.add(createPlaylistButton);
         panel.add(playPlaylistButton);
         panel.add(removePlaylistButton);
         panel.add(removeSongButton);
@@ -95,13 +101,8 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
     }
 
     protected void updateSongsList(String playlist) {
-        ArrayList<String> songs = new ArrayList<>();
         this.songsName.clear();
-        //TODO: agafar el llistat de cançons de la llista de la base de dades songs = cotroller.getSongsPlaylist(playlist)
-        songs.add(this.selectedValuesList.get(0));
-        for (String song : songs) {
-            this.songsName.addElement(song);
-        }
+        this.songsName.addAll(this.event.getSongs(playlist));
     }
 
     @Override
@@ -112,6 +113,9 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
             // TODO: controller.deletePlaylist(String.valueOf(selectedValuesList.get(0));
         } else if (e.getSource() == removeSongButton) {
             // TODO: controller.deleteSongsFromPlaylist(String.valueOf(selectedValuesList.get(0), selectedSongs);
+        } else if (e.getSource() == createPlaylistButton) {
+            new CreatePlaylistPopUp("Create playlist");
+
         }
     }
 
@@ -119,7 +123,7 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
     public void valueChanged(ListSelectionEvent e) {
         if (!e.getValueIsAdjusting()) {
             this.selectedValuesList = this.playlistList.getSelectedValuesList();
-            updateSongsList(String.valueOf(this.selectedValuesList.get(0)));
+            this.updateSongsList(this.selectedValuesList.get(0));
             this.removeSongButton.setVisible(true);
         }
     }
