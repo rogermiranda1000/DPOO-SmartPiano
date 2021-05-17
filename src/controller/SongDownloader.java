@@ -3,7 +3,7 @@ package controller;
 import entities.Song;
 import model.WebScrapping;
 
-public class SongDownloader extends Thread {
+public class SongDownloader extends Thread implements SongNotifier {
     private final int scrappingTime;
     private final SongNotifier notifier;
     private long lastTime;
@@ -20,7 +20,7 @@ public class SongDownloader extends Thread {
         try {
             while (true) {
                 // obtè de la WEB
-                for (Song s : WebScrapping.getSongs()) this.notifier.addSong(s);
+                WebScrapping.getSongs(this);
 
                 // espera el temps d'scrapping
                 long now = System.currentTimeMillis();
@@ -30,5 +30,11 @@ public class SongDownloader extends Thread {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+
+    @Override
+    public void addSong(Song song) {
+        this.notifier.addSong(song);
     }
 }

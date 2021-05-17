@@ -6,4 +6,7 @@ public interface MenuEvent {
     int currentSongPos();
 
     boolean playing();
+
+    void exitSession();
+
 }
