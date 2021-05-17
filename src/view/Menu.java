@@ -21,7 +21,7 @@ public class Menu extends JFrame implements ActionListener, KeyChanger {
     private JFrame window;
     private JPanel mainContent;
     private CardLayout cl;
-    private Piano piano;
+    protected Piano piano;
 
     private final LogIn login;
     private final Playlist playlist;
@@ -298,7 +298,7 @@ public class Menu extends JFrame implements ActionListener, KeyChanger {
     }
 
     @Override
-    public void changeKey(Note n, char newLetter) {
-        //piano.changeKey();
+    public void changeKey(Note n, char newLetter, int octava) {
+        piano.changeKey(n, newLetter, octava);
     }
 }

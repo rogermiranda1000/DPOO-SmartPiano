@@ -3,7 +3,6 @@ package view;
 import entities.Note;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -11,13 +10,16 @@ public class Tecla extends JPanel implements MouseListener, KeyListener{
 
     private JPanel tecla = new JPanel();
     private Note note;
-    private int ocataba;
+    private int ocatava;
     private KeyController kC;
-    private String keyAssocieted;
+    private Note keyAssocieted;
+    private boolean isBlack;
 
-    public Tecla(Piano p, Note note, boolean isWhite) {
+    public Tecla(Piano p, Note note, boolean isBlack, int octava) {
         this.note = note;
         this.kC = p;
+        this.ocatava = octava;
+        this.isBlack = isBlack;
 
         MyKeyListener mKL = new MyKeyListener(p);
 
@@ -25,7 +27,7 @@ public class Tecla extends JPanel implements MouseListener, KeyListener{
         this.setLayout(new BorderLayout());
         this.add(new JLabel(note.toString()), BorderLayout.SOUTH);
 
-        if(isWhite) this.setBackground(new Color(0, 0, 0));
+        if(isBlack) this.setBackground(new Color(0, 0, 0));
         else this.setBackground(new Color(255, 255, 255));
 
         this.addMouseListener(this);
@@ -35,7 +37,15 @@ public class Tecla extends JPanel implements MouseListener, KeyListener{
 
     }
 
-    public void setKeyAssocieted(String keyAssocieted) {
+    public Note getNote(){
+        return this.note;
+    }
+
+    public int getOctava(){
+        return this.ocatava;
+    }
+
+    public void setKeyAssocieted(Note keyAssocieted) {
         this.keyAssocieted = keyAssocieted;
     }
 
@@ -47,14 +57,15 @@ public class Tecla extends JPanel implements MouseListener, KeyListener{
     @Override
     public void mousePressed(MouseEvent e) {
         if(this.contains(e.getPoint())){
-            this.setBackground(new Color(255, 0, 0));
+            this.setBackground(new Color(99, 99, 99));
             kC.isPressed(note);
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        this.setBackground(new Color(0, 64, 255));
+        if(isBlack) this.setBackground(new Color(0, 0, 0));
+        else this.setBackground(new Color(255, 255, 255));
         kC.isNotPressed(note);
     }
 
@@ -70,20 +81,24 @@ public class Tecla extends JPanel implements MouseListener, KeyListener{
 
     @Override
     public void keyTyped(KeyEvent e) {
-        System.out.println("2");
-        kC.keyBoardPressed(e.getKeyChar());
+        if(this.note.toString().charAt(0) == e.getKeyChar()){
+            System.out.println("NOTA: " + note + " - Octava: " + ocatava);
+        }
+        /*System.out.println(e.getKeyChar());
+        kC.keyBoardPressed(e.getKeyChar());*/
 
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println("HOLA");
-        kC.keyBoardPressed(e.getKeyChar());
+        /*System.out.println(e.getKeyChar());
+        System.out.println(e.getKeyCode());
+        kC.keyBoardPressed(e.getKeyChar());*/
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        System.out.println("HEY");
-        kC.keyBoardNotPressed(e.getKeyChar());
+        /*System.out.println("HEY");
+        kC.keyBoardNotPressed(e.getKeyChar());*/
     }
 }
