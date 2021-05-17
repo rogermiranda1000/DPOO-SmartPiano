@@ -1,5 +1,6 @@
 package model;
 
+import controller.SongEnder;
 import entities.Song;
 import entities.SongNote;
 
@@ -20,15 +21,19 @@ public class NotePlayer extends Thread {
 
     private boolean paused;
     private boolean alive;
+    private float volume;
 
+    private final SongEnder songEnder;
     private final Object notified; //Utilitzat per fer el notify
 
-    public NotePlayer(Song song) {
+    public NotePlayer(Song song, float volume, SongEnder songEnder) {
         this.paused = false;
         this.alive = true;
         this.notified = new Object();
         this.notes = song.getNotes();
         this.tickLength = song.getTickLength();
+        this.volume = volume;
+        this.songEnder = songEnder;
         MidiChannel[] channels = null;
         Synthesizer synth = null;
         try {
@@ -46,7 +51,7 @@ public class NotePlayer extends Thread {
      * Constructor del singleton
      */
     public NotePlayer() {
-        this(new Song("","",null, 1, false));
+        this(new Song(), 1, null);
     }
 
     /**
@@ -54,6 +59,8 @@ public class NotePlayer extends Thread {
      * @param p Booleà que indica si es pausa
      */
     public void setPlay(boolean p) {
+        if (!p == this.paused) return;
+
         synchronized (this.notified) {
             this.paused = !p;
             if (p) this.notified.notify();
@@ -61,17 +68,19 @@ public class NotePlayer extends Thread {
 
     }
 
+    public void setVolume(float volume) {
+        this.volume = volume;
+    }
+
     public synchronized boolean getAlive() {
         return this.alive;
     }
 
-    private void closeSynth() {
-        this.synth.close();
-    }
-
+    /**
+     * Força l'eliminació del thread
+     */
     public synchronized void closePlayer() {
         this.alive = false;
-        this.closeSynth();
     }
 
     @Override
@@ -99,12 +108,18 @@ public class NotePlayer extends Thread {
                 }
             }
         }
-        this.closeSynth();
+
+        // es tanca & notifica
+        if (this.getAlive()) {
+            // si ja s'ha tancat vol dir que ha sigut forçat -> no notifiquis
+            if (this.songEnder != null) this.songEnder.songEnded();
+        }
+        this.synth.close();
     }
 
     public void executeNote(SongNote note) {
         if (note.isPressed()) {
-            this.channels[INSTRUMENT].noteOn(note.getId(), note.getVelocity());
+            this.channels[INSTRUMENT].noteOn(note.getId(), Math.round(note.getVelocity()*volume));
         } else {
             this.channels[INSTRUMENT].noteOff(note.getId(), note.getVelocity());
         }
