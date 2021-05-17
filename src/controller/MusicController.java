@@ -5,6 +5,8 @@ import entities.Song;
 import model.NotePlayer;
 import view.PlayingSongNotifier;
 
+import java.util.Random;
+
 public class MusicController implements SongEnder, PlaylistBarEvent, SongRequest, PlaylistRequest {
     // TODO syncronized?
     private NotePlayer player;
@@ -74,7 +76,7 @@ public class MusicController implements SongEnder, PlaylistBarEvent, SongRequest
      * @return un enter aleatori entre 1 i list.getSongs().size() - 1
      */
     private int getRandomNext() {
-        return (int)Math.round(Math.random() * (this.list.getSongs().size()-2))+1;
+        return new Random().nextInt(this.list.getSongs().size());
     }
 
     @Override
