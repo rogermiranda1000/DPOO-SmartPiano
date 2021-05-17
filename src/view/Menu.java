@@ -1,29 +1,31 @@
 package view;
 
-import controller.MenuEvent;
-import controller.PlaylistEvent;
-import controller.SongsEvent;
+import controller.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Menu extends JFrame implements ActionListener {
+public class Menu extends JFrame implements ActionListener, PlayingSongNotifier {
     public static final int HEIGHT = 900;
     public static final int WIDTH = 1600;
     private JButton playButton, loopButton, nextButton, backButton, shuffleButton;
     private JButton songsButton, playlistButton, pianoButton, rankingButton, settingsButton, exitButton;
     private JLabel playingSong;
-    private MenuEvent event;
-
-    private JPanel mainContent;
-    private CardLayout cl;
+    private final MenuEvent event;
+    private final PlaylistBarEvent playE;
+    private final JPanel mainContent;
+    private final CardLayout cl;
 
     private final Playlist playlist;
+    private final Songs songs;
 
-    public Menu(MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE) {
+    public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE) {
         this.event = menuE;
+        this.playE = playE;
+        playE.setPlayingSongListner(this);
+
         this.setTitle("Piano TIME!");
         ImageIcon img = new ImageIcon("images\\icon.jpg");
         this.setIconImage(img.getImage());
@@ -41,8 +43,9 @@ public class Menu extends JFrame implements ActionListener {
 
         // Adding layouts
         this.playlist = new Playlist(playlistE);
+        this.songs = new Songs(songsE, songRequestE);
         mainContent = new JPanel(new CardLayout());
-        mainContent.add(new Songs(songsE), "songs");
+        mainContent.add(this.songs, "songs");
         mainContent.add(this.playlist, "playlists");
         mainContent.add(new Piano(), "piano");
         mainContent.add(new Ranking(), "ranking");
@@ -202,33 +205,32 @@ public class Menu extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == loopButton) {
-            if (event.toggleLoop()) {
-                loopButton.setForeground(Color.LIGHT_GRAY);
-                // TODO: player.setLoopState(false);
-            } else {
-                loopButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
-                // TODO: player.setLoopState(true);
-            }
+        /* BOTTOM BAR BUTTONS */
+        if(e.getSource() == loopButton) {
+            this.loopButton.setForeground( this.loopButton.getForeground().equals(ColorConstants.ACTIVE_BUTTON.getColor()) ? Color.LIGHT_GRAY : ColorConstants.ACTIVE_BUTTON.getColor() ); // toggle button's color
+            this.playE.toggleLoop();
         } else if (e.getSource() == backButton) {
-            if (event.currentSongPos() > 1) {
+            /*if(event.currentSongPos() > 1){
                 //TODO: player.playBackSong();
-                playingSong.setText("back" /*TODO : player.getPlayingSongTitle() + - + player.getPlayingSongArtist*/);
-            }
+                playingSong.setText("back"); // TODO : player.getPlayingSongTitle() + - + player.getPlayingSongArtist
+            }*/
         } else if (e.getSource() == playButton) {
-            if (event.playing()) {
-                playButton.setText(Icon.PAUSE.getIcon());
-                // TODO: player.pausePlay();
-            } else {
-                playButton.setText(Icon.PLAY.getIcon());
-                //TODO player.resumePlay();
-            }
+            this.playButton.setText( this.playButton.getText().equals(Icon.PAUSE.getIcon()) ? Icon.PLAY.getIcon() : Icon.PAUSE.getIcon() ); // toggle button's text
+            this.playE.togglePlaying();
         } else if (e.getSource() == nextButton) {
-            if (event.currentSongPos() < 10 /* TODO: player.playingListSize()*/) {
+            /*if(event.currentSongPos() < 10){ // TODO: player.playingListSize()
                 //TODO: player.playNextSong();
-                playingSong.setText("next" /*TODO : player.getPlayingSongTitle() + - + player.getPlayingSongArtist*/);
-            }
-        } else if (e.getSource() == songsButton) {
+                playingSong.setText("next" ); // TODO : player.getPlayingSongTitle() + - + player.getPlayingSongArtist
+            }*/
+        } else if (e.getSource() == this.shuffleButton) {
+            this.shuffleButton.setForeground( this.shuffleButton.getForeground().equals(ColorConstants.ACTIVE_BUTTON.getColor()) ? Color.LIGHT_GRAY : ColorConstants.ACTIVE_BUTTON.getColor() ); // toggle button's color
+            this.playE.toggleRandom();
+        }
+        /* TOP BAR BUTTONS */
+        else if (e.getSource() == songsButton) {
+            // s'entrarà a songs -> recargar
+            this.songs.reloadSongs();
+            this.songs.reloadPlaylists();
             cl.show(mainContent, ("songs"));
 
             resetButtonsColors();
@@ -255,7 +257,12 @@ public class Menu extends JFrame implements ActionListener {
             resetButtonsColors();
             settingsButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == exitButton) {
-            event.exitSession();
+            this.event.exitSession();
         }
+    }
+
+    @Override
+    public void newSongPlaying(String songName) {
+        this.playingSong.setText(songName);
     }
 }

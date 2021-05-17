@@ -13,8 +13,13 @@ public class List {
         this.songs = new ArrayList<>();
     }
 
-    public void addSong(Song s) {
+    public List() {
+        this("", "");
+    }
+
+    public List addSong(Song s) {
         this.songs.add(s);
+        return this;
     }
 
     public String getName() {
