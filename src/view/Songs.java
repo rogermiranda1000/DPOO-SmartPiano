@@ -3,7 +3,6 @@ package view;
 import controller.SongsEvent;
 
 import javax.swing.*;
-import javax.swing.Icon;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
