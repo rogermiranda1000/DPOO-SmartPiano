@@ -4,15 +4,11 @@ import entities.Note;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 public class Piano extends JPanel implements KeyController {
 
-    public static final boolean ISWHITE = true;
+    public static final boolean ISBLACK = true;
 
     private ArrayList<JPanel> jP = new ArrayList<>();
     private JPanel jP2 = new JPanel();
@@ -30,25 +26,34 @@ public class Piano extends JPanel implements KeyController {
     }
 
     private void drawPiano(){
+        int octava = 1;
         for (int i = 0; i < 24; i++) {
 
             String nota = Note.getNote(i % 12).toString();
 
+            if(i == 11) octava = 2;
             if(nota.charAt(nota.length() - 1) == 'X'){
-                Tecla temp = new Tecla(this, Note.getNote(i % 12), ISWHITE);
+                Tecla temp = new Tecla(this, Note.getNote(i % 12), ISBLACK, octava);
                 keys.add(temp);
                 this.add(temp, BorderLayout.SOUTH);
             }else {
-                Tecla temp = new Tecla(this, Note.getNote(i % 12), !ISWHITE);
+                Tecla temp = new Tecla(this, Note.getNote(i % 12), !ISBLACK, octava);
                 keys.add(temp);
                 this.add(temp, BorderLayout.SOUTH);
             }
         }
     }
 
-    private void changeKey(){
-        for (int i = 0; i < keys.size(); i++) {
-            keys.get(i).setKeyAssocieted(Note.getNote(i % 12).toString());
+    void changeKey(Note n, char letter, int octava){
+        int i = 0;
+
+        while(i < 24){
+            if(n.equals(keys.get(i).getNote()) && keys.get(i).getOctava() == octava){
+                keys.get(i).setKeyAssocieted(n);
+                break;
+            }
+
+            i++;
         }
     }
 

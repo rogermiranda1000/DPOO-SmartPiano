@@ -6,6 +6,8 @@ import javax.swing.event.ChangeListener;
 
 public class Bars extends JSlider implements ChangeListener {
 
+    //TODO: borrar si s'està segur.
+
     JSlider jS;
     SliderController sC;
 
