@@ -4,13 +4,14 @@ import controller.LoginEvent;
 import controller.MenuEvent;
 import controller.PlaylistEvent;
 import controller.SongsEvent;
+import entities.Note;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Menu extends JFrame implements ActionListener {
+public class Menu extends JFrame implements ActionListener, KeyChanger {
     public static final int HEIGHT = 900;
     public static final int WIDTH  = 1600;
     private JButton playButton, loopButton, nextButton, backButton, shuffleButton;
@@ -26,6 +27,8 @@ public class Menu extends JFrame implements ActionListener {
     private final Playlist playlist;
 
     public Menu(LoginEvent loginE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE) {
+
+        //TODO: Fer que les tecles es pouguin canviar i que tinguin un valor inicial.
         this.event = menuE;
         window = new JFrame("Piano TIME!");
         ImageIcon img = new ImageIcon("images\\icon.jpg");
@@ -54,7 +57,7 @@ public class Menu extends JFrame implements ActionListener {
         piano = new Piano();
         mainContent.add(piano, "piano");
         mainContent.add(new Ranking(), "ranking");
-        mainContent.add(new Settings(), "settings");
+        mainContent.add(new Settings(this), "settings");
         window.add(mainContent);
         cl = (CardLayout) (mainContent.getLayout());
         /* DEFAULT VIEW */
@@ -292,5 +295,10 @@ public class Menu extends JFrame implements ActionListener {
 
     public void wrongCreation() {
         this.login.wrongCreation();
+    }
+
+    @Override
+    public void changeKey(Note n, char newLetter) {
+        //piano.changeKey();
     }
 }

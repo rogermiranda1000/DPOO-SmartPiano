@@ -18,7 +18,7 @@ public class Settings extends JPanel implements SliderController, ChangeListener
     public static final int HEIGHT = 900;
     public static final int WIDTH  = 1600;
 
-    public Settings() {
+    public Settings(KeyChanger kC) {
 
         this.setBackground(ColorConstants.BACKGROUND.getColor());
 

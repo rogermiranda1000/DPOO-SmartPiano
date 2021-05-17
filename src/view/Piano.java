@@ -46,7 +46,7 @@ public class Piano extends JPanel implements KeyController {
         }
     }
 
-    private void changeKeys(){
+    private void changeKey(){
         for (int i = 0; i < keys.size(); i++) {
             keys.get(i).setKeyAssocieted(Note.getNote(i % 12).toString());
         }
