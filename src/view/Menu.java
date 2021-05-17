@@ -20,6 +20,7 @@ public class Menu extends JFrame implements ActionListener {
     private JFrame window;
     private JPanel mainContent;
     private CardLayout cl;
+    private Piano piano;
 
     private final LogIn login;
     private final Playlist playlist;
@@ -49,7 +50,9 @@ public class Menu extends JFrame implements ActionListener {
         mainContent = new JPanel(new CardLayout());
         mainContent.add(new Songs(songsE), "songs");
         mainContent.add(this.playlist, "playlists");
-        mainContent.add(new Piano(), "piano");
+
+        piano = new Piano();
+        mainContent.add(piano, "piano");
         mainContent.add(new Ranking(), "ranking");
         mainContent.add(new Settings(), "settings");
         window.add(mainContent);
@@ -255,6 +258,7 @@ public class Menu extends JFrame implements ActionListener {
             playlistButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == pianoButton) {
             cl.show(mainContent, ("piano"));
+            piano.requestFocus();
 
             resetButtonsColors();
             pianoButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
