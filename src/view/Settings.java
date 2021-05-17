@@ -12,6 +12,9 @@ import java.util.ArrayList;
 
 public class Settings extends JPanel implements SliderController, ChangeListener {
 
+
+    //TODO: LOGOUT, delete account
+
     public static final int HEIGHT = 900;
     public static final int WIDTH  = 1600;
 
