@@ -227,6 +227,10 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, ConfigNo
         piano.playNote(key);
     }
 
+    public void stopNote(char key){
+        piano.stopNote(key);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == loopButton) {

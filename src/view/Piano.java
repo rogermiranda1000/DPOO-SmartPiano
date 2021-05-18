@@ -64,6 +64,11 @@ public class Piano extends JPanel implements KeyController {
         }
     }
 
+    public void stopNote(char key){
+        for (int i = 0; i < keys.size(); i++) {
+            if(keys.get(i).getKey() == key) keys.get(i).stopNote();
+        }
+    }
 
 
 
