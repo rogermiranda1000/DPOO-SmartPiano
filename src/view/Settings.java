@@ -12,21 +12,18 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class Settings extends JPanel implements ActionListener, ChangeListener{ //}, SliderController, ChangeListener {
     private final CardLayout cl;
     private final JPanel mainContent;
     private JButton keysConfigButton, saveKeysConfigButton;
-    private JSlider volum, velocitat;
-    private JLabel volumTxt, velocitatTxt;
+    private JSlider volumePiano, volumeSong;
+    private JLabel volumePianoTxt, volumeSongTxt;
     private JButton oneOctava, twoOctaves;
-    private JButton deleteButton, editButton, saveButton;
+    private JButton deleteButton, saveButton;
 
     private static ConfigNotifier cN;
     private static KeyChanger kC;
-
-    //TODO: LOGOUT, delete account
 
     public static final int HEIGHT = 900;
     public static final int WIDTH  = 1600;
@@ -69,16 +66,16 @@ public class Settings extends JPanel implements ActionListener, ChangeListener{ 
         bars.get(0).addChangeListener(this);*/
 
         //Barra de volum
-        JPanel volumePanel = new JPanel();
-        volum = new JSlider(0,100,50);
-        volum.addChangeListener(this);
-        volumTxt = new JLabel("50");
+        JPanel pianoVolumePanel = new JPanel();
+        volumePiano = new JSlider(0,100,50);
+        volumePiano.addChangeListener(this);
+        volumePianoTxt = new JLabel("50");
 
         //Barra de velocitat
-        JPanel speedPanel = new JPanel();
-        velocitat = new JSlider(0,100,50);
-        velocitat.addChangeListener(this);
-        velocitatTxt = new JLabel("50");
+        JPanel songVolumePanel = new JPanel();
+        volumeSong = new JSlider(0,100,50);
+        volumeSong.addChangeListener(this);
+        volumeSongTxt = new JLabel("50");
 
         //Botons octaves
         JPanel octavesPanel = new JPanel();
@@ -90,36 +87,33 @@ public class Settings extends JPanel implements ActionListener, ChangeListener{ 
         JPanel blankSpace = new JPanel(); //TODO: buscar millor maner de fer espai en blanc.
         blankSpace.setPreferredSize(new Dimension(100,30));
 
-        //Edit profile
-        JPanel editPanel = new JPanel();
-        editPanel.setLayout(new BorderLayout());
+        //Delete profile
+        JPanel deletePanel = new JPanel();
+        deletePanel.setLayout(new BorderLayout());
         deleteButton = new JButton("Delete profile");
-        editButton = new JButton("Edit profile");
-        editPanel.add(new JLabel("Do you want to delete/edit your profile?"), BorderLayout.NORTH);
-        editPanel.add(deleteButton, BorderLayout.WEST);
-        editPanel.add(editButton, BorderLayout.EAST);
+        deletePanel.add(new JLabel("Do you want to delete your profile?"), BorderLayout.NORTH);
+        deletePanel.add(deleteButton, BorderLayout.CENTER);
 
 
         //Save button
         saveButton = new JButton("[SAVE CURRENT CONFIGURATION]");
 
         //Afegim els elements als seus JPanel
-        volumePanel.add(new Label("Volume"));
-        volumePanel.add(volum);
-        volumePanel.add(volumTxt);
-        speedPanel.add(new Label("Speed"));
-        speedPanel.add(velocitat);
-        speedPanel.add(velocitatTxt);
+        pianoVolumePanel.add(new Label("Paino volume"));
+        pianoVolumePanel.add(volumePiano);
+        pianoVolumePanel.add(volumePianoTxt);
+        songVolumePanel.add(new Label("Song volume"));
+        songVolumePanel.add(volumeSong);
+        songVolumePanel.add(volumeSongTxt);
         octavesPanel.add(new Label("Octaves: "));
         octavesPanel.add(oneOctava);
         octavesPanel.add(twoOctaves);
 
         //Afegim els JPanels que contenen els elements a la pantalla (JPanel que està dins de la pantalla).
-        options.add(volumePanel);
-        options.add(speedPanel);
+        options.add(pianoVolumePanel);
+        options.add(songVolumePanel);
         options.add(octavesPanel);
         options.add(blankSpace);
-        options.add(editPanel);
         options.add(saveButton);
 
         JPanel information = new JPanel();
@@ -178,6 +172,14 @@ public class Settings extends JPanel implements ActionListener, ChangeListener{ 
         return content;
     }
 
+    private int getPianoVolume(){
+        return this.volumePiano.getValue();
+    }
+
+    private int getSongVolume(){
+        return this.volumeSong.getValue();
+    }
+
     private JPanel keysView(){
         JPanel content = new JPanel();
         saveKeysConfigButton = new GenericButton("Save changes!", null);
@@ -206,11 +208,8 @@ public class Settings extends JPanel implements ActionListener, ChangeListener{ 
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        if(e.getSource() == volum) volumTxt.setText(Integer.toString(volum.getValue()));
-        else if(e.getSource() == velocitat) velocitatTxt.setText(Integer.toString(velocitat.getValue()));
-
-        //cN.saveVolumes(); //TODO: actualitxar valors de settings cap a menu
-
+        if(e.getSource() == volumePiano) volumePianoTxt.setText(Integer.toString(volumePiano.getValue()));
+        else if(e.getSource() == volumeSong) volumeSongTxt.setText(Integer.toString(volumeSong.getValue()));
     }
 
     @Override
@@ -221,15 +220,16 @@ public class Settings extends JPanel implements ActionListener, ChangeListener{ 
             cl.show(mainContent, ("settings"));
         }
 
-        //TODO: connectar amb BBDD.
-        if(e.getSource() == saveButton) System.out.println("SAVE!");
 
-        //TODO: preguntar com fer sense getSouce (es per una cosa que va dir el Pol de que es podia fer millor) - De David
+        if(e.getSource() == saveButton){
+            cN.saveVolumes((float) volumePiano.getValue(), (float) volumePiano.getValue());
+        }
+        if(e.getSource() == deleteButton) cN.sendSignal("delete");
+
+
         if(e.getSource() == oneOctava) System.out.println("Primera octava");
         else if(e.getSource() == twoOctaves) System.out.println("Segona octava");
 
-        if(e.getSource() == deleteButton) System.out.println("Delete");
-        else if(e.getSource() == editButton) System.out.println("Edit");
     }
 }
 

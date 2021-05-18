@@ -104,11 +104,12 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == playPlaylistButton) {
-            // TODO: controller.playPlaylist(String.valueOf(selectedValuesList.get(0));
+            event.playPlaylist(String.valueOf(selectedValuesList.get(0)));
         } else if (e.getSource() == removePlaylistButton) {
-            // TODO: controller.deletePlaylist(String.valueOf(selectedValuesList.get(0));
+            event.deletePlaylist(String.valueOf(selectedValuesList.get(0)));
         } else if (e.getSource() == removeSongButton) {
-            // TODO: controller.deleteSongsFromPlaylist(String.valueOf(selectedValuesList.get(0), selectedSongs);
+            //TODO: arreglar això, no se que fa XD
+            //event.deleteSongsFromPlaylist(String.valueOf(selectedValuesList.get(0), selectedSongs));
         }
     }
 

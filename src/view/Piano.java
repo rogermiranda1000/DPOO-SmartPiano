@@ -44,7 +44,7 @@ public class Piano extends JPanel implements KeyController {
         }
     }
 
-    //TODO: funció bucle que actualitzi les notes/tecles
+    //TODO: funció bucle que actualitzi les notes/tecles - Revisat, crec que bé
     public void changeKey(Note n, char letter, int octava){
         int i = 0;
 

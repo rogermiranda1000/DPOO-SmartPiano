@@ -27,7 +27,7 @@ public class Songs extends JPanel implements ActionListener {
 
         this.event = songE;
 
-        //TODO: borrar aquest TODO.
+
         // Adding layouts
         mainContent = new JPanel(new CardLayout());
         mainContent.add(songsList(), "songs");
