@@ -44,7 +44,8 @@ public class Piano extends JPanel implements KeyController {
         }
     }
 
-    void changeKey(Note n, char letter, int octava){
+    //TODO: funció bucle que actualitzi les notes/tecles
+    public void changeKey(Note n, char letter, int octava){
         int i = 0;
 
         while(i < 24){
@@ -57,7 +58,15 @@ public class Piano extends JPanel implements KeyController {
         }
     }
 
-    //TODO: funció bucle que actualitzi les notes/tecles
+    public void playNote(char key){
+        for (int i = 0; i < keys.size(); i++) {
+            if(keys.get(i).getKey() == key) keys.get(i).playNote();
+        }
+    }
+
+
+
+
 
 
 
