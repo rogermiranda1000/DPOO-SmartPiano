@@ -80,6 +80,21 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     }
 
     @Override
+    public void deletePlaylist(String playlist) {
+        //TODO: conectar amb BBDD
+    }
+
+    @Override
+    public void playPlaylist(String valueOf) {
+        //TODO: conectar amb BBDD
+    }
+
+    @Override
+    public void deleteSongsFromPlaylist(String value) {
+        //TODO: conectar amb BBDD
+    }
+
+    @Override
     public boolean saveKeyNotes(char[] chars) {
         return false;
     }
@@ -87,5 +102,10 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     @Override
     public boolean saveVolumes(float pianoVolume, float songVolume) {
         return false;
+    }
+
+    @Override
+    public String sendSignal(String type) {
+        return type;
     }
 }

@@ -17,4 +17,10 @@ public interface PlaylistEvent {
      * @return Cançons formant playlist
      */
     ArrayList<Song> getSongs(String playlist);
+
+    void deletePlaylist(String playlist);
+
+    void playPlaylist(String valueOf);
+
+    void deleteSongsFromPlaylist(String value);
 }

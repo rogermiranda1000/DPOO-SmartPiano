@@ -318,8 +318,17 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, ConfigNo
         return false;
     }
 
+    //TODO: connectar amb BBDD.
     @Override
     public boolean saveVolumes(float pianoVolume, float songVolume) {
         return false;
+    }
+
+
+    //TODO: connectar amb BBDD.
+    //Sé que aquesta funció és molt tonta, però és la manera que se m'ha ocurregut, demano disculpes per possibles atacs de panic al veure aquesta funció. - David
+    @Override
+    public String sendSignal(String type) {
+        return type;
     }
 }
