@@ -41,12 +41,25 @@ public class Tecla extends JPanel implements MouseListener, KeyListener{
         return this.note;
     }
 
+    public char getKey() {
+        return keyAssocieted;
+    }
+
     public int getOctava(){
         return this.ocatava;
     }
 
     public void setKeyAssocieted(char keyAssocieted) {
         this.keyAssocieted = keyAssocieted;
+    }
+
+    public void playNote(){
+        this.setBackground(new Color(68, 108, 234));
+    }
+
+    public void stopNote(){
+        if(isBlack) this.setBackground(new Color(0, 0, 0));
+        else this.setBackground(new Color(255, 255, 255));
     }
 
     @Override

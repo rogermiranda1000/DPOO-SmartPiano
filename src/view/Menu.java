@@ -220,6 +220,10 @@ public class Menu extends JFrame implements ActionListener, KeyChanger {
         settingsButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
     }
 
+    public void playNote(char key){
+        piano.playNote(key);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == loopButton) {
