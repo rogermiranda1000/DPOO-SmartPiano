@@ -2,6 +2,7 @@ package view;
 
 import controller.MenuEvent;
 import controller.PlaylistEvent;
+import controller.RankingEvent;
 import controller.SongsEvent;
 
 import javax.swing.*;
@@ -22,7 +23,7 @@ public class Menu extends JFrame implements ActionListener {
 
     private final Playlist playlist;
 
-    public Menu(MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE) {
+    public Menu(MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE) {
         this.event = menuE;
         this.setTitle("Piano TIME!");
         ImageIcon img = new ImageIcon("images\\icon.jpg");
@@ -45,7 +46,7 @@ public class Menu extends JFrame implements ActionListener {
         mainContent.add(new Songs(songsE), "songs");
         mainContent.add(this.playlist, "playlists");
         mainContent.add(new Piano(), "piano");
-        mainContent.add(new Ranking(), "ranking");
+        mainContent.add(new Ranking(rankingE), "ranking");
         mainContent.add(new Settings(), "settings");
         this.add(mainContent);
         cl = (CardLayout) (mainContent.getLayout());
