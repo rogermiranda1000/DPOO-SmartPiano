@@ -11,25 +11,28 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Menu extends JFrame implements ActionListener, KeyChanger {
+public class Menu extends JFrame implements ActionListener, KeyChanger, ConfigNotifier {
     public static final int HEIGHT = 900;
     public static final int WIDTH  = 1600;
     private JButton playButton, loopButton, nextButton, backButton, shuffleButton;
     private JButton songsButton, playlistButton, pianoButton, rankingButton, settingsButton,exitButton;
     private JLabel playingSong;
-    private MenuEvent event;
     private JFrame window;
     private JPanel mainContent;
     private CardLayout cl;
     protected Piano piano;
 
+    private MenuEvent event;
+    private ConfigNotifier configN;
+
     private final LogIn login;
     private final Playlist playlist;
 
-    public Menu(LoginEvent loginE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE) {
+    public Menu(LoginEvent loginE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, ConfigNotifier configN) {
 
         //TODO: Fer que les tecles es pouguin canviar i que tinguin un valor inicial.
         this.event = menuE;
+        this.configN = configN;
         window = new JFrame("Piano TIME!");
         ImageIcon img = new ImageIcon("images\\icon.jpg");
         window.setIconImage(img.getImage());
