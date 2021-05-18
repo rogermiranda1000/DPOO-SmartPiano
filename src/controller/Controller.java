@@ -6,11 +6,11 @@ import model.BusinessFacade;
 import persistance.PlaylistDAO;
 import persistance.SongDAO;
 import persistance.UserDAO;
-import view.Menu;
+import view.*;
 
 import java.util.ArrayList;
 
-public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier {
+public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, ConfigNotifier  {
     private final Menu view;
     private final BusinessFacade model;
     private final SongDownloader scrapper;
@@ -21,7 +21,7 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         this.scrapper = new SongDownloader(this, scrappingTime);
         this.scrapper.start();
 
-        this.view = new Menu(this, this, this, this);
+        this.view = new Menu(this, this, this, this, this);
         this.view.start();
     }
 
