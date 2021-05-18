@@ -21,6 +21,8 @@ public class Main {
             new Controller(c.getScrapping(), new SongDDBBDAO(ddbb), new UserDDBBDAO(ddbb), new PlaylistDDBBDAO(ddbb), new ConfigDDBBDAO(ddbb));
         } catch (FileNotFoundException | SQLException ex) {
             ex.printStackTrace();
+        } catch (ClassNotFoundException ex) {
+            System.err.println("No tens la dependencia del driver de MariaDB!");
         }
     }
 }
