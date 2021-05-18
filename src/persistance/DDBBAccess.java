@@ -17,8 +17,10 @@ public class DDBBAccess {
     /**
      * Es conecta a la base de dades segons els parà
      * @throws SQLException Error al conectar
+     * @throws ClassNotFoundException No es té el driver de MariaDB
+     * @throws SQLInvalidAuthorizationSpecException Credencials invàl·lides
      */
-    public DDBBAccess(DDBBInfo info, int maxConnections) throws SQLException, ClassNotFoundException {
+    public DDBBAccess(DDBBInfo info, int maxConnections) throws SQLException, ClassNotFoundException, SQLInvalidAuthorizationSpecException {
         DDBBAccess.loadDriver();
 
         this.ddbb = new Connection[maxConnections];
