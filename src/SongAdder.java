@@ -19,7 +19,7 @@ public class SongAdder {
     private static final String []SONG = {"Living la Vida Loca", "https://www.midiworld.com/download/800"};*/
     private static final String []SONG = {"River flows in you", "https://bitmidi.com/uploads/112145.mid"};
 
-    public static void main (String[] args) {
+    public static void main (String[] args) throws ClassNotFoundException {
         try {
             Config c = new Config(new File("config.json"));
             DDBBAccess ddbb = new DDBBAccess(c.readConfig(), 1);
