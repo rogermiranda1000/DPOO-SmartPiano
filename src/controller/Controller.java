@@ -12,7 +12,7 @@ import view.Menu;
 
 import java.util.ArrayList;
 
-public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest {
+public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, PlaysManager {
     private Menu menu;
     private LogIn login;
     private final BusinessFacade model;
@@ -22,7 +22,7 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     public Controller(int scrappingTime, SongDAO songManager, UserDAO userManager, PlaylistDAO playlistManager, ConfigDAO configManager) {
         this.model = new BusinessFacade(songManager, userManager, playlistManager, configManager);
 
-        this.musicController = new MusicController();
+        this.musicController = new MusicController(this);
 
         this.scrapper = new SongDownloader(this, scrappingTime);
         this.scrapper.start();
@@ -87,5 +87,10 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     @Override
     public void requestSong(Song song) {
         this.musicController.requestSong(this.model.getSong(song));
+    }
+
+    @Override
+    public void addPlay(long secondsPlayed, Song song) {
+
     }
 }

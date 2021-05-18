@@ -18,6 +18,7 @@ public class NotePlayer extends Thread {
     private final double tickLength;
     private final MidiChannel[] channels;
     private final Synthesizer synth;
+    private long tick;
 
     private boolean paused;
     private boolean alive;
@@ -34,6 +35,7 @@ public class NotePlayer extends Thread {
         this.tickLength = song.getTickLength();
         this.volume = volume;
         this.songEnder = songEnder;
+        this.tick = 0;
         MidiChannel[] channels = null;
         Synthesizer synth = null;
         try {
@@ -86,7 +88,7 @@ public class NotePlayer extends Thread {
     @Override
     @SuppressWarnings("BusyWait")
     public void run() {
-        long tick = 0;
+        this.tick = 0;
         int i = 0;
         while (i < notes.size() && this.getAlive()) {
             // Esperem fins al seguent event
@@ -123,5 +125,13 @@ public class NotePlayer extends Thread {
         } else {
             this.channels[INSTRUMENT].noteOff(note.getId(), note.getVelocity());
         }
+    }
+
+    /**
+     * Dóna el segon actual de la cançó
+     * @return valor long corresponent al segon actual de la canço, 0 default
+     */
+    public long getCurrentSecond() {
+        return Math.round(tick * tickLength/1000/1000);
     }
 }

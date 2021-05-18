@@ -17,13 +17,15 @@ public class MusicController implements SongEnder, PlaylistBarEvent, SongRequest
     private boolean isRandom;
     private boolean isLooping;
     private PlayingSongNotifier notifier;
+    private PlaysManager playsManager;
 
-    public MusicController() {
+    public MusicController(PlaysManager playsManager) {
         this.isPlaying = true;
         this.songIndex = 0;
         this.volume = 1;
         this.isRandom = false;
         this.isLooping = false;
+        this.playsManager = playsManager;
     }
 
     private void setPlaying(boolean playing) {
@@ -44,12 +46,23 @@ public class MusicController implements SongEnder, PlaylistBarEvent, SongRequest
         if (this.player != null) this.player.setVolume(volume);
     }
 
+    /**
+     * Gets the second of the song being played
+     * @return the second that the current song is at
+     */
+    public long getSecond() {
+        return (this.player == null)? 0 : player.getCurrentSecond();
+    }
+
     private Song getCurrentSong() {
         return this.list.getSongs().get(this.songIndex);
     }
 
     private void playSong() {
-        if (this.player != null) this.player.closePlayer();
+        if (this.player != null) {
+            if (this.player.getCurrentSecond() > 0) playsManager.addPlay(this.player.getCurrentSecond(), this.getCurrentSong());
+            this.player.closePlayer();
+        }
 
         this.player = new NotePlayer(this.getCurrentSong(), this.volume, this);
         this.player.setPlay(this.isPlaying);
@@ -92,6 +105,7 @@ public class MusicController implements SongEnder, PlaylistBarEvent, SongRequest
     @Override
     public void songEnded() {
         this.nextSong();
+        System.out.println(getSecond());
     }
 
     @Override
