@@ -49,7 +49,7 @@ public class Piano extends JPanel implements KeyController {
 
         while(i < 24){
             if(n.equals(keys.get(i).getNote()) && keys.get(i).getOctava() == octava){
-                keys.get(i).setKeyAssocieted(n);
+                keys.get(i).setKeyAssocieted(letter);
                 break;
             }
 

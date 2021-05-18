@@ -12,7 +12,7 @@ public class Tecla extends JPanel implements MouseListener, KeyListener{
     private Note note;
     private int ocatava;
     private KeyController kC;
-    private Note keyAssocieted;
+    private char keyAssocieted;
     private boolean isBlack;
 
     public Tecla(Piano p, Note note, boolean isBlack, int octava) {
@@ -45,7 +45,7 @@ public class Tecla extends JPanel implements MouseListener, KeyListener{
         return this.ocatava;
     }
 
-    public void setKeyAssocieted(Note keyAssocieted) {
+    public void setKeyAssocieted(char keyAssocieted) {
         this.keyAssocieted = keyAssocieted;
     }
 

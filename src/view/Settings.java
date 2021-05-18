@@ -14,15 +14,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Settings extends JPanel implements ActionListener, SliderController, ChangeListener {
+public class Settings extends JPanel implements ActionListener, ChangeListener{ //}, SliderController, ChangeListener {
     private final CardLayout cl;
     private final JPanel mainContent;
     private JButton keysConfigButton, saveKeysConfigButton;
     private JSlider volum, velocitat;
     private JLabel volumTxt, velocitatTxt;
     private JButton oneOctava, twoOctaves;
-    private JButton deleteButton, editButton;
+    private JButton deleteButton, editButton, saveButton;
 
+    private static ConfigNotifier cN;
     private static KeyChanger kC;
 
     //TODO: LOGOUT, delete account
@@ -30,9 +31,10 @@ public class Settings extends JPanel implements ActionListener, SliderController
     public static final int HEIGHT = 900;
     public static final int WIDTH  = 1600;
 
-    public Settings(KeyChanger kC) {
+    public Settings(KeyChanger kC, ConfigNotifier cN) {
 
         this.kC = kC;
+        this.cN = cN;
 
         mainContent = new JPanel(new CardLayout());
         mainContent.add(settingsView(), "settings");
@@ -98,6 +100,9 @@ public class Settings extends JPanel implements ActionListener, SliderController
         editPanel.add(editButton, BorderLayout.EAST);
 
 
+        //Save button
+        saveButton = new JButton("[SAVE CURRENT CONFIGURATION]");
+
         //Afegim els elements als seus JPanel
         volumePanel.add(new Label("Volume"));
         volumePanel.add(volum);
@@ -115,6 +120,7 @@ public class Settings extends JPanel implements ActionListener, SliderController
         options.add(octavesPanel);
         options.add(blankSpace);
         options.add(editPanel);
+        options.add(saveButton);
 
         JPanel information = new JPanel();
         information.setLayout(new BoxLayout(information, BoxLayout.Y_AXIS));
@@ -135,6 +141,7 @@ public class Settings extends JPanel implements ActionListener, SliderController
             e.printStackTrace();
         }
 
+        //TODO: Connectar amb BBDD per aconseguir el nom, mail...
         String[] labelsInfo = {"[USER NAME]","[EMAIL]","[DATE]","[POINTS]"};
 
         for (int i = 0; i < labelsInfo.length; i++) {
@@ -172,7 +179,7 @@ public class Settings extends JPanel implements ActionListener, SliderController
     }
 
     private JPanel keysView(){
-    JPanel content = new JPanel();
+        JPanel content = new JPanel();
         saveKeysConfigButton = new GenericButton("Save changes!", null);
         saveKeysConfigButton.addActionListener(this);
         content.add(saveKeysConfigButton, BorderLayout.CENTER);
@@ -191,15 +198,18 @@ public class Settings extends JPanel implements ActionListener, SliderController
         return null;
     }
 
-    @Override
+    /*@Override
     public void changeValue(int value) {
         System.out.println("CANVI " + value);
-    }
+    }*/
+
 
     @Override
     public void stateChanged(ChangeEvent e) {
         if(e.getSource() == volum) volumTxt.setText(Integer.toString(volum.getValue()));
         else if(e.getSource() == velocitat) velocitatTxt.setText(Integer.toString(velocitat.getValue()));
+
+        //cN.saveVolumes(); //TODO: actualitxar valors de settings cap a menu
 
     }
 
@@ -211,6 +221,9 @@ public class Settings extends JPanel implements ActionListener, SliderController
             cl.show(mainContent, ("settings"));
         }
 
+        //TODO: connectar amb BBDD.
+        if(e.getSource() == saveButton) System.out.println("SAVE!");
+
         //TODO: preguntar com fer sense getSouce (es per una cosa que va dir el Pol de que es podia fer millor) - De David
         if(e.getSource() == oneOctava) System.out.println("Primera octava");
         else if(e.getSource() == twoOctaves) System.out.println("Segona octava");
@@ -219,3 +232,4 @@ public class Settings extends JPanel implements ActionListener, SliderController
         else if(e.getSource() == editButton) System.out.println("Edit");
     }
 }
+

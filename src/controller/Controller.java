@@ -78,4 +78,14 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         }
         return null;
     }
+
+    @Override
+    public boolean saveKeyNotes(char[] chars) {
+        return false;
+    }
+
+    @Override
+    public boolean saveVolumes(float pianoVolume, float songVolume) {
+        return false;
+    }
 }

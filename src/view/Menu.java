@@ -57,7 +57,7 @@ public class Menu extends JFrame implements ActionListener, KeyChanger {
         piano = new Piano();
         mainContent.add(piano, "piano");
         mainContent.add(new Ranking(), "ranking");
-        mainContent.add(new Settings(this), "settings");
+        mainContent.add(new Settings(this, this), "settings");
         window.add(mainContent);
         cl = (CardLayout) (mainContent.getLayout());
         /* DEFAULT VIEW */
@@ -300,5 +300,15 @@ public class Menu extends JFrame implements ActionListener, KeyChanger {
     @Override
     public void changeKey(Note n, char newLetter, int octava) {
         piano.changeKey(n, newLetter, octava);
+    }
+
+    @Override
+    public boolean saveKeyNotes(char[] chars) {
+        return false;
+    }
+
+    @Override
+    public boolean saveVolumes(float pianoVolume, float songVolume) {
+        return false;
     }
 }
