@@ -3,22 +3,22 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.time.LocalTime;
 import java.util.Date;
 
 
 class GraphDrawer extends JPanel {
-    private final int[] yCoords;
-    private final int startX = 50;
-    private final int startY = 20;
-    private int endX = this.getWidth() - 50;
-    private int endY = this.getHeight() - 160;
-    private int prevX = startX;
-    private int prevY = endY;
-    private int unitX;
-    private int unitY;
-    String name;
-    Color lineColor;
-    Date time = new Date();
+    protected final int[] yCoords;
+    protected final int startX = 50;
+    protected final int startY = 20;
+    protected int endX;
+    protected int endY;
+    protected int prevX;
+    protected int prevY;
+    protected int unitX;
+    protected int unitY;
+    protected String name;
+    protected Color lineColor;
 
 
     public GraphDrawer(int[] yCoords, String name, Color lineColor) {
@@ -33,11 +33,14 @@ class GraphDrawer extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         int topElementY = GetMax(yCoords);
-        int hour = time.getHours();
         int numHoritzontalLines = numSections(topElementY);
+        int hour = java.time.LocalTime.now().getHour();
+
 
         endX = this.getHeight() - 50;
         endY = this.getWidth() - 160;
+        prevX = startX;
+        prevY = endY;
         unitX = (endX - startX) / 23;
         unitY = (endY - startY) / numHoritzontalLines;
 
@@ -61,7 +64,7 @@ class GraphDrawer extends JPanel {
 
         //dibuix de les lineas horitzontals
         int count = 0;
-        for (int i = endY; i > startY; i -= unitY) {
+        for (int i = endY; i >= startY; i -= unitY) {
             g2d.drawLine(startX, i, endX, i);
             g2d.setColor(Color.BLACK);
             g2d.drawString(Integer.toString(topElementY*count/numHoritzontalLines), startX - 45, i + 5);
@@ -74,7 +77,7 @@ class GraphDrawer extends JPanel {
         boolean firstElement = true;
         g2d.setColor(lineColor);
         g2d.setStroke(new BasicStroke(4));
-        prevY = endY - (yCoords[0] * unitY);
+        prevY = endY - (yCoords[0] * unitY * numHoritzontalLines / topElementY);
         for (int y : yCoords) {
             if (firstElement) {
                 firstElement = false;
