@@ -11,13 +11,6 @@ public interface PlaylistEvent {
      */
     ArrayList<String> getPlaylists();
 
-
-    void deletePlaylist(String playlist);
-
-    void playPlaylist(String valueOf);
-
-    void deleteSongsFromPlaylist(String value);
-
     /**
      * Retorna les cançons que formen una playlist
      * @param playlist Nom de la playlist a buscar
