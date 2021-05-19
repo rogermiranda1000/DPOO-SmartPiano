@@ -9,7 +9,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class Songs extends JPanel implements ActionListener {
@@ -36,6 +35,8 @@ public class Songs extends JPanel implements ActionListener {
         this.event = songE;
         this.requestEvent = requestE;
 
+
+        // Adding layouts
         mainContent = new JPanel(new CardLayout());
         mainContent.add(songsList(), "songs");
         mainContent.add(addToPlaylist(), "playlists");

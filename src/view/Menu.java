@@ -1,26 +1,30 @@
 package view;
 
 import controller.*;
+import entities.Note;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Menu extends JFrame implements ActionListener, PlayingSongNotifier {
+public class Menu extends JFrame implements ActionListener, KeyChanger, PlayingSongNotifier {
     public static final int HEIGHT = 900;
     public static final int WIDTH = 1600;
     private JButton playButton, loopButton, nextButton, backButton, shuffleButton;
     private JButton songsButton, playlistButton, pianoButton, rankingButton, settingsButton, exitButton;
     private JLabel playingSong;
+
     private final MenuEvent event;
     private final PlaylistBarEvent playE;
     private final JPanel mainContent;
     private final CardLayout cl;
 
-    private final Playlist playlist;
     private final Songs songs;
+    private final Playlist playlist;
+    private final Piano piano;
 
+    //TODO: Fer que les tecles es pouguin canviar i que tinguin un valor inicial.
     public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE) {
         this.event = menuE;
         this.playE = playE;
@@ -49,7 +53,13 @@ public class Menu extends JFrame implements ActionListener, PlayingSongNotifier 
         mainContent.add(this.playlist, "playlists");
         mainContent.add(new Piano(), "piano");
         mainContent.add(new Ranking(rankingE), "ranking");
-        mainContent.add(new Settings(), "settings");
+        mainContent.add(new Settings(this), "settings");
+        this.add(mainContent);
+
+        piano = new Piano();
+        mainContent.add(piano, "piano");
+        mainContent.add(new Ranking(rankingE), "ranking");
+        mainContent.add(new Settings(this), "settings");
         this.add(mainContent);
         cl = (CardLayout) (mainContent.getLayout());
         /* DEFAULT VIEW */
@@ -203,11 +213,19 @@ public class Menu extends JFrame implements ActionListener, PlayingSongNotifier 
         settingsButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
     }
 
+    public void playNote(char key) {
+        piano.playNote(key);
+    }
+
+    public void stopNote(char key) {
+        piano.stopNote(key);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         /* BOTTOM BAR BUTTONS */
-        if(e.getSource() == loopButton) {
-            this.loopButton.setForeground( this.loopButton.getForeground().equals(ColorConstants.ACTIVE_BUTTON.getColor()) ? Color.LIGHT_GRAY : ColorConstants.ACTIVE_BUTTON.getColor() ); // toggle button's color
+        if (e.getSource() == loopButton) {
+            this.loopButton.setForeground(this.loopButton.getForeground().equals(ColorConstants.ACTIVE_BUTTON.getColor()) ? Color.LIGHT_GRAY : ColorConstants.ACTIVE_BUTTON.getColor()); // toggle button's color
             this.playE.toggleLoop();
         } else if (e.getSource() == backButton) {
             /*if(event.currentSongPos() > 1){
@@ -215,7 +233,7 @@ public class Menu extends JFrame implements ActionListener, PlayingSongNotifier 
                 playingSong.setText("back"); // TODO : player.getPlayingSongTitle() + - + player.getPlayingSongArtist
             }*/
         } else if (e.getSource() == playButton) {
-            this.playButton.setText( this.playButton.getText().equals(Icon.PAUSE.getIcon()) ? Icon.PLAY.getIcon() : Icon.PAUSE.getIcon() ); // toggle button's text
+            this.playButton.setText(this.playButton.getText().equals(Icon.PAUSE.getIcon()) ? Icon.PLAY.getIcon() : Icon.PAUSE.getIcon()); // toggle button's text
             this.playE.togglePlaying();
         } else if (e.getSource() == nextButton) {
             /*if(event.currentSongPos() < 10){ // TODO: player.playingListSize()
@@ -223,7 +241,7 @@ public class Menu extends JFrame implements ActionListener, PlayingSongNotifier 
                 playingSong.setText("next" ); // TODO : player.getPlayingSongTitle() + - + player.getPlayingSongArtist
             }*/
         } else if (e.getSource() == this.shuffleButton) {
-            this.shuffleButton.setForeground( this.shuffleButton.getForeground().equals(ColorConstants.ACTIVE_BUTTON.getColor()) ? Color.LIGHT_GRAY : ColorConstants.ACTIVE_BUTTON.getColor() ); // toggle button's color
+            this.shuffleButton.setForeground(this.shuffleButton.getForeground().equals(ColorConstants.ACTIVE_BUTTON.getColor()) ? Color.LIGHT_GRAY : ColorConstants.ACTIVE_BUTTON.getColor()); // toggle button's color
             this.playE.toggleRandom();
         }
         /* TOP BAR BUTTONS */
@@ -265,4 +283,32 @@ public class Menu extends JFrame implements ActionListener, PlayingSongNotifier 
     public void newSongPlaying(String songName) {
         this.playingSong.setText(songName);
     }
+
+    @Override
+    public void changeKey(Note n, char newLetter, int octava) {
+        piano.changeKey(n, newLetter, octava);
+    }
+
+
+    /*
+    @Override
+    public boolean saveKeyNotes(char[] chars) {
+        return false;
+    }
+
+    //TODO: connectar amb BBDD.
+    @Override
+    public boolean saveVolumes(float pianoVolume, float songVolume) {
+        return false;
+    }
+
+
+    //TODO: connectar amb BBDD.
+    //Sé que aquesta funció és molt tonta, però és la manera que se m'ha ocurregut, demano disculpes per possibles atacs de panic al veure aquesta funció. - David
+    @Override
+    public String sendSignal(String type) {
+        return type;
+    }
+    */
+
 }
