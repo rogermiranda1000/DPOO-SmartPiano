@@ -193,7 +193,7 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
     }
 
     public void popUpSongsAdded() {
-        JOptionPane.showMessageDialog(this, "Songs added to playlist. (◕‿◕✿)");
+        JOptionPane.showMessageDialog(this, "Finished adding to playlist. (◕‿◕✿)");
     }
 
     /**
@@ -239,6 +239,7 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
                     // playlist
                     for (int j = selectedSongs.length - 1; j >= 0; j--) {
                         // song
+                        this.event.addSongPlaylist(this.getSong(selectedSongs[j]), (String) playlistsTable.getModel().getValueAt(selectedPlaylists[i], 0));
                     }
                 }
                 this.popUpSongsAdded();
@@ -256,5 +257,15 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
     public void songDeleted(Song song) {
         this.reloadSongs();
         JOptionPane.showMessageDialog(this, song.getName() + " was deleted.");
+    }
+
+    @Override
+    public void unableToAddSong(Song song) {
+        JOptionPane.showMessageDialog(this, "Error adding the song " + song.toString() + ".");
+    }
+
+    @Override
+    public void songAdded(Song song) {
+        // uwu
     }
 }

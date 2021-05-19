@@ -164,4 +164,33 @@ public class BusinessFacade {
         this.loggedUserPlaylists.remove(remove);
         return true;
     }
+
+    private List getLoggedPlaylist(String name) {
+        if (this.loggedUserPlaylists == null) return null;
+
+        for (List l : this.loggedUserPlaylists) {
+            if (l.equals(name)) return l;
+        }
+        return null;
+    }
+
+    public boolean addSongPlaylist(Song song, String playlist) {
+        List add = this.getLoggedPlaylist(playlist);
+        if (add == null) return false;
+
+        List list = new List(playlist, this.loggedUser.getName());
+        if (!this.playlistManager.addSongPlaylist(list, song)) return false;
+        add.addSong(song);
+        return true;
+    }
+
+    public Boolean existsSongInPlaylist(Song song, String playlist) {
+        List search = this.getLoggedPlaylist(playlist);
+        if (search == null) return null;
+
+        for (Song s : search.getSongs()) {
+            if (s.equals(song)) return true;
+        }
+        return false;
+    }
 }

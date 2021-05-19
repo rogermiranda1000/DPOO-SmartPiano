@@ -273,6 +273,16 @@ public class Menu extends JFrame implements ActionListener, PlayingSongNotifier,
     }
 
     @Override
+    public void unableToAddSong(Song song) {
+        this.songs.unableToAddSong(song);
+    }
+
+    @Override
+    public void songAdded(Song song) {
+        this.songs.songAdded(song);
+    }
+
+    @Override
     public void unableToDeleteSong(Song song) {
         this.songs.unableToDeleteSong(song);
     }
