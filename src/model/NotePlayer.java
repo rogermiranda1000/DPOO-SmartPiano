@@ -19,6 +19,7 @@ public class NotePlayer extends Thread {
     private final MidiChannel[] channels;
     private final Synthesizer synth;
     private long tick;
+    private int lastSecondSent;
 
     private boolean paused;
     private boolean alive;
@@ -36,6 +37,7 @@ public class NotePlayer extends Thread {
         this.volume = volume;
         this.songEnder = songEnder;
         this.tick = 0;
+        this.lastSecondSent = 0;
         MidiChannel[] channels = null;
         Synthesizer synth = null;
         try {
@@ -128,10 +130,13 @@ public class NotePlayer extends Thread {
     }
 
     /**
-     * Dóna el segon actual de la cançó
-     * @return valor long corresponent al segon actual de la canço, 0 default
+     * Dóna els segons que han passat des de l'últim cop que s'ha cridat la funció
+     * @return valor corresponent al segon que han passat
      */
-    public long getCurrentSecond() {
-        return Math.round(tick * tickLength/1000/1000);
+    public int getCurrentSecond() {
+        int second = (int)Math.round(tick * tickLength/1000/1000);
+        int r = second - lastSecondSent;
+        this.lastSecondSent = second;
+        return r;
     }
 }
