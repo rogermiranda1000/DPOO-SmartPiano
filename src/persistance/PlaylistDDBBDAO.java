@@ -92,6 +92,11 @@ public class PlaylistDDBBDAO implements PlaylistDAO {
         return this.removeSongPlaylist(id, song);
     }
 
+    @Override
+    public boolean removeSongAllPlaylists(Song song) {
+        return true; // TODO
+    }
+
     private boolean removeSongPlaylist(int id, Song song) {
         try {
             if (this.ddbb.runSentence("DELETE FROM ListSongs WHERE list = ? AND song = (SELECT id FROM Songs JOIN Users ON username = ? WHERE name = ? AND date = ?);",

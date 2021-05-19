@@ -13,6 +13,7 @@ public interface PlaylistDAO {
 
     boolean addSongPlaylist(List list, Song song);
     boolean removeSongPlaylist(List list, Song song);
+    boolean removeSongAllPlaylists(Song song);
 
     /**
      * Retorna totes les Playlist d'un usuari
