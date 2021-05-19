@@ -21,7 +21,7 @@ public class Menu extends JFrame implements ActionListener, PlayingSongNotifier 
     private final Playlist playlist;
     private final Songs songs;
 
-    public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE) {
+    public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE) {
         this.event = menuE;
         this.playE = playE;
         playE.setPlayingSongListner(this);
@@ -45,10 +45,10 @@ public class Menu extends JFrame implements ActionListener, PlayingSongNotifier 
         this.playlist = new Playlist(playlistE);
         this.songs = new Songs(songsE, songRequestE);
         mainContent = new JPanel(new CardLayout());
-        mainContent.add(this.songs, "songs");
+        mainContent.add(new Songs(songsE), "songs");
         mainContent.add(this.playlist, "playlists");
         mainContent.add(new Piano(), "piano");
-        mainContent.add(new Ranking(), "ranking");
+        mainContent.add(new Ranking(rankingE), "ranking");
         mainContent.add(new Settings(), "settings");
         this.add(mainContent);
         cl = (CardLayout) (mainContent.getLayout());
