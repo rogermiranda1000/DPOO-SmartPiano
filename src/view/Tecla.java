@@ -67,7 +67,7 @@ public class Tecla extends JPanel implements MouseListener, KeyListener {
     public void mousePressed(MouseEvent e) {
         if(this.contains(e.getPoint())){
             this.setBackground(new Color(99, 99, 99));
-            kC.isPressed(note);
+            kC.isPressed(this.note, this.ocatava);
         }
     }
 
@@ -75,7 +75,7 @@ public class Tecla extends JPanel implements MouseListener, KeyListener {
     public void mouseReleased(MouseEvent e) {
         if(isBlack) this.setBackground(new Color(0, 0, 0));
         else this.setBackground(new Color(255, 255, 255));
-        kC.isNotPressed(note);
+        kC.isNotPressed(this.note, this.ocatava);
     }
 
     @Override
