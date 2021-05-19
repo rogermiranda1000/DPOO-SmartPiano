@@ -45,7 +45,7 @@ public class Menu extends JFrame implements ActionListener, PlayingSongNotifier 
         this.playlist = new Playlist(playlistE);
         this.songs = new Songs(songsE, songRequestE);
         mainContent = new JPanel(new CardLayout());
-        mainContent.add(new Songs(songsE), "songs");
+        mainContent.add(this.songs, "songs");
         mainContent.add(this.playlist, "playlists");
         mainContent.add(new Piano(), "piano");
         mainContent.add(new Ranking(rankingE), "ranking");
