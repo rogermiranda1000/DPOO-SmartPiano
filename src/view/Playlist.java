@@ -112,9 +112,9 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
             JOptionPane.showMessageDialog(this, "Select a playlist first.");
         } else {
             if (e.getSource() == playPlaylistButton) {
-                // TODO: controller.playPlaylist(String.valueOf(selectedValuesList.get(0));
+                this.event.requestPlayList(this.selectedValue);
             } else if (e.getSource() == removePlaylistButton) {
-                this.event.removePlaylist(selectedValue); // TODO totes
+                this.event.removePlaylist(selectedValue);
             } else if (e.getSource() == removeSongButton) {
                 // TODO: controller.deleteSongsFromPlaylist(String.valueOf(selectedValuesList.get(0), selectedSongs);
             }

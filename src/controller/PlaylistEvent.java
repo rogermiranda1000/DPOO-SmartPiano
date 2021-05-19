@@ -36,4 +36,10 @@ public interface PlaylistEvent {
      * @param song Canço a eliminar
      */
     void removeSongPlaylist(String playlist, Song song);
+
+    /**
+     * Solicita reproduir una playlist
+     * @param playlist Nom de la playlist a reproduir
+     */
+    void requestPlayList(String playlist);
 }

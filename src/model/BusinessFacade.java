@@ -29,13 +29,14 @@ public class BusinessFacade {
         this.loggedUserPlaylists = null;
     }
 
-    private void updatePlaylists() {
-        if (this.loggedUser == null) this.loggedUserPlaylists = null; // empty array
+    private boolean updatePlaylists() {
+        if (this.loggedUser == null) return false;
 
         this.loggedUserPlaylists = this.playlistManager.getPlaylists(this.loggedUser);
         for (List p: this.loggedUserPlaylists) {
             for (Song s: p.getSongs()) this.songManager.updateSong(s);
         }
+        return true;
     }
 
     public Song getSong(Song s) {
@@ -44,8 +45,20 @@ public class BusinessFacade {
     }
 
     public ArrayList<List> getPlaylists() {
-        if (this.loggedUserPlaylists == null) this.updatePlaylists();
+        if (this.loggedUserPlaylists == null) {
+            if (!this.updatePlaylists()) return new ArrayList<>();
+        }
         return this.loggedUserPlaylists;
+    }
+
+    public List getPlaylist(String list) {
+        if (this.loggedUser == null) return null;
+
+        List search = new List(list, this.loggedUser.getName());
+        for (List l : this.getPlaylists()) {
+            if (l.equals(search)) return l;
+        }
+        return null; // not found
     }
 
 
@@ -122,6 +135,7 @@ public class BusinessFacade {
 
     public void logout() {
         this.loggedUser = null;
+        this.loggedUserPlaylists = null;
     }
 
     public float getSongVolume() {
