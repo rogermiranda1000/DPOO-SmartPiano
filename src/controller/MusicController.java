@@ -66,6 +66,10 @@ public class MusicController implements SongEnder, PlaylistBarEvent, SongRequest
     }
 
     private void playSong() {
+        if (this.player != null) {
+            this.addPlay();
+            this.player.closePlayer();
+        }
         this.player = new NotePlayer(this.getCurrentSong(), this.volume, this);
         this.player.setPlay(this.isPlaying);
         this.player.start();
