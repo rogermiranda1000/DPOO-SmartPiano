@@ -15,4 +15,17 @@ public interface SongsEvent {
      * @return Cançons que l'usuari loguejat té acces
      */
     ArrayList<Song> getUserSongs();
+
+    /**
+     * Elimina la canço sol·licitada
+     * @param song Canço a eliminar
+     */
+    void deleteSong(Song song);
+
+    /**
+     * Solocita afegir una canço a una playlist
+     * @param song Canço a afegir
+     * @param list Playlist on afegir la canço
+     */
+    void addSongPlaylist(Song song, String list);
 }

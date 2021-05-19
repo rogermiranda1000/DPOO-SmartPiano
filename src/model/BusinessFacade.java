@@ -28,13 +28,14 @@ public class BusinessFacade {
         this.loggedUserPlaylists = null;
     }
 
-    private void updatePlaylists() {
-        if (this.loggedUser == null) this.loggedUserPlaylists = null; // empty array
+    private boolean updatePlaylists() {
+        if (this.loggedUser == null) return false;
 
         this.loggedUserPlaylists = this.playlistManager.getPlaylists(this.loggedUser);
         for (List p: this.loggedUserPlaylists) {
             for (Song s: p.getSongs()) this.songManager.updateSong(s);
         }
+        return true;
     }
 
     public Song getSong(Song s) {
@@ -43,8 +44,20 @@ public class BusinessFacade {
     }
 
     public ArrayList<List> getPlaylists() {
-        if (this.loggedUserPlaylists == null) this.updatePlaylists();
+        if (this.loggedUserPlaylists == null) {
+            if (!this.updatePlaylists()) return new ArrayList<>();
+        }
         return this.loggedUserPlaylists;
+    }
+
+    public List getPlaylist(String list) {
+        if (this.loggedUser == null) return null;
+
+        List search = new List(list, this.loggedUser.getName());
+        for (List l : this.getPlaylists()) {
+            if (l.equals(search)) return l;
+        }
+        return null; // not found
     }
 
 
@@ -82,7 +95,17 @@ public class BusinessFacade {
         return this.songManager.addVirtualSong(song);
     }
 
+    /**
+     * Elimina una canço si l'autor és el propi usuari
+     * @param song Canço a eliminar
+     * @return Si s'ha pogut eliminar (true) o no (false)
+     */
     public boolean deleteSong(Song song) {
+        if (this.loggedUser == null) return false; // si no hi ha usuari loguejat, no pot eliminar una canço
+        if (!song.getArtist().equals(this.loggedUser.getName())) return false; // TODO comprobar si l'usuari és virtual amb el mateix nom
+
+        // elimina les cançons
+        if (!this.playlistManager.removeSongAllPlaylists(song)) return false;
         return this.songManager.deleteSong(song);
     }
 
@@ -109,11 +132,65 @@ public class BusinessFacade {
         return (this.loggedUser != null);
     }
 
+    public void logout() {
+        this.loggedUser = null;
+        this.loggedUserPlaylists = null;
+    }
+
     public float getSongVolume() {
         if (this.loggedUser == null) return 1.f;
         Float r = this.configManager.getVolumeSong(this.loggedUser.getName());
         if (r == null) return 1.f;
         return r;
+    }
+
+    public boolean addPlaylist(String list) {
+        if (this.loggedUser == null) return false;
+        List add = new List(list, this.loggedUser.getName());
+        if (this.playlistManager.existsPlaylist(add)) return false;
+
+        if (!this.playlistManager.createPlaylist(add)) return false;
+        this.loggedUserPlaylists.add(add);
+        return true;
+    }
+
+    public boolean removePlaylist(String list) {
+        if (this.loggedUser == null) return false;
+        List remove = new List(list, this.loggedUser.getName());
+        if (!this.playlistManager.existsPlaylist(remove)) return false;
+
+        if (!this.playlistManager.removePlaylist(remove)) return false;
+        this.loggedUserPlaylists.remove(remove);
+        return true;
+    }
+
+    private List getLoggedPlaylist(String name) {
+        if (this.loggedUserPlaylists == null) return null;
+
+        for (List l : this.loggedUserPlaylists) {
+            if (l.getName().equals(name)) return l;
+        }
+        return null;
+    }
+
+    public boolean addSongPlaylist(Song song, String playlist) {
+        List add = this.getLoggedPlaylist(playlist);
+        if (add == null) return false;
+
+        List list = new List(playlist, this.loggedUser.getName());
+        if (!this.playlistManager.addSongPlaylist(list, song)) return false;
+        add.addSong(song);
+        return true;
+    }
+
+    public Boolean existsSongInPlaylist(Song song, String playlist) {
+        List search = this.getLoggedPlaylist(playlist);
+        if (search == null) return null;
+
+        for (Song s : search.getSongs()) {
+            if (s.equals(song)) return true;
+        }
+        return false;
     }
 
     public boolean addPlay(int secondsPlayed, Song song) {

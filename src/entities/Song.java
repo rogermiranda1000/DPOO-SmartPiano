@@ -124,4 +124,11 @@ public class Song {
     public String toString() {
         return this.songName + ", per " + this.author;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Song)) return false;
+        Song s = (Song) o;
+        return (this.songName.equals(s.songName) && this.author.equals(s.author) && this.getDate().equals(s.getDate()));
+    }
 }

@@ -33,6 +33,7 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     public void requestLogin(String user, String password) {
         if (this.model.login(user, password)) {
             this.login.dispose();
+
             this.menu = new Menu(this.musicController, this, this, this, this, this);
             this.menu.setVisible(true);
 
@@ -69,37 +70,29 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     }
 
     @Override
-    public void deletePlaylist(String playlist) {
-        //TODO: conectar amb BBDD
+    public void addPlaylist(String playlist) {
+        if (this.model.addPlaylist(playlist)) this.menu.playlistCreated();
+        else this.menu.playlistNotCreated();
     }
 
     @Override
-    public void playPlaylist(String valueOf) {
-        //TODO: conectar amb BBDD
+    public void removePlaylist(String playlist) {
+        if (this.model.removePlaylist(playlist)) this.menu.playlistDeleted();
+        else this.menu.playlistNotDeleted();
     }
 
     @Override
-    public void deleteSongsFromPlaylist(String value) {
-        //TODO: conectar amb BBDD
-    }
-
-    /*
-    @Override
-    public boolean saveKeyNotes(char[] chars) {
-        return false;
+    public void removeSongPlaylist(String playlist, Song song) {
+        // TODO
     }
 
     @Override
-    public boolean saveVolumes(float pianoVolume, float songVolume) {
-        return false;
-    }
+    public void requestPlayList(String playlist) {
+        List request = this.model.getPlaylist(playlist);
+        if (request == null) return;
 
-    @Override
-    public String sendSignal(String type) {
-        return type;
+        this.musicController.requestPlaylist(request);
     }
-    */
-
 
     @Override
     public ArrayList<Song> getUserSongs() {
@@ -107,7 +100,25 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     }
 
     @Override
+    public void deleteSong(Song song) {
+        if (this.model.deleteSong(song)) this.menu.songDeleted(song);
+        else this.menu.unableToDeleteSong(song);
+    }
+
+    @Override
+    public void addSongPlaylist(Song song, String list) {
+        Boolean exists = this.model.existsSongInPlaylist(song, list);
+        if (exists == null || exists) this.menu.unableToAddSong(song); // ja existeix
+        else {
+            this.model.addSongPlaylist(song, list);
+            this.menu.songAdded(song);
+        }
+    }
+
+    @Override
     public void exitSession() {
+        this.model.logout();
+
         this.menu.dispose();
         this.login = new LogIn(this);
         this.login.setVisible(true);
