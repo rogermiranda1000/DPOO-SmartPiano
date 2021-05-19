@@ -119,6 +119,8 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     public void exitSession() {
         this.model.logout();
 
+        this.musicController.reset();
+
         this.menu.dispose();
         this.login = new LogIn(this);
         this.login.setVisible(true);
