@@ -9,9 +9,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
-public class Songs extends JPanel implements ActionListener {
+public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
     private final DefaultTableModel songs;
     private final JTable songsTable;
 
@@ -35,8 +34,6 @@ public class Songs extends JPanel implements ActionListener {
         this.event = songE;
         this.requestEvent = requestE;
 
-
-        // Adding layouts
         mainContent = new JPanel(new CardLayout());
         mainContent.add(songsList(), "songs");
         mainContent.add(addToPlaylist(), "playlists");
@@ -187,10 +184,6 @@ public class Songs extends JPanel implements ActionListener {
         }
     }
 
-    private void removeSongFromTable(int rowNum) {
-        songs.removeRow(rowNum);
-    }
-
     private void popUpNoSongSelected() {
         JOptionPane.showMessageDialog(this, "You haven't selected a song. ლ(ಠ益ಠლ)");
     }
@@ -199,41 +192,21 @@ public class Songs extends JPanel implements ActionListener {
         JOptionPane.showMessageDialog(this, "You haven't selected a playlist. ლ(ಠ益ಠლ)");
     }
 
-    private void popUpSongsDeleted(ArrayList<String> titles) {
-        StringBuilder sb = new StringBuilder();
-
-        for(int i = 0; titles.size() > i ; i++) {
-            sb.append(titles.get(i));
-            sb.append(", ");
-            if(i == 4) {
-                sb.append("and ");
-                sb.append(titles.size() - 5);
-                sb.append(" more songs");
-                break;
-            }
-        }
-
-        sb.setLength(sb.length()-2); // eliminem el ", "
-        if(titles.size() == 1){
-            sb.append(" was");
-        }
-        else sb.append(" were");
-        sb.append(" deleted.");
-
-        JOptionPane.showMessageDialog(this, sb.toString());
-    }
-
     public void popUpSongsAdded() {
-        JOptionPane.showMessageDialog(this, "Songs added to playlist. (◕‿◕✿)");
+        JOptionPane.showMessageDialog(this, "Finished adding to playlist. (◕‿◕✿)");
     }
 
-    private String getSongTitle(int pos){
-        return String.valueOf(songsTable.getModel().getValueAt(pos, 0));
+    /**
+     * Donada una fila de la taula retorna la canço
+     * @param pos Fila
+     * @return Canço indicada a la fila
+     */
+    private Song getSong(int pos){
+        return new Song((String) songsTable.getModel().getValueAt(pos, 0), (String) songsTable.getModel().getValueAt(pos, 1), (String) songsTable.getModel().getValueAt(pos, 2));
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ArrayList<String> titles = new ArrayList<>();
         int[] selectedSongs = songsTable.getSelectedRows();
         int[] selectedPlaylists = playlistsTable.getSelectedRows();
 
@@ -253,14 +226,9 @@ public class Songs extends JPanel implements ActionListener {
             if (selectedSongs.length == 0) {
                 popUpNoSongSelected();
             } else {
-                //TODO: remove from database & lists
-                for (int i = selectedSongs.length - 1; i >= 0; i--) {
-                    titles.add(getSongTitle(selectedSongs[i]));
-                    removeSongFromTable(selectedSongs[i]);
+                for (int i = 0; i < selectedSongs.length; i++) {
+                    this.event.deleteSong(this.getSong(selectedSongs[i]));
                 }
-                popUpSongsDeleted(titles);
-
-
             }
         } else if (e.getSource() == backToSongsButton) {
             cl.show(mainContent, ("songs"));
@@ -271,13 +239,33 @@ public class Songs extends JPanel implements ActionListener {
                     // playlist
                     for (int j = selectedSongs.length - 1; j >= 0; j--) {
                         // song
+                        this.event.addSongPlaylist(this.getSong(selectedSongs[j]), (String) playlistsTable.getModel().getValueAt(selectedPlaylists[i], 0));
                     }
                 }
                 this.popUpSongsAdded();
                 cl.show(mainContent,("songs"));
-
-                //TODO: update database & list
             }
         }
+    }
+
+    @Override
+    public void unableToDeleteSong(Song song) {
+        JOptionPane.showMessageDialog(this, song.getName() + " can't be deleted!");
+    }
+
+    @Override
+    public void songDeleted(Song song) {
+        this.reloadSongs();
+        JOptionPane.showMessageDialog(this, song.getName() + " was deleted.");
+    }
+
+    @Override
+    public void unableToAddSong(Song song) {
+        JOptionPane.showMessageDialog(this, "Error adding the song " + song.toString() + ".");
+    }
+
+    @Override
+    public void songAdded(Song song) {
+
     }
 }

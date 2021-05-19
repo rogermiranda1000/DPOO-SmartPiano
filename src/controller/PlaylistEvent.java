@@ -11,17 +11,35 @@ public interface PlaylistEvent {
      */
     ArrayList<String> getPlaylists();
 
-
-    void deletePlaylist(String playlist);
-
-    void playPlaylist(String valueOf);
-
-    void deleteSongsFromPlaylist(String value);
-
     /**
      * Retorna les cançons que formen una playlist
      * @param playlist Nom de la playlist a buscar
      * @return Cançons formant playlist
      */
     ArrayList<Song> getPlaylistSongs(String playlist);
+
+    /**
+     * Solicita afegir una playlist
+     * @param playlist Nom de la playlist
+     */
+    void addPlaylist(String playlist);
+
+    /**
+     * Solicita eliminar una playlist
+     * @param playlist Nom de la playlist
+     */
+    void removePlaylist(String playlist);
+
+    /**
+     * Solicita eliminar una canço d'una playlist
+     * @param playlist Nom de la playlist on està la canço
+     * @param song Canço a eliminar
+     */
+    void removeSongPlaylist(String playlist, Song song);
+
+    /**
+     * Solicita reproduir una playlist
+     * @param playlist Nom de la playlist a reproduir
+     */
+    void requestPlayList(String playlist);
 }

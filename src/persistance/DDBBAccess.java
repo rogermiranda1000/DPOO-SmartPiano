@@ -65,15 +65,20 @@ public class DDBBAccess {
      */
     public ResultSet getSentence(String sql, Object... params) throws SQLException {
         int connectionId = this.getConnection();
-        PreparedStatement stmt = this.ddbb[connectionId].prepareStatement(sql);
-        int x;
-        for (x = 0; x < params.length; x++) stmt.setObject(x+1, params[x]);
+        try {
+            PreparedStatement stmt = this.ddbb[connectionId].prepareStatement(sql);
+            int x;
+            for (x = 0; x < params.length; x++) stmt.setObject(x + 1, params[x]);
 
-        ResultSet rs = stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
 
-        stmt.close();
-        this.closeConnection(connectionId);
-        return rs;
+            stmt.close();
+            this.closeConnection(connectionId);
+            return rs;
+        } catch (SQLException ex) {
+            this.closeConnection(connectionId);
+            throw ex;
+        }
     }
 
     /**
@@ -85,14 +90,19 @@ public class DDBBAccess {
      */
     public int runSentence(String sql, Object... params) throws SQLException {
         int connectionId = this.getConnection();
-        PreparedStatement stmt = this.ddbb[connectionId].prepareStatement(sql);
-        int x;
-        for (x = 0; x < params.length; x++) stmt.setObject(x+1, params[x]);
+        try {
+            PreparedStatement stmt = this.ddbb[connectionId].prepareStatement(sql);
+            int x;
+            for (x = 0; x < params.length; x++) stmt.setObject(x+1, params[x]);
 
-        x = stmt.executeUpdate();
-        stmt.close();
-        this.closeConnection(connectionId);
+            x = stmt.executeUpdate();
+            stmt.close();
+            this.closeConnection(connectionId);
 
-        return x;
+            return x;
+        } catch (SQLException ex) {
+            this.closeConnection(connectionId);
+            throw ex;
+        }
     }
 }

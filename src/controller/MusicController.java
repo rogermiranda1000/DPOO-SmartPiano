@@ -37,7 +37,7 @@ public class MusicController implements SongEnder, PlaylistBarEvent, SongRequest
         this.list = list;
         this.songIndex = 0;
 
-        this.playSong();
+        if (this.list.getSongs().size() > 0) this.playSong();
     }
 
     // TODO: Al actualitzar el volum cal cridar sempre setVolume()

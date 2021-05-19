@@ -33,4 +33,11 @@ public class List {
     public String getCreator() {
         return this.creator;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof List)) return false;
+        List l = (List)o;
+        return (l.name.equals(this.name) && l.creator.equals(this.creator));
+    }
 }

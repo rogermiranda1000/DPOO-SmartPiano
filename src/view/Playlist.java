@@ -9,9 +9,8 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 
-public class Playlist extends JPanel implements ActionListener, ListSelectionListener {
+public class Playlist extends JPanel implements ActionListener, ListSelectionListener, PlaylistMenuNotifier {
     private final DefaultListModel<String> playlistName;
     private final JList<String> playlistList;
     private final DefaultListModel<Song> songsName;
@@ -20,7 +19,7 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
     private JButton removeSongButton;
     private JButton removePlaylistButton;
     private JButton createPlaylistButton;
-    private List<String> selectedValuesList;
+    private String selectedValue;
 
     private final PlaylistEvent event;
 
@@ -107,24 +106,59 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == playPlaylistButton) {
-            // TODO: controller.playPlaylist(String.valueOf(selectedValuesList.get(0));
-        } else if (e.getSource() == removePlaylistButton) {
-            // TODO: controller.deletePlaylist(String.valueOf(selectedValuesList.get(0));
-        } else if (e.getSource() == removeSongButton) {
-            // TODO: controller.deleteSongsFromPlaylist(String.valueOf(selectedValuesList.get(0), selectedSongs);
-        } else if (e.getSource() == createPlaylistButton) {
-            new CreatePlaylistPopUp("Create playlist");
-
+        if (e.getSource() == createPlaylistButton) {
+            new CreatePlaylistPopUp(this.event);
+        } else if (this.selectedValue == null) {
+            JOptionPane.showMessageDialog(this, "Select a playlist first.");
+        } else {
+            if (e.getSource() == playPlaylistButton) {
+                this.event.requestPlayList(this.selectedValue);
+            } else if (e.getSource() == removePlaylistButton) {
+                this.event.removePlaylist(selectedValue);
+            } else if (e.getSource() == removeSongButton) {
+                // TODO: controller.deleteSongsFromPlaylist(String.valueOf(selectedValuesList.get(0), selectedSongs);
+            }
         }
     }
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        if (!e.getValueIsAdjusting()) {
-            this.selectedValuesList = this.playlistList.getSelectedValuesList();
-            this.updateSongsList(this.selectedValuesList.get(0));
-            this.removeSongButton.setVisible(true);
+        if (!e.getValueIsAdjusting() && this.playlistList.getSelectedValuesList().size() > 0) {
+            this.selectedValue = this.playlistList.getSelectedValuesList().get(0);
+            this.updateSongsList(this.selectedValue);
         }
+    }
+
+    @Override
+    public void playlistCreated() {
+        this.reloadPlaylists();
+        //JOptionPane.showMessageDialog(this, "Playlist created.");
+    }
+
+    @Override
+    public void playlistNotCreated() {
+        JOptionPane.showMessageDialog(this, "This playlist already exists!");
+    }
+
+    @Override
+    public void playlistDeleted() {
+        this.reloadPlaylists();
+        //JOptionPane.showMessageDialog(this, "Playlist deleted.");
+    }
+
+    @Override
+    public void playlistNotDeleted() {
+        // no hauria d'arribar aquí mai
+        JOptionPane.showMessageDialog(this, "Error deleting the playlist.");
+    }
+
+    @Override
+    public void songDeletedFromPlaylist() {
+        // TODO
+    }
+
+    @Override
+    public void songNotDeletedFromPlaylist() {
+        // TODO
     }
 }

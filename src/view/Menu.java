@@ -1,6 +1,7 @@
 package view;
 
 import controller.*;
+import entities.Song;
 import entities.Note;
 
 import javax.swing.*;
@@ -8,7 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Menu extends JFrame implements ActionListener, KeyChanger, PlayingSongNotifier {
+public class Menu extends JFrame implements ActionListener, KeyChanger, PlayingSongNotifier, SongsMenuNotifier, PlaylistMenuNotifier {
     public static final int HEIGHT = 900;
     public static final int WIDTH = 1600;
     private JButton playButton, loopButton, nextButton, backButton, shuffleButton;
@@ -24,7 +25,6 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, PlayingS
     private final Playlist playlist;
     private final Piano piano;
 
-    //TODO: Fer que les tecles es pouguin canviar i que tinguin un valor inicial.
     public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE) {
         this.event = menuE;
         this.playE = playE;
@@ -282,6 +282,56 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, PlayingS
     @Override
     public void newSongPlaying(String songName) {
         this.playingSong.setText(songName);
+    }
+
+    @Override
+    public void songDeleted(Song song) {
+        this.songs.songDeleted(song);
+    }
+
+    @Override
+    public void unableToAddSong(Song song) {
+        this.songs.unableToAddSong(song);
+    }
+
+    @Override
+    public void songAdded(Song song) {
+        this.songs.songAdded(song);
+    }
+
+    @Override
+    public void unableToDeleteSong(Song song) {
+        this.songs.unableToDeleteSong(song);
+    }
+
+    @Override
+    public void playlistCreated() {
+        this.playlist.playlistCreated();
+    }
+
+    @Override
+    public void playlistNotCreated() {
+        this.playlist.playlistNotCreated();
+    }
+
+    @Override
+    public void playlistDeleted() {
+        this.playlist.playlistDeleted();
+    }
+
+    @Override
+    public void playlistNotDeleted() {
+        this.playlist.playlistNotDeleted();
+    }
+
+    @Override
+    public void songDeletedFromPlaylist() {
+        this.playlist.songDeletedFromPlaylist();
+    }
+
+    @Override
+    public void songNotDeletedFromPlaylist() {
+        this.playlist.songNotDeletedFromPlaylist();
     }
 
     @Override
