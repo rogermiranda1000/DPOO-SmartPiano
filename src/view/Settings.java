@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class Settings extends JPanel implements ActionListener, ChangeListener{ //}, SliderController, ChangeListener {
+public class Settings extends JPanel implements ActionListener, ChangeListener {
     private final CardLayout cl;
     private final JPanel mainContent;
     private JButton keysConfigButton, saveKeysConfigButton;
@@ -22,13 +22,12 @@ public class Settings extends JPanel implements ActionListener, ChangeListener{ 
     private JButton oneOctava, twoOctaves;
     private JButton deleteButton, saveButton;
 
-    private static KeyChanger kC;
+    private final KeyChanger kC;
 
     public static final int HEIGHT = 900;
     public static final int WIDTH  = 1600;
 
     public Settings(KeyChanger kC) {
-
         this.kC = kC;
 
         mainContent = new JPanel(new CardLayout());
@@ -82,7 +81,7 @@ public class Settings extends JPanel implements ActionListener, ChangeListener{ 
         oneOctava.addActionListener(this);
         twoOctaves.addActionListener(this);
 
-        JPanel blankSpace = new JPanel(); //TODO: buscar millor maner de fer espai en blanc.
+        JPanel blankSpace = new JPanel(); //TODO: buscar millor maner de fer espai en blanc
         blankSpace.setPreferredSize(new Dimension(100,30));
 
         //Delete profile
