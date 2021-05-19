@@ -169,7 +169,7 @@ public class BusinessFacade {
         if (this.loggedUserPlaylists == null) return null;
 
         for (List l : this.loggedUserPlaylists) {
-            if (l.equals(name)) return l;
+            if (l.getName().equals(name)) return l;
         }
         return null;
     }
