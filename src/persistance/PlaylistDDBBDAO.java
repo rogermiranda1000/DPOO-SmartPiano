@@ -77,8 +77,8 @@ public class PlaylistDDBBDAO implements PlaylistDAO {
 
     private boolean addSongPlaylist(int id, Song song) {
         try {
-            if (this.ddbb.runSentence("INSERT INTO ListSongs(list, song) VALUES (?, (SELECT Songs.id FROM Songs JOIN Users ON Users.id = Songs.author WHERE Users.username = ? AND Songs.name = ? AND Songs.date = ?) );",
-                    id, song.getArtist(), song.getName(), song.getDate()) == 0) return false;
+            return (this.ddbb.runSentence("INSERT INTO ListSongs(list, song) VALUES (?, (SELECT Songs.id FROM Songs JOIN Users ON Users.id = Songs.author WHERE Users.username = ? AND Songs.name = ? AND Songs.date = ?) );",
+                    id, song.getArtist(), song.getName(), song.getDate()) > 0);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
