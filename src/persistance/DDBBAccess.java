@@ -19,6 +19,8 @@ public class DDBBAccess {
      * @throws SQLException Error al conectar
      * @throws ClassNotFoundException No es té el driver de MariaDB
      * @throws SQLInvalidAuthorizationSpecException Credencials invàl·lides
+     * @throws SQLNonTransientConnectionException IP de la base de dades invàl·lida
+     * @throws SQLSyntaxErrorException DB nom invàl·lid
      */
     public DDBBAccess(DDBBInfo info, int maxConnections) throws SQLException, ClassNotFoundException, SQLInvalidAuthorizationSpecException {
         DDBBAccess.loadDriver();
