@@ -7,10 +7,9 @@ import persistance.*;
 import view.LogIn;
 import view.Menu;
 
-import javax.xml.stream.events.StartDocument;
 import java.util.ArrayList;
 
-public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, PlaysManager {
+public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager {
     private Menu menu;
     private LogIn login;
     private final BusinessFacade model;
@@ -34,8 +33,7 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     public void requestLogin(String user, String password) {
         if (this.model.login(user, password)) {
             this.login.dispose();
-
-            this.menu = new Menu(this.musicController, this, this, this, this);
+            this.menu = new Menu(this.musicController, this, this, this, this, this);
             this.menu.setVisible(true);
 
             this.musicController.setVolume(this.model.getSongVolume());
@@ -71,6 +69,39 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     }
 
     @Override
+    public void deletePlaylist(String playlist) {
+        //TODO: conectar amb BBDD
+    }
+
+    @Override
+    public void playPlaylist(String valueOf) {
+        //TODO: conectar amb BBDD
+    }
+
+    @Override
+    public void deleteSongsFromPlaylist(String value) {
+        //TODO: conectar amb BBDD
+    }
+
+    /*
+    @Override
+    public boolean saveKeyNotes(char[] chars) {
+        return false;
+    }
+
+    @Override
+    public boolean saveVolumes(float pianoVolume, float songVolume) {
+        return false;
+    }
+
+    @Override
+    public String sendSignal(String type) {
+        return type;
+    }
+    */
+
+
+    @Override
     public ArrayList<Song> getUserSongs() {
         return this.model.getSongs();
     }
@@ -90,5 +121,17 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     @Override
     public void addPlay(int secondsPlayed, Song song) {
         this.model.addPlay(secondsPlayed, song);
+    }
+
+    @Override
+    public int[] getSongsStadistics() {
+        //TODO Return the number of songs listened the las 24h and splited between hours.
+        return new int[0];
+    }
+
+    @Override
+    public int[] getTimeStadistics() {
+        //TODO Return the number of seconds listened the las 24h and splited between hours.
+        return new int[0];
     }
 }
