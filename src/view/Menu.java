@@ -1,13 +1,14 @@
 package view;
 
 import controller.*;
+import entities.Song;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Menu extends JFrame implements ActionListener, PlayingSongNotifier {
+public class Menu extends JFrame implements ActionListener, PlayingSongNotifier, SongsMenuNotifier {
     public static final int HEIGHT = 900;
     public static final int WIDTH = 1600;
     private JButton playButton, loopButton, nextButton, backButton, shuffleButton;
@@ -264,5 +265,15 @@ public class Menu extends JFrame implements ActionListener, PlayingSongNotifier 
     @Override
     public void newSongPlaying(String songName) {
         this.playingSong.setText(songName);
+    }
+
+    @Override
+    public void songDeleted(Song song) {
+        this.songs.songDeleted(song);
+    }
+
+    @Override
+    public void unableToDeleteSong(Song song) {
+        this.songs.unableToDeleteSong(song);
     }
 }

@@ -83,7 +83,14 @@ public class BusinessFacade {
         return this.songManager.addVirtualSong(song);
     }
 
+    /**
+     * Elimina una canço si l'autor és el propi usuari
+     * @param song Canço a eliminar
+     * @return Si s'ha pogut eliminar (true) o no (false)
+     */
     public boolean deleteSong(Song song) {
+        if (this.loggedUser == null) return false; // si no hi ha usuari loguejat, no pot eliminar una canço
+        if (!song.getArtist().equals(this.loggedUser.getName())) return false; // TODO comprobar si l'usuari és virtual amb el mateix nom
         return this.songManager.deleteSong(song);
     }
 

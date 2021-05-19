@@ -78,6 +78,12 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     }
 
     @Override
+    public void deleteSong(Song song) {
+        if (this.model.deleteSong(song)) this.menu.songDeleted(song);
+        else this.menu.unableToDeleteSong(song);
+    }
+
+    @Override
     public void exitSession() {
         this.menu.dispose();
         this.login = new LogIn(this);
