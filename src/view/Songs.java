@@ -19,10 +19,8 @@ public class Songs extends JPanel implements ActionListener {
 
     private final DefaultTableModel playlists;
     private final SongsEvent event;
-    private final JTable songsTable;
     private final JTable playlistsTable;
 
-    private final SongsEvent event;
     private final SongRequest requestEvent;
 
     private JButton playSongButton, addSongButton, removeSongButton, backToSongsButton, addToPlaylistButton;
@@ -34,7 +32,6 @@ public class Songs extends JPanel implements ActionListener {
         this.songsTable = new JTable(this.songs);
 
         this.playlists = new DefaultTableModel();
-        this.songsTable = new JTable(this.songs);
         this.playlistsTable = new JTable(this.playlists);
 
         this.event = songE;

@@ -11,17 +11,17 @@ public interface PlaylistEvent {
      */
     ArrayList<String> getPlaylists();
 
-    /**
-     * Retorna les cançons que formen una playlist
-     * @param playlist Nom de la playlist a buscar
-     * @return Cançons formant playlist
-     */
-    ArrayList<Song> getSongs(String playlist);
 
     void deletePlaylist(String playlist);
 
     void playPlaylist(String valueOf);
 
     void deleteSongsFromPlaylist(String value);
+
+    /**
+     * Retorna les cançons que formen una playlist
+     * @param playlist Nom de la playlist a buscar
+     * @return Cançons formant playlist
+     */
     ArrayList<Song> getPlaylistSongs(String playlist);
 }
