@@ -83,7 +83,8 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
 
     @Override
     public void removeSongPlaylist(String playlist, Song song) {
-        // TODO
+        if (this.model.removeSongPlaylist(playlist, song)) this.menu.songDeletedFromPlaylist();
+        else this.menu.songNotDeletedFromPlaylist();
     }
 
     @Override

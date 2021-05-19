@@ -94,13 +94,20 @@ public class PlaylistDDBBDAO implements PlaylistDAO {
 
     @Override
     public boolean removeSongAllPlaylists(Song song) {
-        return true; // TODO
+        try {
+            this.ddbb.runSentence("DELETE FROM ListSongs WHERE song = (SELECT Songs.id FROM Songs JOIN Users ON Songs.author = Users.id WHERE username = ? AND name = ? AND date = ?);",
+                    song.getArtist(), song.getName(), song.getDate());
+            return true;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
     }
 
     private boolean removeSongPlaylist(int id, Song song) {
         try {
-            if (this.ddbb.runSentence("DELETE FROM ListSongs WHERE list = ? AND song = (SELECT id FROM Songs JOIN Users ON username = ? WHERE name = ? AND date = ?);",
-                    id, song.getArtist(), song.getName(), song.getDate()) == 0) return false;
+            return (this.ddbb.runSentence("DELETE FROM ListSongs WHERE list = ? AND song = (SELECT Songs.id FROM Songs JOIN Users ON Songs.author = Users.id WHERE username = ? AND name = ? AND date = ?);",
+                    id, song.getArtist(), song.getName(), song.getDate()) > 0);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }

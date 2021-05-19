@@ -193,4 +193,12 @@ public class BusinessFacade {
         if (this.loggedUser == null) return false;
         return this.statisticsManager.addListen(this.loggedUser.getName(), song, secondsPlayed);
     }
+
+    public boolean removeSongPlaylist(String playlist, Song song) {
+        if (this.loggedUser == null) return false;
+        if (!this.playlistManager.removeSongPlaylist(new List(playlist, this.loggedUser.getName()), song)) return false;
+
+        this.getPlaylist(playlist).removeSong(song);
+        return true;
+    }
 }
