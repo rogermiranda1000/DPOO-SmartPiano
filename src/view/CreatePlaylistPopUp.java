@@ -1,17 +1,23 @@
 package view;
 
+import controller.PlaylistEvent;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class CreatePlaylistPopUp extends JDialog implements ActionListener {
+    private static final String TITLE = "Create playlist";
 
-    private JButton okay;
-    private TextField inputField;
+    private final JButton okay;
+    private final TextField inputField;
+    private final PlaylistEvent event;
 
-    public CreatePlaylistPopUp(String text) {
-        this.setTitle(text);
+    public CreatePlaylistPopUp(PlaylistEvent event) {
+        this.event = event;
+
+        this.setTitle(CreatePlaylistPopUp.TITLE);
         this.setSize(400, 120);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
@@ -46,21 +52,10 @@ public class CreatePlaylistPopUp extends JDialog implements ActionListener {
         this.add(container, BorderLayout.CENTER);
         okay.addActionListener(this);
         this.setVisible(true);
-
-        return;
-
     }
 
     public void emptyInput() {
         JOptionPane.showMessageDialog(this, "Empty text field.");
-    }
-
-    public void wrongInput() {
-        JOptionPane.showMessageDialog(this, "Playlist already exists.");
-    }
-
-    public void closePopUp() {
-        this.dispose();
     }
 
     @Override
@@ -69,7 +64,8 @@ public class CreatePlaylistPopUp extends JDialog implements ActionListener {
             if (inputField.getText().equals("")) {
                 emptyInput();
             } else {
-                // TODO: createPlaylist
+                this.event.addPlaylist(inputField.getText());
+                dispose(); // tanca
             }
         }
     }

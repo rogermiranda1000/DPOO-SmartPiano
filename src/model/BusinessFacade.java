@@ -126,4 +126,14 @@ public class BusinessFacade {
         if (r == null) return 1.f;
         return r;
     }
+
+    public boolean addPlaylist(String list) {
+        if (this.loggedUser == null) return false;
+        List add = new List(list, this.loggedUser.getName());
+        if (this.playlistManager.existsPlaylist(add)) return false;
+
+        if (!this.playlistManager.createPlaylist(add)) return false;
+        this.loggedUserPlaylists.add(add);
+        return true;
+    }
 }

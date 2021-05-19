@@ -11,7 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class Playlist extends JPanel implements ActionListener, ListSelectionListener {
+public class Playlist extends JPanel implements ActionListener, ListSelectionListener, PlaylistMenuNotifier {
     private final DefaultListModel<String> playlistName;
     private final JList<String> playlistList;
     private final DefaultListModel<Song> songsName;
@@ -114,7 +114,7 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
         } else if (e.getSource() == removeSongButton) {
             // TODO: controller.deleteSongsFromPlaylist(String.valueOf(selectedValuesList.get(0), selectedSongs);
         } else if (e.getSource() == createPlaylistButton) {
-            new CreatePlaylistPopUp("Create playlist");
+            new CreatePlaylistPopUp(this.event);
 
         }
     }
@@ -126,5 +126,16 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
             this.updateSongsList(this.selectedValuesList.get(0));
             this.removeSongButton.setVisible(true);
         }
+    }
+
+    @Override
+    public void playlistCreated() {
+        this.reloadPlaylists();
+        JOptionPane.showMessageDialog(this, "Playlist created.");
+    }
+
+    @Override
+    public void playlistNotCreated() {
+        JOptionPane.showMessageDialog(this, "This playlist already exists!");
     }
 }

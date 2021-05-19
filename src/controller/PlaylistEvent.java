@@ -17,4 +17,10 @@ public interface PlaylistEvent {
      * @return Cançons formant playlist
      */
     ArrayList<Song> getPlaylistSongs(String playlist);
+
+    /**
+     * Solicita afegir una playlist
+     * @param playlist Nom de la playlist
+     */
+    void addPlaylist(String playlist);
 }
