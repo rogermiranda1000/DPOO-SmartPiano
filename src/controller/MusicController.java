@@ -61,7 +61,6 @@ public class MusicController implements SongEnder, PlaylistBarEvent, SongRequest
     private void addPlay() {
         if (this.player != null) {
             int second = this.getSecond();
-            System.out.println(second);
             if (second > 0) playsManager.addPlay(second, this.getCurrentSong());
         }
     }
