@@ -94,17 +94,22 @@ public class NotePlayer extends Thread {
         int i = 0;
         while (i < notes.size() && this.getAlive()) {
             // Esperem fins al seguent event
+            try {
+                synchronized (this.notified) {
+                    if (this.paused) this.notified.wait();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             if (notes.get(i).getTick() > tick) {
                 try {
                     Thread.sleep((long)((notes.get(i).getTick() - tick) * tickLength / (1000 * SPEED)));
-                    synchronized (this.notified) {
-                        if (this.paused) this.notified.wait();
-                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 tick = notes.get(i).getTick();
             }
+
             //Reproduim els events d'aquest tick
             if (this.getAlive()) {
                 while (i < notes.size() && notes.get(i).getTick() == tick) {
