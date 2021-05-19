@@ -3,10 +3,7 @@ package model;
 import entities.List;
 import entities.Song;
 import entities.User;
-import persistance.ConfigDAO;
-import persistance.PlaylistDAO;
-import persistance.SongDAO;
-import persistance.UserDAO;
+import persistance.*;
 
 import java.util.ArrayList;
 
@@ -15,15 +12,17 @@ public class BusinessFacade {
     private final UserDAO userManager;
     private final PlaylistDAO playlistManager;
     private final ConfigDAO configManager;
+    private final StatisticsDAO statisticsManager;
 
     private User loggedUser;
     private ArrayList<List> loggedUserPlaylists;
 
-    public BusinessFacade(SongDAO songManager, UserDAO userManager, PlaylistDAO playlistManager, ConfigDAO configManager) {
+    public BusinessFacade(SongDAO songManager, UserDAO userManager, PlaylistDAO playlistManager, ConfigDAO configManager, StatisticsDAO statisticsManager) {
         this.songManager = songManager;
         this.userManager = userManager;
         this.playlistManager = playlistManager;
         this.configManager = configManager;
+        this.statisticsManager = statisticsManager;
 
         this.loggedUser = null;
         this.loggedUserPlaylists = null;
@@ -192,5 +191,10 @@ public class BusinessFacade {
             if (s.equals(song)) return true;
         }
         return false;
+    }
+
+    public boolean addPlay(int secondsPlayed, Song song) {
+        if (this.loggedUser == null) return false;
+        return this.statisticsManager.addListen(this.loggedUser.getName(), song, secondsPlayed);
     }
 }
