@@ -6,22 +6,20 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Tecla extends JPanel implements MouseListener, KeyListener{
+public class Tecla extends JPanel implements MouseListener, KeyListener {
+    private final Note note;
+    private final int ocatava;
 
-    private JPanel tecla = new JPanel();
-    private Note note;
-    private int ocatava;
-    private KeyController kC;
+    private final JPanel tecla = new JPanel();
+    private final KeyController kC;
     private char keyAssocieted;
-    private boolean isBlack;
+    private final boolean isBlack;
 
     public Tecla(Piano p, Note note, boolean isBlack, int octava) {
         this.note = note;
         this.kC = p;
         this.ocatava = octava;
         this.isBlack = isBlack;
-
-        MyKeyListener mKL = new MyKeyListener(p);
 
         this.setPreferredSize(new Dimension(40,200));
         this.setLayout(new BorderLayout());
@@ -63,9 +61,7 @@ public class Tecla extends JPanel implements MouseListener, KeyListener{
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
-
-    }
+    public void mouseClicked(MouseEvent e) { }
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -83,14 +79,10 @@ public class Tecla extends JPanel implements MouseListener, KeyListener{
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
+    public void mouseEntered(MouseEvent e) { }
 
     @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
+    public void mouseExited(MouseEvent e) { }
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -99,19 +91,11 @@ public class Tecla extends JPanel implements MouseListener, KeyListener{
         }
         /*System.out.println(e.getKeyChar());
         kC.keyBoardPressed(e.getKeyChar());*/
-
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
-        /*System.out.println(e.getKeyChar());
-        System.out.println(e.getKeyCode());
-        kC.keyBoardPressed(e.getKeyChar());*/
-    }
+    public void keyPressed(KeyEvent e) { }
 
     @Override
-    public void keyReleased(KeyEvent e) {
-        /*System.out.println("HEY");
-        kC.keyBoardNotPressed(e.getKeyChar());*/
-    }
+    public void keyReleased(KeyEvent e) { }
 }

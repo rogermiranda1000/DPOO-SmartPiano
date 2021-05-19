@@ -5,12 +5,10 @@ import controller.SongsEvent;
 import entities.Song;
 
 import javax.swing.*;
-import javax.swing.Icon;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class Songs extends JPanel implements ActionListener {
@@ -18,9 +16,9 @@ public class Songs extends JPanel implements ActionListener {
     private final JTable songsTable;
 
     private final DefaultTableModel playlists;
-    private final SongsEvent event;
     private final JTable playlistsTable;
 
+    private final SongsEvent event;
     private final SongRequest requestEvent;
 
     private JButton playSongButton, addSongButton, removeSongButton, backToSongsButton, addToPlaylistButton;

@@ -14,7 +14,6 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, PlayingS
     private JButton playButton, loopButton, nextButton, backButton, shuffleButton;
     private JButton songsButton, playlistButton, pianoButton, rankingButton, settingsButton, exitButton;
     private JLabel playingSong;
-    protected Piano piano;
 
     private final MenuEvent event;
     private final PlaylistBarEvent playE;
@@ -23,6 +22,7 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, PlayingS
 
     private final Songs songs;
     private final Playlist playlist;
+    private final Piano piano;
 
     //TODO: Fer que les tecles es pouguin canviar i que tinguin un valor inicial.
     public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE) {

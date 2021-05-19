@@ -66,7 +66,6 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     @Override
     public ArrayList<Song> getPlaylistSongs(String playlist) {
         ArrayList<List> l = this.model.getPlaylists();
-        ArrayList<String> r = new ArrayList<>();
         for (List list: l) {
             if (list.getName().equals(playlist)) return list.getSongs();
         }
