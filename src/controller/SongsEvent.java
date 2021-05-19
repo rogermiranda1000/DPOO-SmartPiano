@@ -15,4 +15,10 @@ public interface SongsEvent {
      * @return Cançons que l'usuari loguejat té acces
      */
     ArrayList<Song> getUserSongs();
+
+    /**
+     * Elimina la canço sol·licitada
+     * @param song Canço a eliminar
+     */
+    void deleteSong(Song song);
 }
