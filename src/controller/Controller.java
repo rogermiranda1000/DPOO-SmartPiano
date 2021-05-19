@@ -3,26 +3,23 @@ package controller;
 import entities.List;
 import entities.Song;
 import model.BusinessFacade;
-import persistance.ConfigDAO;
-import persistance.PlaylistDAO;
-import persistance.SongDAO;
-import persistance.UserDAO;
+import persistance.*;
 import view.LogIn;
 import view.Menu;
 
 import java.util.ArrayList;
 
-public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest {
+public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager {
     private Menu menu;
     private LogIn login;
     private final BusinessFacade model;
     private final SongDownloader scrapper;
     private final MusicController musicController;
 
-    public Controller(int scrappingTime, SongDAO songManager, UserDAO userManager, PlaylistDAO playlistManager, ConfigDAO configManager) {
-        this.model = new BusinessFacade(songManager, userManager, playlistManager, configManager);
+    public Controller(int scrappingTime, SongDAO songManager, UserDAO userManager, PlaylistDAO playlistManager, ConfigDAO configManager, StatisticsDAO statisticsManager) {
+        this.model = new BusinessFacade(songManager, userManager, playlistManager, configManager, statisticsManager);
 
-        this.musicController = new MusicController();
+        this.musicController = new MusicController(this);
 
         this.scrapper = new SongDownloader(this, scrappingTime);
         this.scrapper.start();
@@ -37,7 +34,7 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         if (this.model.login(user, password)) {
             this.login.dispose();
 
-            this.menu = new Menu(this.musicController, this, this, this, this);
+            this.menu = new Menu(this.musicController, this, this, this, this, this);
             this.menu.setVisible(true);
 
             this.musicController.setVolume(this.model.getSongVolume());
@@ -130,5 +127,22 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     @Override
     public void requestSong(Song song) {
         this.musicController.requestSong(this.model.getSong(song));
+    }
+
+    @Override
+    public void addPlay(int secondsPlayed, Song song) {
+        this.model.addPlay(secondsPlayed, song);
+    }
+
+    @Override
+    public int[] getSongsStadistics() {
+        //TODO Return the number of songs listened the las 24h and splited between hours.
+        return new int[0];
+    }
+
+    @Override
+    public int[] getTimeStadistics() {
+        //TODO Return the number of seconds listened the las 24h and splited between hours.
+        return new int[0];
     }
 }

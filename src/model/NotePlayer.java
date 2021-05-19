@@ -18,6 +18,8 @@ public class NotePlayer extends Thread {
     private final double tickLength;
     private final MidiChannel[] channels;
     private final Synthesizer synth;
+    private long tick;
+    private int lastSecondSent;
 
     private boolean paused;
     private boolean alive;
@@ -34,6 +36,8 @@ public class NotePlayer extends Thread {
         this.tickLength = song.getTickLength();
         this.volume = volume;
         this.songEnder = songEnder;
+        this.tick = 0;
+        this.lastSecondSent = 0;
         MidiChannel[] channels = null;
         Synthesizer synth = null;
         try {
@@ -86,21 +90,26 @@ public class NotePlayer extends Thread {
     @Override
     @SuppressWarnings("BusyWait")
     public void run() {
-        long tick = 0;
+        this.tick = 0;
         int i = 0;
         while (i < notes.size() && this.getAlive()) {
             // Esperem fins al seguent event
+            try {
+                synchronized (this.notified) {
+                    if (this.paused) this.notified.wait();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             if (notes.get(i).getTick() > tick) {
                 try {
                     Thread.sleep((long)((notes.get(i).getTick() - tick) * tickLength / (1000 * SPEED)));
-                    synchronized (this.notified) {
-                        if (this.paused) this.notified.wait();
-                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 tick = notes.get(i).getTick();
             }
+
             //Reproduim els events d'aquest tick
             if (this.getAlive()) {
                 while (i < notes.size() && notes.get(i).getTick() == tick) {
@@ -123,5 +132,16 @@ public class NotePlayer extends Thread {
         } else {
             this.channels[INSTRUMENT].noteOff(note.getId(), note.getVelocity());
         }
+    }
+
+    /**
+     * Dóna els segons que han passat des de l'últim cop que s'ha cridat la funció
+     * @return valor corresponent al segon que han passat
+     */
+    public int getCurrentSecond() {
+        int second = (int)Math.round(tick * tickLength/1000/1000);
+        int r = second - lastSecondSent;
+        this.lastSecondSent = second;
+        return r;
     }
 }
