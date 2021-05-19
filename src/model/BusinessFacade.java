@@ -120,6 +120,10 @@ public class BusinessFacade {
         return (this.loggedUser != null);
     }
 
+    public void logout() {
+        this.loggedUser = null;
+    }
+
     public float getSongVolume() {
         if (this.loggedUser == null) return 1.f;
         Float r = this.configManager.getVolumeSong(this.loggedUser.getName());
@@ -134,6 +138,16 @@ public class BusinessFacade {
 
         if (!this.playlistManager.createPlaylist(add)) return false;
         this.loggedUserPlaylists.add(add);
+        return true;
+    }
+
+    public boolean removePlaylist(String list) {
+        if (this.loggedUser == null) return false;
+        List remove = new List(list, this.loggedUser.getName());
+        if (!this.playlistManager.existsPlaylist(remove)) return false;
+
+        if (!this.playlistManager.removePlaylist(remove)) return false;
+        this.loggedUserPlaylists.remove(remove);
         return true;
     }
 }

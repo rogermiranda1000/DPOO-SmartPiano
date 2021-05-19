@@ -23,4 +23,17 @@ public interface PlaylistEvent {
      * @param playlist Nom de la playlist
      */
     void addPlaylist(String playlist);
+
+    /**
+     * Solicita eliminar una playlist
+     * @param playlist Nom de la playlist
+     */
+    void removePlaylist(String playlist);
+
+    /**
+     * Solicita eliminar una canço d'una playlist
+     * @param playlist Nom de la playlist on està la canço
+     * @param song Canço a eliminar
+     */
+    void removeSongPlaylist(String playlist, Song song);
 }
