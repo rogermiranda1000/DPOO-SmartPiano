@@ -73,6 +73,12 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     }
 
     @Override
+    public void addPlaylist(String playlist) {
+        if (this.model.addPlaylist(playlist)) this.menu.playlistCreated();
+        else this.menu.playlistNotCreated();
+    }
+
+    @Override
     public ArrayList<Song> getUserSongs() {
         return this.model.getSongs();
     }
