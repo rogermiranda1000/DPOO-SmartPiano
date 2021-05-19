@@ -286,4 +286,24 @@ public class Menu extends JFrame implements ActionListener, PlayingSongNotifier,
     public void playlistNotCreated() {
         this.playlist.playlistNotCreated();
     }
+
+    @Override
+    public void playlistDeleted() {
+        this.playlist.playlistDeleted();
+    }
+
+    @Override
+    public void playlistNotDeleted() {
+        this.playlist.playlistNotDeleted();
+    }
+
+    @Override
+    public void songDeletedFromPlaylist() {
+        this.playlist.songDeletedFromPlaylist();
+    }
+
+    @Override
+    public void songNotDeletedFromPlaylist() {
+        this.playlist.songNotDeletedFromPlaylist();
+    }
 }

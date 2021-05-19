@@ -79,6 +79,17 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     }
 
     @Override
+    public void removePlaylist(String playlist) {
+        if (this.model.removePlaylist(playlist)) this.menu.playlistDeleted();
+        else this.menu.playlistNotDeleted();
+    }
+
+    @Override
+    public void removeSongPlaylist(String playlist, Song song) {
+
+    }
+
+    @Override
     public ArrayList<Song> getUserSongs() {
         return this.model.getSongs();
     }
@@ -91,6 +102,8 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
 
     @Override
     public void exitSession() {
+        this.model.logout();
+
         this.menu.dispose();
         this.login = new LogIn(this);
         this.login.setVisible(true);
