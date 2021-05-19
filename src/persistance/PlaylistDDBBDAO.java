@@ -59,8 +59,8 @@ public class PlaylistDDBBDAO implements PlaylistDAO {
             Integer id = this.getPlaylistId(list);
             if (id == null) return false;
 
+            if (this.ddbb.runSentence("DELETE FROM ListSongs WHERE list = ?;", id) == 0) return false;
             if (this.ddbb.runSentence("DELETE FROM Lists WHERE id = ?;", id) == 0) return false;
-            this.ddbb.runSentence("DELETE FROM ListSongs WHERE list = ?;", id);
             return true;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -77,7 +77,7 @@ public class PlaylistDDBBDAO implements PlaylistDAO {
 
     private boolean addSongPlaylist(int id, Song song) {
         try {
-            if (this.ddbb.runSentence("INSERT INTO ListSongs(list, song) VALUES (?, (SELECT id FROM Songs JOIN Users ON username = ? WHERE name = ? AND date = ?) );",
+            if (this.ddbb.runSentence("INSERT INTO ListSongs(list, song) VALUES (?, (SELECT Songs.id FROM Songs JOIN Users ON Users.id = Songs.author WHERE Users.username = ? AND Songs.name = ? AND Songs.date = ?) );",
                     id, song.getArtist(), song.getName(), song.getDate()) == 0) return false;
         } catch (SQLException ex) {
             ex.printStackTrace();

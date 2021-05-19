@@ -109,6 +109,16 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     }
 
     @Override
+    public void addSongPlaylist(Song song, String list) {
+        Boolean exists = this.model.existsSongInPlaylist(song, list);
+        if (exists == null || exists) this.menu.unableToAddSong(song); // ja existeix
+        else {
+            this.model.addSongPlaylist(song, list);
+            this.menu.songAdded(song);
+        }
+    }
+
+    @Override
     public void exitSession() {
         this.model.logout();
 
