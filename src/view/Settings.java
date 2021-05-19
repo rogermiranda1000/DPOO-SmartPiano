@@ -22,16 +22,14 @@ public class Settings extends JPanel implements ActionListener, ChangeListener{ 
     private JButton oneOctava, twoOctaves;
     private JButton deleteButton, saveButton;
 
-    private static ConfigNotifier cN;
     private static KeyChanger kC;
 
     public static final int HEIGHT = 900;
     public static final int WIDTH  = 1600;
 
-    public Settings(KeyChanger kC, ConfigNotifier cN) {
+    public Settings(KeyChanger kC) {
 
         this.kC = kC;
-        this.cN = cN;
 
         mainContent = new JPanel(new CardLayout());
         mainContent.add(settingsView(), "settings");
@@ -222,9 +220,9 @@ public class Settings extends JPanel implements ActionListener, ChangeListener{ 
 
 
         if(e.getSource() == saveButton){
-            cN.saveVolumes((float) volumePiano.getValue(), (float) volumePiano.getValue());
+
         }
-        if(e.getSource() == deleteButton) cN.sendSignal("delete");
+        if(e.getSource() == deleteButton) ;
 
 
         if(e.getSource() == oneOctava) System.out.println("Primera octava");

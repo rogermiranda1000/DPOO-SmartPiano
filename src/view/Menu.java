@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Menu extends JFrame implements ActionListener, KeyChanger, ConfigNotifier {
+public class Menu extends JFrame implements ActionListener, KeyChanger{
     public static final int HEIGHT = 900;
     public static final int WIDTH  = 1600;
     private JButton playButton, loopButton, nextButton, backButton, shuffleButton;
@@ -23,16 +23,14 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, ConfigNo
     protected Piano piano;
 
     private MenuEvent event;
-    private ConfigNotifier configN;
 
     private final LogIn login;
     private final Playlist playlist;
 
-    public Menu(LoginEvent loginE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, ConfigNotifier configN) {
+    public Menu(LoginEvent loginE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE) {
 
         //TODO: Fer que les tecles es pouguin canviar i que tinguin un valor inicial.
         this.event = menuE;
-        this.configN = configN;
         window = new JFrame("Piano TIME!");
         ImageIcon img = new ImageIcon("images\\icon.jpg");
         window.setIconImage(img.getImage());
@@ -60,7 +58,7 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, ConfigNo
         piano = new Piano();
         mainContent.add(piano, "piano");
         mainContent.add(new Ranking(), "ranking");
-        mainContent.add(new Settings(this, this), "settings");
+        mainContent.add(new Settings(this), "settings");
         window.add(mainContent);
         cl = (CardLayout) (mainContent.getLayout());
         /* DEFAULT VIEW */
@@ -313,6 +311,7 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, ConfigNo
         piano.changeKey(n, newLetter, octava);
     }
 
+    /*
     @Override
     public boolean saveKeyNotes(char[] chars) {
         return false;
@@ -331,4 +330,6 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, ConfigNo
     public String sendSignal(String type) {
         return type;
     }
+    */
+
 }
