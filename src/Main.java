@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.sql.SQLInvalidAuthorizationSpecException;
+import java.sql.SQLNonTransientConnectionException;
+import java.sql.SQLSyntaxErrorException;
 
 public class Main {
     private static final int MAX_DDBB_ACCESS = 2;
@@ -30,6 +32,10 @@ public class Main {
             System.err.println("No tens la dependencia del driver de MariaDB!");
         } catch (SQLInvalidAuthorizationSpecException ex) {
             System.err.println("Les credencials especificades en config.json (usuari/password) son incorrectes!");
+        } catch (SQLNonTransientConnectionException ex) {
+            System.err.println("Les dades especificades en config.json (ip/port) son incorrectes!");
+        } catch (SQLSyntaxErrorException ex) {
+            System.err.println("El nom de la base de dades especificat al config.json és incorrecte!");
 
             /* OTHER EXCEPTIONS */
         } catch (SQLException ex) {
