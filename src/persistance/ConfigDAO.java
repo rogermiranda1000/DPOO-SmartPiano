@@ -4,6 +4,8 @@ import entities.User;
 
 public interface ConfigDAO {
     boolean setVolumePiano(String nick, float value);
+    Float getVolumePiano(String nick);
+
     boolean setVolumeSong(String nick, float value);
-    entities.Config getConfig(String nick);
+    Float getVolumeSong(String nick);
 }

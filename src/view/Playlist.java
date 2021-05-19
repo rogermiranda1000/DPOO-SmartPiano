@@ -19,6 +19,7 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
     private JButton playPlaylistButton;
     private JButton removeSongButton;
     private JButton removePlaylistButton;
+    private JButton createPlaylistButton;
     private List<String> selectedValuesList;
 
     private final PlaylistEvent event;
@@ -78,6 +79,7 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
         JPanel panel = new JPanel();
         panel.setBackground(ColorConstants.MENU.getColor());
 
+        createPlaylistButton = new GenericButton(view.Icon.ADD.getIcon());
         playPlaylistButton = new GenericButton(view.Icon.PLAY.getIcon());
         removePlaylistButton = new GenericButton("X");
         removeSongButton = new GenericButton("X", new Font(null, Font.PLAIN, 20));
@@ -85,7 +87,9 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
         playPlaylistButton.addActionListener(this);
         removePlaylistButton.addActionListener(this);
         removeSongButton.addActionListener(this);
+        createPlaylistButton.addActionListener(this);
 
+        panel.add(createPlaylistButton);
         panel.add(playPlaylistButton);
         panel.add(removePlaylistButton);
         panel.add(removeSongButton);
@@ -104,12 +108,14 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == playPlaylistButton) {
-            event.playPlaylist(String.valueOf(selectedValuesList.get(0)));
+            // TODO: controller.playPlaylist(String.valueOf(selectedValuesList.get(0));
         } else if (e.getSource() == removePlaylistButton) {
-            event.deletePlaylist(String.valueOf(selectedValuesList.get(0)));
+            // TODO: controller.deletePlaylist(String.valueOf(selectedValuesList.get(0));
         } else if (e.getSource() == removeSongButton) {
-            //TODO: arreglar això, no se que fa XD
-            //event.deleteSongsFromPlaylist(String.valueOf(selectedValuesList.get(0), selectedSongs));
+            // TODO: controller.deleteSongsFromPlaylist(String.valueOf(selectedValuesList.get(0), selectedSongs);
+        } else if (e.getSource() == createPlaylistButton) {
+            new CreatePlaylistPopUp("Create playlist");
+
         }
     }
 
