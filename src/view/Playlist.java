@@ -102,7 +102,7 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
 
     protected void updateSongsList(String playlist) {
         this.songsName.clear();
-        this.songsName.addAll(this.event.getSongs(playlist));
+        this.songsName.addAll(this.event.getPlaylistSongs(playlist));
     }
 
     @Override
