@@ -266,6 +266,6 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
 
     @Override
     public void songAdded(Song song) {
-        // uwu
+
     }
 }
