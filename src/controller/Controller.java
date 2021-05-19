@@ -3,13 +3,11 @@ package controller;
 import entities.List;
 import entities.Song;
 import model.BusinessFacade;
-import persistance.ConfigDAO;
-import persistance.PlaylistDAO;
-import persistance.SongDAO;
-import persistance.UserDAO;
+import persistance.*;
 import view.LogIn;
 import view.Menu;
 
+import javax.xml.stream.events.StartDocument;
 import java.util.ArrayList;
 
 public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, PlaysManager {
@@ -19,8 +17,8 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     private final SongDownloader scrapper;
     private final MusicController musicController;
 
-    public Controller(int scrappingTime, SongDAO songManager, UserDAO userManager, PlaylistDAO playlistManager, ConfigDAO configManager) {
-        this.model = new BusinessFacade(songManager, userManager, playlistManager, configManager);
+    public Controller(int scrappingTime, SongDAO songManager, UserDAO userManager, PlaylistDAO playlistManager, ConfigDAO configManager, StatisticsDAO statisticsManager) {
+        this.model = new BusinessFacade(songManager, userManager, playlistManager, configManager, statisticsManager);
 
         this.musicController = new MusicController(this);
 
@@ -90,7 +88,7 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     }
 
     @Override
-    public void addPlay(long secondsPlayed, Song song) {
-
+    public void addPlay(int secondsPlayed, Song song) {
+        this.model.addPlay(secondsPlayed, song);
     }
 }
