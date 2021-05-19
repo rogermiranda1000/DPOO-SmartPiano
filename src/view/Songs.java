@@ -1,31 +1,44 @@
 package view;
 
+import controller.SongRequest;
 import controller.SongsEvent;
+import entities.Song;
 
 import javax.swing.*;
+import javax.swing.Icon;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class Songs extends JPanel implements ActionListener {
     private final DefaultTableModel songs;
+    private final JTable songsTable;
+
     private final DefaultTableModel playlists;
     private final SongsEvent event;
     private final JTable songsTable;
     private final JTable playlistsTable;
+
+    private final SongsEvent event;
+    private final SongRequest requestEvent;
+
     private JButton playSongButton, addSongButton, removeSongButton, backToSongsButton, addToPlaylistButton;
     private final JPanel mainContent;
     private final CardLayout cl;
 
-    public Songs(SongsEvent songE) {
+    public Songs(SongsEvent songE, SongRequest requestE) {
         this.songs = new DefaultTableModel();
+        this.songsTable = new JTable(this.songs);
+
         this.playlists = new DefaultTableModel();
         this.songsTable = new JTable(this.songs);
         this.playlistsTable = new JTable(this.playlists);
 
         this.event = songE;
+        this.requestEvent = requestE;
 
 
         // Adding layouts
@@ -49,11 +62,9 @@ public class Songs extends JPanel implements ActionListener {
         // Create columns
         songs.addColumn("Title");
         songs.addColumn("Artist");
+        songs.addColumn("Date");
         songs.addColumn("Duration");
         songs.addColumn("Punctuation");
-
-        //TODO: Add songs from database
-        for (int i = 0; i < 300; i++) addSongToTable(String.valueOf(i), "a", "a", "a");
 
         songsTable.setBounds(30, 40, 80, 90);
         songsTable.setFont(f);
@@ -72,6 +83,16 @@ public class Songs extends JPanel implements ActionListener {
         return songsList;
     }
 
+    public void reloadSongs() {
+        this.clearSongsTable();
+        for (Song s : this.event.getUserSongs()) this.addSongToTable(s);
+    }
+
+    public void reloadPlaylists() {
+        this.clearPlaylistTable();
+        for (String l : this.event.getPlaylists()) this.addPlaylistToTable(l);
+    }
+
     public JPanel addToPlaylist(){
         JPanel playlistsList = new JPanel();
         Font f = new Font(null, Font.PLAIN, 16);
@@ -80,9 +101,6 @@ public class Songs extends JPanel implements ActionListener {
 
         // Create columns
         playlists.addColumn("Playlist");
-
-        //TODO: add Playlists from database
-        for (int i = 0; i < 100; i++) addPlaylistToTable(String.valueOf(i));
 
         playlistsTable.setBounds(30, 40, 80, 90);
         playlistsTable.setFont(f);
@@ -145,12 +163,33 @@ public class Songs extends JPanel implements ActionListener {
         return panel;
     }
 
-    private void addSongToTable(String title, String artist, String duration, String score) {
-        songs.addRow(new Object[]{title, artist, duration, score});
+    private void addSongToTable(Song song) {
+        songs.addRow(new Object[]{song.getName(), song.getArtist(), song.getDate(), (int)Math.floor(song.getDuration()), String.format("%.1f", song.getScore())});
+    }
+
+    private Song getSongFromTable(int row) {
+        // cada fila té Object[]{song, song.getArtist(), song.getDate(), song.getDuration(), song.getScore()}
+        return new Song((String) this.songs.getValueAt(row, 0), (String) this.songs.getValueAt(row, 1), (String) this.songs.getValueAt(row, 2));
+    }
+
+    private void clearSongsTable() {
+        int count = this.songs.getRowCount();
+        while (count > 0){
+            this.songs.removeRow(count-1);
+            count = this.songs.getRowCount();
+        }
     }
 
     private void addPlaylistToTable(String title) {
         playlists.addRow(new Object[]{title});
+    }
+
+    private void clearPlaylistTable() {
+        int rowCount = this.playlists.getRowCount();
+        while (rowCount > 0) {
+            this.playlists.removeRow(rowCount - 1);
+            rowCount = this.playlists.getRowCount();
+        }
     }
 
     private void removeSongFromTable(int rowNum) {
@@ -166,24 +205,27 @@ public class Songs extends JPanel implements ActionListener {
     }
 
     private void popUpSongsDeleted(ArrayList<String> titles) {
-        String msg = "";
-        for(int i = 0; titles.size() > i ; i++ ){
-            msg = msg + titles.get(i);
-            if(i == 5){
-                msg = msg + " and " + String.valueOf((titles.size() - 4)) + " more songs";
+        StringBuilder sb = new StringBuilder();
+
+        for(int i = 0; titles.size() > i ; i++) {
+            sb.append(titles.get(i));
+            sb.append(", ");
+            if(i == 4) {
+                sb.append("and ");
+                sb.append(titles.size() - 5);
+                sb.append(" more songs");
                 break;
-            } else {
-                msg = msg + ", ";
             }
         }
+
+        sb.setLength(sb.length()-2); // eliminem el ", "
         if(titles.size() == 1){
-            msg = msg + " was";
-            msg = msg.replace(",", "");
-        } else {
-            msg = msg + " were";
+            sb.append(" was");
         }
-        msg = msg + " deleted.";
-        JOptionPane.showMessageDialog(this, msg);
+        else sb.append(" were");
+        sb.append(" deleted.");
+
+        JOptionPane.showMessageDialog(this, sb.toString());
     }
 
     public void popUpSongsAdded() {
@@ -196,12 +238,16 @@ public class Songs extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ArrayList<String> titles = new ArrayList<String>();
+        ArrayList<String> titles = new ArrayList<>();
         int[] selectedSongs = songsTable.getSelectedRows();
         int[] selectedPlaylists = playlistsTable.getSelectedRows();
 
         if (e.getSource() == playSongButton) {
-
+            if (selectedSongs.length == 0) {
+                popUpNoSongSelected();
+            } else {
+                this.requestEvent.requestSong(this.getSongFromTable(selectedSongs[0])); // TODO multiple
+            }
         } else if (e.getSource() == addSongButton) {
             if (selectedSongs.length == 0) {
                 popUpNoSongSelected();
@@ -224,16 +270,15 @@ public class Songs extends JPanel implements ActionListener {
         } else if (e.getSource() == backToSongsButton) {
             cl.show(mainContent, ("songs"));
         } else if (e.getSource() == addToPlaylistButton) {
-            if (selectedPlaylists.length == 0) {
-                popUpNoPlaylistSelected();
-            } else {
+            if (selectedPlaylists.length == 0) this.popUpNoPlaylistSelected();
+            else {
                 for (int i = selectedPlaylists.length - 1; i >= 0; i--) {
                     // playlist
-                    for (int j = selectedSongs.length - 1; i >= 0; i--) {
+                    for (int j = selectedSongs.length - 1; j >= 0; j--) {
                         // song
                     }
                 }
-                popUpSongsAdded();
+                this.popUpSongsAdded();
                 cl.show(mainContent,("songs"));
 
                 //TODO: update database & list

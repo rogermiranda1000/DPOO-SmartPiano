@@ -20,6 +20,13 @@ public class ConfigDDBBDAO implements ConfigDAO{
     }
 
     @Override
+    public Float getVolumePiano(String nick) {
+        entities.Config config = this.getConfig(nick);
+        if (config == null) return null;
+        return config.getVolumePiano();
+    }
+
+    @Override
     public boolean setVolumeSong(String nick, float value) {
         try {
             return (this.ddbb.runSentence("UPDATE RegisteredUsers SET volume_song = ? WHERE(id = (SELECT Users.id FROM Users WHERE Users.username = ?));", value, nick) > 0);
@@ -29,7 +36,13 @@ public class ConfigDDBBDAO implements ConfigDAO{
     }
 
     @Override
-    public entities.Config getConfig(String nick) {
+    public Float getVolumeSong(String nick) {
+        entities.Config config = this.getConfig(nick);
+        if (config == null) return null;
+        return config.getVolumeSong();
+    }
+
+    private entities.Config getConfig(String nick) {
         try {
             ResultSet rs = this.ddbb.getSentence("SELECT ru.volume_piano, ru.volume_song FROM RegisteredUsers AS ru JOIN Users AS u ON u.id = ru.id WHERE u.username = ?;", nick);
             if (!rs.next()) {
@@ -40,4 +53,6 @@ public class ConfigDDBBDAO implements ConfigDAO{
             return null;
         }
     }
+
+
 }

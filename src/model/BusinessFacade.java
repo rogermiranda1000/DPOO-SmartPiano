@@ -3,6 +3,7 @@ package model;
 import entities.List;
 import entities.Song;
 import entities.User;
+import persistance.ConfigDAO;
 import persistance.PlaylistDAO;
 import persistance.SongDAO;
 import persistance.UserDAO;
@@ -13,14 +14,16 @@ public class BusinessFacade {
     private final SongDAO songManager;
     private final UserDAO userManager;
     private final PlaylistDAO playlistManager;
+    private final ConfigDAO configManager;
 
     private User loggedUser;
     private ArrayList<List> loggedUserPlaylists;
 
-    public BusinessFacade(SongDAO songManager, UserDAO userManager, PlaylistDAO playlistManager) {
+    public BusinessFacade(SongDAO songManager, UserDAO userManager, PlaylistDAO playlistManager, ConfigDAO configManager) {
         this.songManager = songManager;
         this.userManager = userManager;
         this.playlistManager = playlistManager;
+        this.configManager = configManager;
 
         this.loggedUser = null;
         this.loggedUserPlaylists = null;
@@ -35,9 +38,26 @@ public class BusinessFacade {
         }
     }
 
+    public Song getSong(Song s) {
+        this.songManager.updateSong(s);
+        return s;
+    }
+
     public ArrayList<List> getPlaylists() {
         if (this.loggedUserPlaylists == null) this.updatePlaylists();
         return this.loggedUserPlaylists;
+    }
+
+
+    /**
+     * Obtè les cançons del usuari loguejat i les públiques
+     * /!\ La informació de les cançons és la bàsica (no hi ha tecles)
+     * @return Cançons visibles per l'usuari loguejat
+     */
+    public ArrayList<Song> getSongs() {
+        if (this.loggedUser == null) return new ArrayList<>(); // empty array
+
+        return this.songManager.getAccessibleSongs(this.loggedUser.getName());
     }
 
     /**
@@ -87,9 +107,13 @@ public class BusinessFacade {
      */
     public boolean login(String nick, String password) {
         this.loggedUser = this.userManager.getUser(nick, password);
-        if (this.loggedUser == null) return false;
+        return (this.loggedUser != null);
+    }
 
-        //this.loggedUser.addPlaylist();
-        return true;
+    public float getSongVolume() {
+        if (this.loggedUser == null) return 1.f;
+        Float r = this.configManager.getVolumeSong(this.loggedUser.getName());
+        if (r == null) return 1.f;
+        return r;
     }
 }

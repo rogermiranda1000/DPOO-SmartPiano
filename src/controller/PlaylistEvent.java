@@ -23,4 +23,5 @@ public interface PlaylistEvent {
     void playPlaylist(String valueOf);
 
     void deleteSongsFromPlaylist(String value);
+    ArrayList<Song> getPlaylistSongs(String playlist);
 }

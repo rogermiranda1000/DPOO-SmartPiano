@@ -10,8 +10,9 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
-public class LogIn extends JDialog implements ActionListener, LogInNotifier {
+public class LogIn extends JFrame implements ActionListener, LogInNotifier {
     private static final int WIDTH = 400;
     private static final int HEIGHT = 400;
     private static final int TXT_WIDTH = 120;
@@ -24,15 +25,14 @@ public class LogIn extends JDialog implements ActionListener, LogInNotifier {
     private final JPanel mainContent;
     private final CardLayout cl;
 
-    public LogIn(LoginEvent event, Frame frame) {
-        super(frame, true);
+    public LogIn(LoginEvent event) {
         this.event = event;
 
         this.setTitle("Sign In");
         this.setSize(WIDTH, HEIGHT);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         mainContent = new JPanel(new CardLayout());
         mainContent.add(buildLogin(), "login");
@@ -231,17 +231,46 @@ public class LogIn extends JDialog implements ActionListener, LogInNotifier {
         return container;
     }
 
-    private boolean checkPass() {
+    private boolean checkPasswords() {
         return String.valueOf(passwordRegister.getPassword()).equals(String.valueOf(confirmPasswordRegister.getPassword()));
     }
 
-    private void wrongPass() {
+    private boolean checkMail() {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (emailRegister.getText() == null)
+            return false;
+        return pat.matcher(emailRegister.getText()).matches();
+    }
+
+    private boolean checkPassword() {
+        String passwordRegex = "(^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$)";
+
+        Pattern pat = Pattern.compile(passwordRegex);
+        if (String.valueOf(passwordRegister.getPassword()) == null)
+            return false;
+        return pat.matcher(String.valueOf(passwordRegister.getPassword())).matches();
+    }
+
+    private void wrongPassword() {
+        JOptionPane.showMessageDialog(this, "Wrong password. Password need have: " +
+                "\n- More than 8 characters. " +
+                "\n- At least one lower case and upper case." +
+                "\n- At least one numeric character." +
+                "\n- No whitespaces." +
+                "\nTry it again ( ͡❛ ︹ ͡❛)");
+    }
+
+    private void wrongPasswords() {
         JOptionPane.showMessageDialog(this, "Wrong password. Try it again ( ͡❛ ︹ ͡❛)");
     }
 
-    @Override
-    public void disposeLogin() {
-        this.dispose();
+    private void wrongMail() {
+        JOptionPane.showMessageDialog(this, "Wrong mail format. Try it again ( ͡❛ ︹ ͡❛)");
     }
 
     @Override
@@ -270,9 +299,14 @@ public class LogIn extends JDialog implements ActionListener, LogInNotifier {
         } else if (e.getSource() == backButton) {
             cl.show(mainContent, ("login"));
         } else if (e.getSource() == pushResgisterButton) {
-            // TODO email contains '@' and '.'
-            if (this.checkPass()) this.event.requestRegister(usernameRegister.getText(), emailRegister.getText(), String.valueOf(passwordRegister.getPassword()));
-            else this.wrongPass();
+            if (this.checkMail()) {
+                if (this.checkPassword()) {
+                    if (this.checkPasswords()) {
+                        this.event.requestRegister(usernameRegister.getText(), emailRegister.getText(), String.valueOf(passwordRegister.getPassword()));
+                    } else this.wrongPasswords();
+                } else this.wrongPassword();
+            } else this.wrongMail();
+
         }
     }
 }

@@ -6,6 +6,7 @@ import entities.Song;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class SongDDBBDAO implements SongDAO {
     private final DDBBAccess ddbb;
@@ -114,12 +115,21 @@ public class SongDDBBDAO implements SongDAO {
 
             if (!rs.next()) return false;
 
-            int songId = rs.getInt(1);
             song.setPublic(rs.getBoolean(2));
             song.setTickLength(rs.getLong(3));
+            song.setScore(0); // TODO
 
-            ResultSet songNotes = this.ddbb.getSentence("SELECT tick, pressed, velocity, octave, note FROM SongNotes WHERE song = ?;",
-                    songId);
+            return (this.updateSongNotes(song, rs.getInt(1)));
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+    private boolean updateSongNotes(Song song, int id) {
+        try {
+            ResultSet songNotes = this.ddbb.getSentence("SELECT tick, pressed, velocity, octave, note FROM SongNotes WHERE song = ? ORDER BY tick ASC;",
+                    id);
 
             while (songNotes.next()) {
                 song.addNote(new SongNote(songNotes.getLong(1), songNotes.getBoolean(2), songNotes.getByte(3), songNotes.getByte(4), Note.valueOf(songNotes.getString(5).replaceAll("#$", "X"))));
@@ -129,6 +139,22 @@ public class SongDDBBDAO implements SongDAO {
             ex.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public ArrayList<Song> getAccessibleSongs(String loggedUser) {
+        try {
+            // TODO null score?
+            ResultSet rs = this.ddbb.getSentence("SELECT Songs.name, Author.username, Songs.date, COALESCE(AVG(Ranking.points), 0) AS ranking, (MAX(SN.tick)*Songs.tick_length)/(1000 * 1000) AS duration FROM Songs JOIN Users Author ON Songs.author = Author.id JOIN SongNotes SN on Songs.id = SN.song LEFT JOIN Ranking ON Songs.id = Ranking.song WHERE Songs.author = (SELECT Users.id FROM Users JOIN RegisteredUsers RU ON RU.id = Users.id WHERE Users.username = ?) OR Songs.public = true GROUP BY Songs.id;",
+                    loggedUser);
+
+            ArrayList<Song> r = new ArrayList<>();
+            while (rs.next()) r.add(new Song(rs.getString(1), rs.getString(2), rs.getDate(3), rs.getFloat(4), rs.getDouble(5)));
+            return r;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 
     private Integer getSongId(Song song) {
