@@ -51,10 +51,6 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, PlayingS
         mainContent = new JPanel(new CardLayout());
         mainContent.add(this.songs, "songs");
         mainContent.add(this.playlist, "playlists");
-        mainContent.add(new Piano(), "piano");
-        mainContent.add(new Ranking(rankingE), "ranking");
-        mainContent.add(new Settings(this), "settings");
-        this.add(mainContent);
 
         piano = new Piano();
         mainContent.add(piano, "piano");
@@ -261,6 +257,7 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, PlayingS
             playlistButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == pianoButton) {
             cl.show(mainContent, ("piano"));
+            piano.requestFocus();
 
             resetButtonsColors();
             pianoButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
