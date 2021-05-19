@@ -4,9 +4,11 @@ import entities.Note;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class Piano extends JPanel implements KeyController {
+public class Piano extends JPanel implements KeyController, ActionListener {
     public static final boolean IS_BLACK = true;
     public static final boolean IS_WHITE = false;
 
@@ -14,12 +16,19 @@ public class Piano extends JPanel implements KeyController {
     private final JPanel jP2 = new JPanel();
     private final ArrayList<Tecla> keys = new ArrayList<>();
 
+    private JButton record;
+
     public Piano() {
+        record = new JButton("Record");
+        record.addActionListener(this);
+        record.setFocusable(false);
+        this.add(record, BorderLayout.NORTH);
         drawPiano();
         this.setBackground(ColorConstants.BACKGROUND.getColor());
     }
 
     private void drawPiano(){
+
         for (int i = 0; i < 24; i++) {
             int octava = (i/12) + 1;
             String nota = Note.getNote(i % 12).toString();
@@ -59,14 +68,14 @@ public class Piano extends JPanel implements KeyController {
     }
 
     @Override
-    public boolean isPressed(Note note) {
-        System.out.println("PRESSED " + note.toString());
+    public boolean isPressed(Note note, int octava) {
+        System.out.println("PRESSED " + note.toString() + " - " + octava);
         return true;
     }
 
     @Override
-    public boolean isNotPressed(Note note) {
-        System.out.println("UNPRESSED " + note.toString());
+    public boolean isNotPressed(Note note, int octava) {
+        System.out.println("UNPRESSED " + note.toString() + " - " + octava);
         return true;
     }
 
@@ -80,5 +89,11 @@ public class Piano extends JPanel implements KeyController {
     public boolean keyBoardNotPressed(char nota) {
         System.out.println("UNTIPED " + nota);
         return false;
+    }
+
+    //TODO: connectar amb controller
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == record) System.out.println("Connectar amb controller amb PianoRecorder");
     }
 }
