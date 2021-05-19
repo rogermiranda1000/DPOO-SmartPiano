@@ -20,9 +20,6 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
     private JButton removePlaylistButton;
     private JButton createPlaylistButton;
 
-    private String selectedList;
-    private Song selectedSong;
-
     private final PlaylistEvent event;
 
     public Playlist(PlaylistEvent playlistE) {
@@ -69,8 +66,6 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
         songsList.setFixedCellHeight(25);
         JScrollPane songsListScrollPane = new JScrollPane(songsList);
 
-        songsList.addListSelectionListener(this);
-
         r.add(playlistScrollPane);
         r.add(songsListScrollPane);
 
@@ -103,24 +98,27 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
         return panel;
     }
 
-    protected void updateSongsList(String playlist) {
+    protected void updateSongsSelectedList() {
+        if (this.playlistList.getSelectedValuesList().size() == 0) return;
+
         this.songsName.clear();
-        this.songsName.addAll(this.event.getPlaylistSongs(playlist));
+        this.songsName.addAll(this.event.getPlaylistSongs(this.playlistList.getSelectedValuesList().get(0)));
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == createPlaylistButton) {
             new CreatePlaylistPopUp(this.event);
-        } else if (this.selectedList == null) {
+        } else if (this.playlistList.getSelectedValuesList().size() == 0) {
             JOptionPane.showMessageDialog(this, "Select a playlist first.");
         } else {
             if (e.getSource() == playPlaylistButton) {
-                this.event.requestPlayList(this.selectedList);
+                this.event.requestPlayList(this.playlistList.getSelectedValuesList().get(0));
             } else if (e.getSource() == removePlaylistButton) {
-                this.event.removePlaylist(selectedList);
+                this.event.removePlaylist(this.playlistList.getSelectedValuesList().get(0));
             } else if (e.getSource() == removeSongButton) {
-                this.event.removeSongPlaylist(selectedList, selectedSong);
+                if (this.songsList.getSelectedValuesList().size() == 0) JOptionPane.showMessageDialog(this, "Select a song first.");
+                else this.event.removeSongPlaylist(this.playlistList.getSelectedValuesList().get(0), this.songsList.getSelectedValuesList().get(0));
             }
         }
     }
@@ -129,17 +127,7 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
     public void valueChanged(ListSelectionEvent e) {
         if (e.getValueIsAdjusting()) return;
 
-        if (e.getSource() == this.playlistList) {
-            if (this.playlistList.getSelectedValuesList().size() > 0) {
-                this.selectedList = this.playlistList.getSelectedValuesList().get(0);
-                this.updateSongsList(this.selectedList);
-            }
-        }
-        else if (e.getSource() == this.songsList) {
-            if (this.songsList.getSelectedValuesList().size() > 0) {
-                this.selectedSong = this.songsList.getSelectedValuesList().get(0);
-            }
-        }
+        if (e.getSource() == this.playlistList) this.updateSongsSelectedList();
     }
 
     @Override
@@ -167,7 +155,7 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
 
     @Override
     public void songDeletedFromPlaylist() {
-        this.updateSongsList(this.selectedList);
+        this.updateSongsSelectedList();
     }
 
     @Override
