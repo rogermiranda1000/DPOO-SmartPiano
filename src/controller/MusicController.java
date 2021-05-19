@@ -17,13 +17,15 @@ public class MusicController implements SongEnder, PlaylistBarEvent, SongRequest
     private boolean isRandom;
     private boolean isLooping;
     private PlayingSongNotifier notifier;
+    private PlaysManager playsManager;
 
-    public MusicController() {
+    public MusicController(PlaysManager playsManager) {
         this.isPlaying = true;
         this.songIndex = 0;
         this.volume = 1;
         this.isRandom = false;
         this.isLooping = false;
+        this.playsManager = playsManager;
     }
 
     private void setPlaying(boolean playing) {
@@ -44,13 +46,30 @@ public class MusicController implements SongEnder, PlaylistBarEvent, SongRequest
         if (this.player != null) this.player.setVolume(volume);
     }
 
+    /**
+     * Gets the second of the song being played
+     * @return the second that the current song is at
+     */
+    public int getSecond() {
+        return (this.player == null)? 0 : player.getCurrentSecond();
+    }
+
     private Song getCurrentSong() {
         return this.list.getSongs().get(this.songIndex);
     }
 
-    private void playSong() {
-        if (this.player != null) this.player.closePlayer();
+    private void addPlay() {
+        if (this.player != null) {
+            int second = this.getSecond();
+            if (second > 0) playsManager.addPlay(second, this.getCurrentSong());
+        }
+    }
 
+    private void playSong() {
+        if (this.player != null) {
+            this.addPlay();
+            this.player.closePlayer();
+        }
         this.player = new NotePlayer(this.getCurrentSong(), this.volume, this);
         this.player.setPlay(this.isPlaying);
         this.player.start();
@@ -59,6 +78,7 @@ public class MusicController implements SongEnder, PlaylistBarEvent, SongRequest
     }
 
     private void advanceAndPlay(int value) {
+        this.addPlay();
         if (this.isRandom) this.songIndex = this.getRandomNext();
         else {
             this.songIndex += value;
@@ -107,6 +127,7 @@ public class MusicController implements SongEnder, PlaylistBarEvent, SongRequest
     @Override
     public void togglePlaying() {
         this.setPlaying(!this.isPlaying);
+        if (!this.isPlaying) this.addPlay();
     }
 
     @Override

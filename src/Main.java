@@ -21,7 +21,7 @@ public class Main {
         try {
             Config c = new Config(new File("config.json"));
             DDBBAccess ddbb = new DDBBAccess(c.readConfig(), Main.MAX_DDBB_ACCESS);
-            new Controller(c.getScrapping(), new SongDDBBDAO(ddbb), new UserDDBBDAO(ddbb), new PlaylistDDBBDAO(ddbb), new ConfigDDBBDAO(ddbb));
+            new Controller(c.getScrapping(), new SongDDBBDAO(ddbb), new UserDDBBDAO(ddbb), new PlaylistDDBBDAO(ddbb), new ConfigDDBBDAO(ddbb), new StatisticsDDBBDAO(ddbb));
 
             /* FILE EXCEPTIONS */
         } catch (FileNotFoundException ex) {
