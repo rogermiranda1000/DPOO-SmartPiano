@@ -224,18 +224,12 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, PlayingS
             this.loopButton.setForeground(this.loopButton.getForeground().equals(ColorConstants.ACTIVE_BUTTON.getColor()) ? Color.LIGHT_GRAY : ColorConstants.ACTIVE_BUTTON.getColor()); // toggle button's color
             this.playE.toggleLoop();
         } else if (e.getSource() == backButton) {
-            /*if(event.currentSongPos() > 1){
-                //TODO: player.playBackSong();
-                playingSong.setText("back"); // TODO : player.getPlayingSongTitle() + - + player.getPlayingSongArtist
-            }*/
+            this.playE.previousSong();
         } else if (e.getSource() == playButton) {
             this.playButton.setText(this.playButton.getText().equals(Icon.PAUSE.getIcon()) ? Icon.PLAY.getIcon() : Icon.PAUSE.getIcon()); // toggle button's text
             this.playE.togglePlaying();
         } else if (e.getSource() == nextButton) {
-            /*if(event.currentSongPos() < 10){ // TODO: player.playingListSize()
-                //TODO: player.playNextSong();
-                playingSong.setText("next" ); // TODO : player.getPlayingSongTitle() + - + player.getPlayingSongArtist
-            }*/
+            this.playE.nextSong();
         } else if (e.getSource() == this.shuffleButton) {
             this.shuffleButton.setForeground(this.shuffleButton.getForeground().equals(ColorConstants.ACTIVE_BUTTON.getColor()) ? Color.LIGHT_GRAY : ColorConstants.ACTIVE_BUTTON.getColor()); // toggle button's color
             this.playE.toggleRandom();
