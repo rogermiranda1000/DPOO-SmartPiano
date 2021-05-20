@@ -262,30 +262,32 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
                 "\n- At least one lower case and upper case." +
                 "\n- At least one numeric character." +
                 "\n- No whitespaces." +
-                "\nTry it again ( ͡❛ ︹ ͡❛)");
+                "\nTry it again ( ͡❛ ︹ ͡❛)",
+                "Wrong password",
+                JOptionPane.ERROR_MESSAGE);
     }
 
     private void wrongPasswords() {
-        JOptionPane.showMessageDialog(this, "Wrong password. Try it again ( ͡❛ ︹ ͡❛)");
+        JOptionPane.showMessageDialog(this, "Wrong password. Try it again ( ͡❛ ︹ ͡❛)", "Wrong password", JOptionPane.ERROR_MESSAGE);
     }
 
     private void wrongMail() {
-        JOptionPane.showMessageDialog(this, "Wrong mail format. Try it again ( ͡❛ ︹ ͡❛)");
+        JOptionPane.showMessageDialog(this, "Wrong mail format. Try it again ( ͡❛ ︹ ͡❛)", "Wrong mail", JOptionPane.ERROR_MESSAGE);
     }
 
     @Override
     public void wrongLogin() {
-        JOptionPane.showMessageDialog(this, "Wrong LogIn. Try it again ( ͡❛ ︹ ͡❛)");
+        JOptionPane.showMessageDialog(this, "Wrong LogIn. Try it again ( ͡❛ ︹ ͡❛)", "Wrong Login", JOptionPane.ERROR_MESSAGE);
     }
 
     @Override
     public void userCreated() {
-        JOptionPane.showMessageDialog(this, "User created successfully ¯\\_( ͡❛ ‿‿ ͡❛)_/¯");
+        JOptionPane.showMessageDialog(this, "User created successfully ¯\\_( ͡❛ ‿‿ ͡❛)_/¯", "UserCreated", JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override
     public void wrongCreation() {
-        JOptionPane.showMessageDialog(this, "This user is already taken. Try it again ( ͡❛ ︹ ͡❛)");
+        JOptionPane.showMessageDialog(this, "This user is already taken. Try it again ( ͡❛ ︹ ͡❛)", "Wrong user", JOptionPane.ERROR_MESSAGE);
     }
 
     //TODO: que es pugui accedir tant amb el nom d'usuari o el mail.

@@ -217,6 +217,10 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, PlayingS
         piano.stopNote(key);
     }
 
+    private void exitMessage() {
+        JOptionPane.showMessageDialog(this, "The user has logout.", "User logout", JOptionPane.INFORMATION_MESSAGE);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         /* BOTTOM BAR BUTTONS */
@@ -272,6 +276,7 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, PlayingS
             resetButtonsColors();
             settingsButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == exitButton) {
+            exitMessage();
             this.event.exitSession();
         }
     }
