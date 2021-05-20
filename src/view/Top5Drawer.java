@@ -24,7 +24,6 @@ public class Top5Drawer extends JPanel {
 
             this.dataFormat();
             JTable top5 = new JTable(tableData, columnID);
-            top5.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
             this.add(top5);
 
     }

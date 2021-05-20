@@ -25,9 +25,16 @@ public class Ranking extends JPanel {
         top5Table = new Top5Drawer(this.event);
         this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
         this.add(songsGraph);
+        this.add(Box.createRigidArea(new Dimension(10, 0)));
+        songsGraph.setAlignmentY(BOTTOM_ALIGNMENT);
         this.add(timeGraph);
+        this.add(Box.createRigidArea(new Dimension(10, 0)));
+        timeGraph.setAlignmentY(BOTTOM_ALIGNMENT);
+
         this.add(top5Table);
+
         this.setBackground(ColorConstants.BACKGROUND.getColor());
+        this.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         this.setVisible(true);
 
     }
