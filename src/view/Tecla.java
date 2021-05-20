@@ -75,7 +75,7 @@ public class Tecla extends JPanel implements MouseListener, KeyListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        // TODO fora de la zona de la tecla?
+        if(!this.contains(e.getPoint())) return;
 
         this.release();
     }
