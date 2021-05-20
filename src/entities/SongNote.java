@@ -3,7 +3,7 @@ package entities;
 public class SongNote implements Comparable<SongNote> {
     private final long tick;
     private final boolean pressed;
-    private final byte velocity;
+    private byte velocity;
     private final byte octave;
     private final Note note;
 
@@ -37,6 +37,10 @@ public class SongNote implements Comparable<SongNote> {
 
     public int getId() {
         return (this.getOctave() + 1) * 12 + this.getNote().ordinal();
+    }
+
+    public void setVelocity(byte velocity) {
+        this.velocity = velocity;
     }
 
     /**
