@@ -6,10 +6,12 @@ import model.BusinessFacade;
 import persistance.*;
 import view.LogIn;
 import view.Menu;
+import view.Tecla;
+import view.UpdateKeys;
 
 import java.util.ArrayList;
 
-public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager {
+public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager, UpdateKeys {
     private Menu menu;
     private LogIn login;
     private final BusinessFacade model;
@@ -34,7 +36,7 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         if (this.model.login(user, password)) {
             this.login.dispose();
 
-            this.menu = new Menu(this.musicController, this, this, this, this, this);
+            this.menu = new Menu(this.musicController, this, this, this, this, this, this);
             this.menu.setVisible(true);
 
             this.musicController.setVolume(this.model.getSongVolume());
@@ -144,5 +146,18 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     public int[] getTimeStadistics() {
         //TODO Return the number of seconds listened the las 24h and splited between hours.
         return new int[0];
+    }
+
+    @Override
+    public char[] keysToArray(ArrayList<Tecla> keys) {
+
+        char[] aux = new char[keys.size()];
+
+        for (int i = 0; i < keys.size(); i++) {
+            aux[i] = keys.get(i).getKey();
+        }
+
+        return aux;
+
     }
 }

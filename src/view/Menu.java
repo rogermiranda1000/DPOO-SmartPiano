@@ -25,9 +25,12 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, PlayingS
     private final Playlist playlist;
     private final Piano piano;
 
-    public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE) {
+    private final UpdateKeys uK;
+
+    public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE, UpdateKeys uK) {
         this.event = menuE;
         this.playE = playE;
+        this.uK = uK;
         playE.setPlayingSongListner(this);
 
         this.setTitle("Piano TIME!");
@@ -339,6 +342,8 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, PlayingS
     @Override
     public void changeKey(Note n, char newLetter, int octava) {
         piano.changeKey(n, newLetter, octava);
+        System.out.println("Objecte menu [Tecla: " + newLetter + ", Nota: " + n.toString()
+                          + ", Octava: " + octava + "]");
     }
 
 

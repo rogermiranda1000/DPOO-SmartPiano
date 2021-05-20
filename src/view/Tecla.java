@@ -86,7 +86,7 @@ public class Tecla extends JPanel implements MouseListener, KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-        if(this.note.toString().charAt(0) == e.getKeyChar()){
+        if(e.getKeyChar() == keyAssocieted){ //this.note.toString().charAt(0)
             System.out.println("NOTA: " + note + " - Octava: " + ocatava);
         }
         /*System.out.println(e.getKeyChar());
