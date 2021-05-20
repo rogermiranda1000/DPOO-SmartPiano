@@ -29,7 +29,7 @@ public class Piano extends JPanel implements ActionListener, TeclaNotifier {
 
         // draw piano
         for (int i = 0; i < this.keys.length; i++) {
-            int octava = (i/12) + 1;
+            int octava = (i/12) + Piano.INIT_OCTAVA;
             String nota = Note.getNote(i % 12).toString();
 
             Tecla temp = new Tecla(event, Note.getNote(i % 12), (nota.charAt(nota.length() - 1) == 'X') ? IS_BLACK : IS_WHITE, octava).setKeyAssocieted('t');
