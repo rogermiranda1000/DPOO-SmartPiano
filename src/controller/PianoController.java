@@ -23,6 +23,7 @@ public class PianoController {
         this.recording = false;
         this.notePlayer = new NotePlayer();
         this.songNotes = null;
+        this.volume = 1;
     }
 
     /**
