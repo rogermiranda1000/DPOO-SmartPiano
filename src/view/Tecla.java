@@ -29,7 +29,6 @@ public class Tecla extends JPanel implements MouseListener, KeyListener {
         else this.setBackground(new Color(255, 255, 255));
 
         this.addMouseListener(this);
-        p.addMouseListener(this);
         this.addKeyListener(this);
         p.addKeyListener(this);
 
