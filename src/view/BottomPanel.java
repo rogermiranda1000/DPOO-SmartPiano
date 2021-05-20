@@ -39,7 +39,7 @@ public class BottomPanel extends JPanel implements ActionListener, PlayingSongNo
 
         loopButton = new GenericButton(Icon.LOOP.getIcon(), f);
         backButton = new GenericButton(Icon.BACK.getIcon(), f);
-        playButton = new GenericButton(Icon.PLAY.getIcon(), f);
+        playButton = new GenericButton(Icon.PAUSE.getIcon(), f);
         nextButton = new GenericButton(Icon.NEXT.getIcon(), f);
         shuffleButton = new GenericButton(Icon.SHUFFLE.getIcon(), f);
 
