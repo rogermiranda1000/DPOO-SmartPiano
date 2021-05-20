@@ -1,6 +1,7 @@
 package controller;
 
 import entities.List;
+import entities.Note;
 import entities.Song;
 import model.BusinessFacade;
 import persistance.*;
@@ -9,7 +10,7 @@ import view.Menu;
 
 import java.util.ArrayList;
 
-public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager {
+public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager, TeclaEvent {
     private Menu menu;
     private LogIn login;
     private final BusinessFacade model;
@@ -34,7 +35,7 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         if (this.model.login(user, password)) {
             this.login.dispose();
 
-            this.menu = new Menu(this.musicController, this, this, this, this, this);
+            this.menu = new Menu(this.musicController, this, this, this, this, this, this);
             this.menu.setVisible(true);
 
             this.musicController.setVolume(this.model.getSongVolume());
@@ -147,5 +148,16 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     public int[] getTimeStadistics() {
         //TODO Return the number of seconds listened the las 24h and splited between hours.
         return new int[0];
+    }
+
+    // TODO
+    @Override
+    public void isPressed(Note note, int octava) {
+        System.out.println("Pressed " + note.name() + ", octava " + octava);
+    }
+
+    @Override
+    public void isNotPressed(Note note, int octava) {
+        System.out.println("Released " + note.name() + ", octava " + octava);
     }
 }

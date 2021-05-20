@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMenuNotifier, PlaylistMenuNotifier {
+public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMenuNotifier, PlaylistMenuNotifier, TeclaNotifier {
     public static final int HEIGHT = 900;
     public static final int WIDTH = 1600;
     private JButton songsButton, playlistButton, pianoButton, rankingButton, settingsButton, exitButton;
@@ -22,7 +22,7 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
     private final Playlist playlist;
     private final Piano piano;
 
-    public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE) {
+    public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE, TeclaEvent keyE) {
         this.event = menuE;
 
         this.setTitle("Piano TIME!");
@@ -47,7 +47,7 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
         mainContent.add(this.songs, "songs");
         mainContent.add(this.playlist, "playlists");
 
-        piano = new Piano();
+        piano = new Piano(keyE);
         mainContent.add(piano, "piano");
         mainContent.add(new Ranking(rankingE), "ranking");
         mainContent.add(new Settings(this), "settings");
@@ -125,14 +125,6 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
         pianoButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
         rankingButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
         settingsButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
-    }
-
-    public void playNote(char key) {
-        piano.playNote(key);
-    }
-
-    public void stopNote(char key) {
-        piano.stopNote(key);
     }
 
     @Override
@@ -226,7 +218,17 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
 
     @Override
     public void changeKey(Note n, char newLetter, int octava) {
-        piano.changeKey(n, newLetter, octava);
+        piano.changeKey(n, octava, newLetter);
+    }
+
+    @Override
+    public void playNote(Note note, int octava) {
+        this.piano.playNote(note, octava);
+    }
+
+    @Override
+    public void stopNote(Note note, int octava) {
+        this.piano.stopNote(note, octava);
     }
 
 
