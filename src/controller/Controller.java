@@ -3,6 +3,7 @@ package controller;
 import entities.List;
 import entities.Note;
 import entities.Song;
+import entities.SongNote;
 import model.BusinessFacade;
 import persistance.*;
 import view.LogIn;
@@ -16,11 +17,13 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     private final BusinessFacade model;
     private final SongDownloader scrapper;
     private final MusicController musicController;
+    private final PianoController pianoController;
 
     public Controller(int scrappingTime, SongDAO songManager, UserDAO userManager, PlaylistDAO playlistManager, ConfigDAO configManager, StatisticsDAO statisticsManager) {
         this.model = new BusinessFacade(songManager, userManager, playlistManager, configManager, statisticsManager);
 
         this.musicController = new MusicController(this);
+        this.pianoController = new PianoController();
 
         this.scrapper = new SongDownloader(this, scrappingTime);
         this.scrapper.start();
@@ -153,11 +156,11 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     // TODO
     @Override
     public void isPressed(Note note, int octava) {
-        System.out.println("Pressed " + note.name() + ", octava " + octava);
+        this.pianoController.addNote(new SongNote(0,true,(byte)127,(byte)octava,note));
     }
 
     @Override
     public void isNotPressed(Note note, int octava) {
-        System.out.println("Released " + note.name() + ", octava " + octava);
+        this.pianoController.addNote(new SongNote(0,false,(byte)127,(byte)octava,note));
     }
 }
