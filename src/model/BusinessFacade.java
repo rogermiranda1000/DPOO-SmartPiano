@@ -32,9 +32,6 @@ public class BusinessFacade {
         if (this.loggedUser == null) return false;
 
         this.loggedUserPlaylists = this.playlistManager.getPlaylists(this.loggedUser);
-        for (List p: this.loggedUserPlaylists) {
-            for (Song s: p.getSongs()) this.songManager.updateSong(s);
-        }
         return true;
     }
 
@@ -50,12 +47,21 @@ public class BusinessFacade {
         return this.loggedUserPlaylists;
     }
 
+    /**
+     * Donat un nom obtè la playlist del usuari amb coincidencia.
+     * Important: les cançons de la llista son vàl·lides (tenen notes)
+     * @param list Nom de la llista
+     * @return LLista amb cançons
+     */
     public List getPlaylist(String list) {
         if (this.loggedUser == null) return null;
 
         List search = new List(list, this.loggedUser.getName());
         for (List l : this.getPlaylists()) {
-            if (l.equals(search)) return l;
+            if (l.equals(search)) {
+                for (Song s: l.getSongs()) this.songManager.updateSong(s);
+                return l;
+            }
         }
         return null; // not found
     }
@@ -164,27 +170,17 @@ public class BusinessFacade {
         return true;
     }
 
-    private List getLoggedPlaylist(String name) {
-        if (this.loggedUserPlaylists == null) return null;
-
-        for (List l : this.loggedUserPlaylists) {
-            if (l.getName().equals(name)) return l;
-        }
-        return null;
-    }
-
     public boolean addSongPlaylist(Song song, String playlist) {
-        List add = this.getLoggedPlaylist(playlist);
-        if (add == null) return false;
+        List add = this.getPlaylist(playlist);
+        if (add == null || this.loggedUser == null) return false;
 
-        List list = new List(playlist, this.loggedUser.getName());
-        if (!this.playlistManager.addSongPlaylist(list, song)) return false;
+        if (!this.playlistManager.addSongPlaylist(new List(playlist, this.loggedUser.getName()), song)) return false;
         add.addSong(song);
         return true;
     }
 
     public Boolean existsSongInPlaylist(Song song, String playlist) {
-        List search = this.getLoggedPlaylist(playlist);
+        List search = this.getPlaylist(playlist);
         if (search == null) return null;
 
         for (Song s : search.getSongs()) {
@@ -196,5 +192,13 @@ public class BusinessFacade {
     public boolean addPlay(int secondsPlayed, Song song) {
         if (this.loggedUser == null) return false;
         return this.statisticsManager.addListen(this.loggedUser.getName(), song, secondsPlayed);
+    }
+
+    public boolean removeSongPlaylist(String playlist, Song song) {
+        if (this.loggedUser == null) return false;
+        if (!this.playlistManager.removeSongPlaylist(new List(playlist, this.loggedUser.getName()), song)) return false;
+
+        this.getPlaylist(playlist).removeSong(song);
+        return true;
     }
 }

@@ -22,6 +22,10 @@ public class List {
         return this;
     }
 
+    public void removeSong(Song s) {
+        this.songs.remove(s);
+    }
+
     public String getName() {
         return this.name;
     }

@@ -19,7 +19,6 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
     private JButton removeSongButton;
     private JButton removePlaylistButton;
     private JButton createPlaylistButton;
-    private String selectedValue;
 
     private final PlaylistEvent event;
 
@@ -99,34 +98,36 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
         return panel;
     }
 
-    protected void updateSongsList(String playlist) {
+    protected void updateSongsSelectedList() {
         this.songsName.clear();
-        this.songsName.addAll(this.event.getPlaylistSongs(playlist));
+
+        if (this.playlistList.getSelectedValuesList().size() == 0) return;
+        this.songsName.addAll(this.event.getPlaylistSongs(this.playlistList.getSelectedValuesList().get(0)));
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == createPlaylistButton) {
             new CreatePlaylistPopUp(this.event);
-        } else if (this.selectedValue == null) {
+        } else if (this.playlistList.getSelectedValuesList().size() == 0) {
             JOptionPane.showMessageDialog(this, "Select a playlist first.");
         } else {
             if (e.getSource() == playPlaylistButton) {
-                this.event.requestPlayList(this.selectedValue);
+                this.event.requestPlayList(this.playlistList.getSelectedValuesList().get(0));
             } else if (e.getSource() == removePlaylistButton) {
-                this.event.removePlaylist(selectedValue);
+                this.event.removePlaylist(this.playlistList.getSelectedValuesList().get(0));
             } else if (e.getSource() == removeSongButton) {
-                // TODO: controller.deleteSongsFromPlaylist(String.valueOf(selectedValuesList.get(0), selectedSongs);
+                if (this.songsList.getSelectedValuesList().size() == 0) JOptionPane.showMessageDialog(this, "Select a song first.");
+                else this.event.removeSongPlaylist(this.playlistList.getSelectedValuesList().get(0), this.songsList.getSelectedValuesList().get(0));
             }
         }
     }
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        if (!e.getValueIsAdjusting() && this.playlistList.getSelectedValuesList().size() > 0) {
-            this.selectedValue = this.playlistList.getSelectedValuesList().get(0);
-            this.updateSongsList(this.selectedValue);
-        }
+        if (e.getValueIsAdjusting()) return;
+
+        if (e.getSource() == this.playlistList) this.updateSongsSelectedList();
     }
 
     @Override
@@ -143,6 +144,7 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
     @Override
     public void playlistDeleted() {
         this.reloadPlaylists();
+        this.updateSongsSelectedList();
         //JOptionPane.showMessageDialog(this, "Playlist deleted.");
     }
 
@@ -154,11 +156,12 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
 
     @Override
     public void songDeletedFromPlaylist() {
-        // TODO
+        this.updateSongsSelectedList();
     }
 
     @Override
     public void songNotDeletedFromPlaylist() {
-        // TODO
+        // no hauria d'arribar aquí mai
+        JOptionPane.showMessageDialog(this, "Error deleting the song.");
     }
 }
