@@ -1,8 +1,9 @@
 package controller;
 
-import entities.Song;
 import entities.SongNote;
 import model.NotePlayer;
+
+import java.util.ArrayList;
 
 public class PianoController {
     /**
@@ -13,7 +14,7 @@ public class PianoController {
     private boolean songSilenced;
     private boolean recording;
     private final NotePlayer notePlayer;
-    private Song song;
+    private ArrayList<SongNote> songNotes;
     private long startTime;
     private float volume;
 
@@ -21,7 +22,7 @@ public class PianoController {
         this.songSilenced = false;
         this.recording = false;
         this.notePlayer = new NotePlayer();
-        this.song = null;
+        this.songNotes = null;
     }
 
     /**
@@ -31,7 +32,7 @@ public class PianoController {
         if (this.recording) return;
         this.recording = true;
         this.startTime = System.currentTimeMillis();
-        this.song = new Song();
+        this.songNotes = new ArrayList<>();
     }
 
     /**
@@ -62,7 +63,7 @@ public class PianoController {
     public void addNote(SongNote note) {
         this.notePlayer.executeNote(new SongNote(note.getTick(), note.isPressed(), (byte)Math.round(note.getVelocity() * this.volume), note.getOctave(), note.getNote()));
         if (!this.recording) return;
-        this.song.addNote(new SongNote(Math.round((System.currentTimeMillis() - this.startTime)),
+        this.songNotes.add(new SongNote(Math.round((System.currentTimeMillis() - this.startTime)),
                 note.isPressed(), note.getVelocity(), note.getOctave(), note.getNote()));
     }
 
@@ -79,9 +80,9 @@ public class PianoController {
      * Returns the recorded song only with notes
      * @return If the song recorded notes returns the song, null otherwise
      */
-    public Song getSong() {
-        if (this.song == null || this.song.getNotes().size() < 1) return null;
-        return this.song;
+    public ArrayList<SongNote> getSongNotes() {
+        if (this.songNotes == null || this.songNotes.size() < 1) return null;
+        return this.songNotes;
     }
 
     /**
