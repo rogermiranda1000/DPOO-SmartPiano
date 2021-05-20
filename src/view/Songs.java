@@ -25,10 +25,10 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
     private final CardLayout cl;
 
     public Songs(SongsEvent songE, SongRequest requestE) {
-        this.songs = new DefaultTableModel();
+        this.songs = new UneditableTable();
         this.songsTable = new JTable(this.songs);
 
-        this.playlists = new DefaultTableModel();
+        this.playlists = new UneditableTable();
         this.playlistsTable = new JTable(this.playlists);
 
         this.event = songE;
