@@ -186,7 +186,7 @@ public class Settings extends JPanel implements ActionListener, ChangeListener {
     }
 
     private void changeLetter(Note note, char letter, int octava){
-        kC.changeKey(note, letter, octava);
+        //kC.changeKey(note, letter, octava);
     }
 
     private void addChangeListener(Settings settings) {

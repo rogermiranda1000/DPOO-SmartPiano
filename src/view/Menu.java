@@ -1,7 +1,6 @@
 package view;
 
 import controller.*;
-import entities.Config;
 import entities.Song;
 import entities.Note;
 
@@ -217,8 +216,7 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
         this.playlist.songNotDeletedFromPlaylist();
     }
 
-    @Override
-    public void loadPianoKeysConfig(Config config) {
+    public void loadConfig(char[] config) {
         this.piano.loadConfig(config);
     }
 
@@ -230,6 +228,11 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
     @Override
     public void stopNote(Note note, int octava) {
         this.piano.stopNote(note, octava);
+    }
+
+    @Override
+    public void changeKey(Note n, char newLetter, int octava) {
+        this.piano.changeKey(n, octava, newLetter);
     }
 
 

@@ -40,6 +40,7 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
 
             this.menu = new Menu(this.musicController, this, this, this, this, this, this);
             this.menu.setVisible(true);
+            this.menu.loadConfig(this.model.getBinds());
 
             this.musicController.setVolume(this.model.getSongVolume());
         } else this.login.wrongLogin();

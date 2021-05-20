@@ -1,5 +1,6 @@
 package model;
 
+import entities.Config;
 import entities.List;
 import entities.Song;
 import entities.User;
@@ -15,6 +16,7 @@ public class BusinessFacade {
     private final StatisticsDAO statisticsManager;
 
     private User loggedUser;
+    private Config loggedUserConfig;
     private ArrayList<List> loggedUserPlaylists;
 
     public BusinessFacade(SongDAO songManager, UserDAO userManager, PlaylistDAO playlistManager, ConfigDAO configManager, StatisticsDAO statisticsManager) {
@@ -25,6 +27,7 @@ public class BusinessFacade {
         this.statisticsManager = statisticsManager;
 
         this.loggedUser = null;
+        this.loggedUserConfig = null;
         this.loggedUserPlaylists = null;
     }
 
@@ -33,6 +36,21 @@ public class BusinessFacade {
 
         this.loggedUserPlaylists = this.playlistManager.getPlaylists(this.loggedUser);
         return true;
+    }
+
+    private boolean updateConfig() {
+        if (this.loggedUser == null) return false;
+
+        this.loggedUserConfig = this.configManager.getConfig(this.loggedUser.getName());
+        return (this.loggedUserConfig != null);
+    }
+
+    private Config getConfig() {
+        if (this.loggedUser == null) {
+            if (!updateConfig()) return null;
+        }
+
+        return this.loggedUserConfig;
     }
 
     public Song getSong(Song s) {
@@ -145,9 +163,9 @@ public class BusinessFacade {
 
     public float getSongVolume() {
         if (this.loggedUser == null) return 1.f;
-        Float r = this.configManager.getVolumeSong(this.loggedUser.getName());
-        if (r == null) return 1.f;
-        return r;
+        Config c = this.getConfig();
+        if (c == null) return 1.f;
+        return c.getVolumeSong();
     }
 
     public boolean addPlaylist(String list) {
@@ -200,5 +218,11 @@ public class BusinessFacade {
 
         this.getPlaylist(playlist).removeSong(song);
         return true;
+    }
+
+    public char[] getBinds() {
+        Config c = this.getConfig();
+        if (c == null) return null;
+        return c.getNotesBind();
     }
 }
