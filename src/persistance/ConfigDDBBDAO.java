@@ -22,13 +22,6 @@ public class ConfigDDBBDAO implements ConfigDAO{
     }
 
     @Override
-    public Float getVolumePiano(String nick) {
-        entities.Config config = this.getConfig(nick);
-        if (config == null) return null;
-        return config.getVolumePiano();
-    }
-
-    @Override
     public boolean setVolumeSong(String nick, float value) {
         try {
             return (this.ddbb.runSentence("UPDATE RegisteredUsers SET volume_song = ? WHERE(id = (SELECT Users.id FROM Users WHERE Users.username = ?));", value, nick) > 0);
@@ -38,18 +31,11 @@ public class ConfigDDBBDAO implements ConfigDAO{
     }
 
     @Override
-    public Float getVolumeSong(String nick) {
-        entities.Config config = this.getConfig(nick);
-        if (config == null) return null;
-        return config.getVolumeSong();
-    }
-
-    private entities.Config getConfig(String nick) {
+    public entities.Config getConfig(String nick) {
         try {
             ResultSet rs1 = this.ddbb.getSentence("SELECT ru.volume_piano, ru.volume_song FROM RegisteredUsers AS ru JOIN Users AS u ON u.id = ru.id WHERE u.username = ?;", nick);
-            if (!rs1.next()) {
-                return null;
-            }
+            if (!rs1.next()) return null;
+
             entities.Config config = new entities.Config(rs1.getFloat(1), rs1.getFloat(2));
             ResultSet rs2 = this.ddbb.getSentence("SELECT pk.keyboard FROM PianoKeys AS pk JOIN RegisteredUsers ru ON pk.user = ru.id JOIN Users u on ru.id = u.id WHERE u.username = ? ORDER BY pk.octave ASC, pk.note ASC;", nick);
 

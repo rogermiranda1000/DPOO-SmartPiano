@@ -1,7 +1,7 @@
 package view;
 
-import entities.Config;
+import entities.Note;
 
 public interface KeyChanger {
-    void loadPianoKeysConfig(Config config);
+    void changeKey(Note n, char newLetter, int octava);
 }
