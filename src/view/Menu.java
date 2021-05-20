@@ -54,8 +54,8 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
         this.add(mainContent);
         cl = (CardLayout) (mainContent.getLayout());
         /* DEFAULT VIEW */
-        cl.show(mainContent, ("songs"));
-        songsButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
+        cl.show(mainContent, ("piano"));
+        pianoButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
 
     }
 
