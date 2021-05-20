@@ -15,11 +15,13 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     private final BusinessFacade model;
     private final SongDownloader scrapper;
     private final MusicController musicController;
+    private final PianoController pianoController;
 
     public Controller(int scrappingTime, SongDAO songManager, UserDAO userManager, PlaylistDAO playlistManager, ConfigDAO configManager, StatisticsDAO statisticsManager) {
         this.model = new BusinessFacade(songManager, userManager, playlistManager, configManager, statisticsManager);
 
         this.musicController = new MusicController(this);
+        this.pianoController = new PianoController();
 
         this.scrapper = new SongDownloader(this, scrappingTime);
         this.scrapper.start();
