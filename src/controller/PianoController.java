@@ -11,11 +11,17 @@ public class PianoController {
      * tick_length [us/tick] * 1 [tick] = 10^3 [us]   (cada tick son 1ms)
      */
     private static final double TICK_LENGTH = 1000;
+    private static final int OCTAVA_INICIAL = 3;
+    private static final int NUM_OCTAVES = 2;
     private boolean songSilenced;
     private boolean recording;
     private final NotePlayer notePlayer;
     private ArrayList<SongNote> songNotes;
     private long startTime;
+
+    /**
+     * Keyboard volume
+     */
     private float volume;
 
     public PianoController() {
@@ -24,6 +30,7 @@ public class PianoController {
         this.notePlayer = new NotePlayer();
         this.songNotes = null;
         this.volume = 1;
+        this.notePlayer.setVolume(this.volume);
     }
 
     /**
@@ -43,6 +50,7 @@ public class PianoController {
         this.recording = false;
     }
 
+    // TODO interficies?
     /**
      * Silences the piano
      */
@@ -62,9 +70,9 @@ public class PianoController {
      * @param note Note to be played and added
      */
     public void addNote(SongNote note) {
-        this.notePlayer.executeNote(new SongNote(note.getTick(), note.isPressed(), (byte)Math.round(note.getVelocity() * this.volume), note.getOctave(), note.getNote()));
+        this.notePlayer.executeNote(note);
         if (!this.recording) return;
-        this.songNotes.add(new SongNote(Math.round((System.currentTimeMillis() - this.startTime)),
+        this.songNotes.add(new SongNote(Math.round(System.currentTimeMillis() - this.startTime),
                 note.isPressed(), note.getVelocity(), note.getOctave(), note.getNote()));
     }
 
@@ -73,8 +81,8 @@ public class PianoController {
      * @param note Note
      */
     public void playSongNote(SongNote note) {
-        if (this.songSilenced && (note.getOctave() <= 4 || note.getOctave() >= 3)) return;
-        this.notePlayer.executeNote(new SongNote(note.getTick(), note.isPressed(), (byte)Math.round(note.getVelocity() * this.volume), note.getOctave(), note.getNote()));
+        if (this.songSilenced && (note.getOctave() >= PianoController.OCTAVA_INICIAL && note.getOctave() < (PianoController.OCTAVA_INICIAL + PianoController.NUM_OCTAVES))) return;
+        this.notePlayer.executeNote(note);
     }
 
     /**
@@ -82,7 +90,6 @@ public class PianoController {
      * @return If the song recorded notes returns the song, null otherwise
      */
     public ArrayList<SongNote> getSongNotes() {
-        if (this.songNotes == null || this.songNotes.size() < 1) return null;
         return this.songNotes;
     }
 
@@ -94,6 +101,6 @@ public class PianoController {
         //TODO: Cridar això segons l'usuari carregat
         this.volume = volume;
         if (this.volume > 1) this.volume = 1;
-        if (this.volume < 0) this.volume = 0;
+        else if (this.volume < 0) this.volume = 0;
     }
 }

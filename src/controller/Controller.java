@@ -156,14 +156,11 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     // TODO
     @Override
     public void isPressed(Note note, int octava) {
-        System.out.println("Pressed " + note.name() + ", octava " + octava);
         this.pianoController.addNote(new SongNote(0,true,(byte)127,(byte)octava,note));
-        //TODO: Octava ja hauria de ser byte (no toco per conflictes)
     }
 
     @Override
     public void isNotPressed(Note note, int octava) {
-        System.out.println("Released " + note.name() + ", octava " + octava);
         this.pianoController.addNote(new SongNote(0,false,(byte)127,(byte)octava,note));
     }
 }
