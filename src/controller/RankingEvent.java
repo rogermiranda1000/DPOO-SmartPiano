@@ -1,5 +1,7 @@
 package controller;
 
+import entities.Song;
+
 public interface RankingEvent {
 
     /**
@@ -13,4 +15,6 @@ public interface RankingEvent {
      */
     int[] getTimeStadistics();
 
+
+    Song[] getTop5(int[] plays);
 }
