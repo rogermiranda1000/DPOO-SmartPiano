@@ -46,7 +46,7 @@ public class BusinessFacade {
     }
 
     private Config getConfig() {
-        if (this.loggedUser == null) {
+        if (this.loggedUserConfig == null) {
             if (!updateConfig()) return null;
         }
 

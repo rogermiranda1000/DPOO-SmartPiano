@@ -13,6 +13,7 @@ public class Piano extends JPanel implements ActionListener, TeclaNotifier {
     public static final boolean IS_BLACK = true;
     public static final boolean IS_WHITE = false;
     private static final int NUM_OCTAVES = 2;
+    private static final int INIT_OCTAVA = 3;
 
     private final Tecla[] keys;
     private final JButton record;
@@ -38,8 +39,14 @@ public class Piano extends JPanel implements ActionListener, TeclaNotifier {
         }
     }
 
+    /**
+     * Get the key from the piano
+     * @param note Key
+     * @param octava Octave (from INIT_OCTAVA to INIT_OCTAVA+NUM_OCTAVES)
+     * @return Coincident key
+     */
     private Tecla getKey(Note note, int octava) {
-        return this.keys[12*(octava-1) + note.ordinal()];
+        return this.keys[12*(octava - Piano.INIT_OCTAVA) + note.ordinal()];
     }
 
     /**
@@ -58,7 +65,7 @@ public class Piano extends JPanel implements ActionListener, TeclaNotifier {
      */
     public void loadConfig(char[] binds) {
         for (int i = 0; i < binds.length; i++) {
-            this.changeKey(Note.getNote(i), i/12, binds[i]);
+            this.changeKey(Note.getNote(i), Piano.INIT_OCTAVA + (i/12), binds[i]);
         }
     }
 

@@ -40,8 +40,9 @@ public class ConfigDDBBDAO implements ConfigDAO{
             ResultSet rs2 = this.ddbb.getSentence("SELECT pk.keyboard FROM PianoKeys AS pk JOIN RegisteredUsers ru ON pk.user = ru.id JOIN Users u on ru.id = u.id WHERE u.username = ? ORDER BY pk.octave ASC, pk.note ASC;", nick);
 
             char[] characters = new char[12 * Config.NUM_OCTAVES];
+            rs2.next();
             for (int i = 0; i < characters.length & rs2.next(); i++) {
-                characters[i] = rs2.getString(0).charAt(0);
+                characters[i] = rs2.getString(1).charAt(0);
             }
             config.setNoteBind(characters);
             return config;
