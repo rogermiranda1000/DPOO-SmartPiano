@@ -15,7 +15,6 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
     private JButton songsButton, playlistButton, pianoButton, rankingButton, settingsButton, exitButton;
 
     private final MenuEvent event;
-    private final PlaylistBarEvent playE;
     private final JPanel mainContent;
     private final CardLayout cl;
 
@@ -25,7 +24,6 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
 
     public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE) {
         this.event = menuE;
-        this.playE = playE;
 
         this.setTitle("Piano TIME!");
         ImageIcon img = new ImageIcon("images\\icon.jpg");
