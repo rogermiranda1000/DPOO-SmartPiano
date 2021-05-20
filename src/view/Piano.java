@@ -1,6 +1,7 @@
 package view;
 
 import controller.TeclaEvent;
+import entities.Config;
 import entities.Note;
 
 import javax.swing.*;
@@ -47,8 +48,19 @@ public class Piano extends JPanel implements ActionListener, TeclaNotifier {
      * @param octava Octava; de 1 a NUM_OCTAVES
      * @param letter Nova tecla a escoltar
      */
-    public void changeKey(Note note, int octava, char letter) {
+    private void changeKey(Note note, int octava, char letter) {
         this.getKey(note, octava).setKeyAssocieted(letter);
+    }
+
+    /**
+     * Update all the keys
+     * @param config Keyboard keys binded to the piano keys
+     */
+    public void loadConfig(Config config) {
+        char []binds = config.getNotesBind();
+        for (int i = 0; i < binds.length; i++) {
+            this.changeKey(Note.getNote(i), i/12, binds[i]);
+        }
     }
 
     @Override
