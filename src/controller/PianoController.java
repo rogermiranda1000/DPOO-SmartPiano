@@ -5,7 +5,11 @@ import entities.SongNote;
 import model.NotePlayer;
 
 public class PianoController {
-    private static final float SPEED = 1;   //Cada quants millis es mostrejen les notes (avança tic)
+    /**
+     * us / tick
+     * tick_length [us/tick] * 1 [tick] = 10^3 [us]   (cada tick son 1ms)
+     */
+    private static final double TICK_LENGTH = 1000;
     private boolean songSilenced;
     private boolean recording;
     private final NotePlayer notePlayer;
@@ -58,7 +62,7 @@ public class PianoController {
     public void addNote(SongNote note) {
         this.notePlayer.executeNote(new SongNote(note.getTick(), note.isPressed(), (byte)Math.round(note.getVelocity() * this.volume), note.getOctave(), note.getNote()));
         if (!this.recording) return;
-        this.song.addNote(new SongNote(Math.round((System.currentTimeMillis() - this.startTime)/SPEED),
+        this.song.addNote(new SongNote(Math.round((System.currentTimeMillis() - this.startTime)),
                 note.isPressed(), note.getVelocity(), note.getOctave(), note.getNote()));
     }
 
