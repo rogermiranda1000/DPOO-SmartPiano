@@ -1,5 +1,7 @@
 package persistance;
 
+import entities.Config;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -44,11 +46,19 @@ public class ConfigDDBBDAO implements ConfigDAO{
 
     private entities.Config getConfig(String nick) {
         try {
-            ResultSet rs = this.ddbb.getSentence("SELECT ru.volume_piano, ru.volume_song FROM RegisteredUsers AS ru JOIN Users AS u ON u.id = ru.id WHERE u.username = ?;", nick);
-            if (!rs.next()) {
+            ResultSet rs1 = this.ddbb.getSentence("SELECT ru.volume_piano, ru.volume_song FROM RegisteredUsers AS ru JOIN Users AS u ON u.id = ru.id WHERE u.username = ?;", nick);
+            if (!rs1.next()) {
                 return null;
             }
-            return new entities.Config(rs.getFloat(1), rs.getFloat(2));
+            entities.Config config = new entities.Config(rs1.getFloat(1), rs1.getFloat(2));
+            ResultSet rs2 = this.ddbb.getSentence("SELECT pk.keyboard FROM PianoKeys AS pk JOIN RegisteredUsers ru ON pk.user = ru.id JOIN Users u on ru.id = u.id WHERE u.username = ? ORDER BY pk.octave ASC, pk.note ASC;", nick);
+
+            char[] characters = new char[12 * Config.NUM_OCTAVES];
+            for (int i = 0; i < characters.length & rs2.next(); i++) {
+                characters[i] = rs2.getString(0).charAt(0);
+            }
+            config.setNoteBind(characters);
+            return config;
         } catch (SQLException ex) {
             return null;
         }

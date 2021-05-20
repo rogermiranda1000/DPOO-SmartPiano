@@ -1,16 +1,17 @@
 package entities;
 
 public class Config {
+    public static final int NUM_OCTAVES = 2;
     private float volumePiano;
     private float volumeSong;
 
     /**
      * Per cada Note té un caràcter asociat
      */
-    private final char []noteBind;
+    private char []noteBind;
 
     public Config() {
-        this.noteBind = new char[Note.values().length];
+        this.noteBind = null;
     }
 
     public Config(float volumePiano, float volumeSong) {
@@ -39,7 +40,7 @@ public class Config {
         this.volumeSong = volumeSong;
     }
 
-    public void setNoteBind(Note nota, char valor) {
-        this.noteBind[nota.ordinal()] = valor;
+    public void setNoteBind(char[] valor) {
+        this.noteBind = valor;
     }
 }
