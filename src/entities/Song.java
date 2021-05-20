@@ -11,7 +11,7 @@ public class Song {
      * Temps [us] per tick
      */
     private double tickLength;
-    private final String songName;
+    private String songName;
     private final String author;
     private final Date creationDate;
     private boolean isPublic;
@@ -88,6 +88,10 @@ public class Song {
 
     public boolean getPublic() {
         return this.isPublic;
+    }
+
+    public void setSongName(String songName) {
+        this.songName = songName;
     }
 
     public void setTickLength(double tickLength) {
