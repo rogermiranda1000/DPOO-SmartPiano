@@ -1,6 +1,7 @@
 package view;
 
 import controller.*;
+import entities.Config;
 import entities.Song;
 import entities.Note;
 
@@ -217,8 +218,8 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
     }
 
     @Override
-    public void changeKey(Note n, char newLetter, int octava) {
-        piano.changeKey(n, octava, newLetter);
+    public void loadPianoKeysConfig(Config config) {
+        this.piano.loadConfig(config);
     }
 
     @Override

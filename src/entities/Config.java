@@ -28,8 +28,8 @@ public class Config {
         return volumeSong;
     }
 
-    public char getNoteBind(Note note) {
-        return noteBind[note.ordinal()];
+    public char[] getNotesBind() {
+        return noteBind;
     }
 
     public void setVolumePiano(float volumePiano) {
