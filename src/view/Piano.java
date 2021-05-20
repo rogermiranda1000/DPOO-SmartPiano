@@ -1,21 +1,26 @@
 package view;
 
+import controller.TeclaEvent;
 import entities.Note;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
-public class Piano extends JPanel implements KeyController, ActionListener {
+public class Piano extends JPanel implements ActionListener, TeclaNotifier {
     public static final boolean IS_BLACK = true;
     public static final boolean IS_WHITE = false;
+    private static final int NUM_OCTAVES = 2;
 
-    private final ArrayList<Tecla> keys = new ArrayList<>();
+    private final Tecla[] keys;
     private final JButton record;
+    private final TeclaEvent event;
 
-    public Piano() {
+    public Piano(TeclaEvent event) {
+        this.event = event;
+        this.keys = new Tecla[12 * Piano.NUM_OCTAVES];
+
         record = new JButton("Record");
         record.addActionListener(this);
         record.setFocusable(false);
@@ -25,53 +30,38 @@ public class Piano extends JPanel implements KeyController, ActionListener {
     }
 
     private void drawPiano(){
-
-        for (int i = 0; i < 24; i++) {
+        for (int i = 0; i < this.keys.length; i++) {
             int octava = (i/12) + 1;
             String nota = Note.getNote(i % 12).toString();
 
             Tecla temp = new Tecla(this, Note.getNote(i % 12), (nota.charAt(nota.length() - 1) == 'X') ? IS_BLACK : IS_WHITE, octava);
-            keys.add(temp);
+            this.keys[i] = temp;
             this.add(temp, BorderLayout.SOUTH);
         }
     }
 
+    private Tecla getKey(Note note, int octava) {
+        return this.keys[12*(octava-1) + note.ordinal()];
+    }
+
     /**
      * Funció bucle que actualitza les notes/tecles
-     * @param n
-     * @param letter
-     * @param octava
+     * @param note Tecla a cambiar
+     * @param octava Octava; de 1 a NUM_OCTAVES
+     * @param letter Nova tecla a escoltar
      */
-    public void changeKey(Note n, char letter, int octava){
-        for(int i = 0; i < 24; i++){
-            if(n.equals(keys.get(i).getNote()) && keys.get(i).getOctava() == octava){
-                keys.get(i).setKeyAssocieted(letter);
-                break;
-            }
-        }
-    }
-
-    public void playNote(char key){
-        for (int i = 0; i < keys.size(); i++) {
-            if(keys.get(i).getKey() == key) keys.get(i).playNote();
-        }
-    }
-
-    public void stopNote(char key){
-        for (int i = 0; i < keys.size(); i++) {
-            if(keys.get(i).getKey() == key) keys.get(i).stopNote();
-        }
-    }
-
-    // TODO moure a controller
-    @Override
-    public void isPressed(Note note, int octava) {
-        System.out.println("PRESSED " + note.toString() + " - " + octava);
+    public void changeKey(Note note, int octava, char letter) {
+        this.getKey(note, octava).setKeyAssocieted(letter);
     }
 
     @Override
-    public void isNotPressed(Note note, int octava) {
-        System.out.println("UNPRESSED " + note.toString() + " - " + octava);
+    public void playNote(Note note, int octava) {
+        this.getKey(note, octava).playNote();
+    }
+
+    @Override
+    public void stopNote(Note note, int octava){
+        this.getKey(note, octava).stopNote();
     }
 
     //TODO: connectar amb controller

@@ -1,5 +1,6 @@
 package view;
 
+import controller.TeclaEvent;
 import entities.Note;
 
 import javax.swing.*;
@@ -11,13 +12,13 @@ public class Tecla extends JPanel implements MouseListener, KeyListener {
     private final int ocatava;
 
     private final JPanel tecla = new JPanel();
-    private final KeyController kC;
+    private final TeclaEvent kC = null;// TODO
     private char keyAssocieted;
     private final boolean isBlack;
 
     public Tecla(Piano p, Note note, boolean isBlack, int octava) {
         this.note = note;
-        this.kC = p;
+        //this.kC = p;
         this.ocatava = octava;
         this.isBlack = isBlack;
 
