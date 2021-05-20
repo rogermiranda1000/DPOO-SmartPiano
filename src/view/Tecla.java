@@ -18,12 +18,14 @@ public class Tecla extends JPanel implements MouseListener, KeyListener {
     private char keyAssocieted;
     private final Color color;
     private boolean isPressing;
+    private boolean isHolding;
 
     public Tecla(TeclaEvent p, Note note, boolean isBlack, int octava) {
         this.note = note;
         this.kC = p;
         this.ocatava = octava;
         this.isPressing = false;
+        this.isHolding = false;
 
         this.setPreferredSize(new Dimension(40,200));
         this.setLayout(new BorderLayout());
@@ -70,12 +72,13 @@ public class Tecla extends JPanel implements MouseListener, KeyListener {
     public void mousePressed(MouseEvent e) {
         if(!this.contains(e.getPoint())) return;
 
+        this.isHolding = true;
         this.press();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if(!this.contains(e.getPoint())) return;
+        if(!this.isHolding) return; // TODO compatibilitat amb pantalles tactils (pulsacions simultanies clicant)
 
         this.release();
     }
