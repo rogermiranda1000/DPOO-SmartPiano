@@ -12,11 +12,8 @@ public class Piano extends JPanel implements KeyController, ActionListener {
     public static final boolean IS_BLACK = true;
     public static final boolean IS_WHITE = false;
 
-    private final ArrayList<JPanel> jP = new ArrayList<>();
-    private final JPanel jP2 = new JPanel();
     private final ArrayList<Tecla> keys = new ArrayList<>();
-
-    private JButton record;
+    private final JButton record;
 
     public Piano() {
         record = new JButton("Record");
@@ -39,7 +36,6 @@ public class Piano extends JPanel implements KeyController, ActionListener {
         }
     }
 
-    //TODO: Revisat, crec que bé
     /**
      * Funció bucle que actualitza les notes/tecles
      * @param n
@@ -67,28 +63,15 @@ public class Piano extends JPanel implements KeyController, ActionListener {
         }
     }
 
+    // TODO moure a controller
     @Override
-    public boolean isPressed(Note note, int octava) {
+    public void isPressed(Note note, int octava) {
         System.out.println("PRESSED " + note.toString() + " - " + octava);
-        return true;
     }
 
     @Override
-    public boolean isNotPressed(Note note, int octava) {
+    public void isNotPressed(Note note, int octava) {
         System.out.println("UNPRESSED " + note.toString() + " - " + octava);
-        return true;
-    }
-
-    @Override
-    public boolean keyBoardPressed(char nota) {
-        System.out.println("TIPED " + nota);
-        return true;
-    }
-
-    @Override
-    public boolean keyBoardNotPressed(char nota) {
-        System.out.println("UNTIPED " + nota);
-        return false;
     }
 
     //TODO: connectar amb controller
