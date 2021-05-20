@@ -15,6 +15,11 @@ public interface RankingEvent {
      */
     int[] getTimeStadistics();
 
+    /**
+     * Busca les 5 cançons més escoltades a la base de dades.
+     * @param plays array de 5 enters per obtenir el nombre de reproduccions de les cançons.
+     * @return llista de les 5cançons més escoltades
+     */
 
     Song[] getTop5(int[] plays);
 }
