@@ -14,4 +14,5 @@ public interface StatisticsDAO {
      * @return If the statistics from the player was deleted (true) or something happened (false)
      */
     boolean deletePlayerStatistics(String s);
+    boolean deleteStatistics(Song s);
 }
