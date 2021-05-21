@@ -89,7 +89,7 @@ public class PianoController implements SongValidator, SongEnder {
      * Un-silences the piano
      */
     public void unMute() {
-        this.songSilenced = true;
+        this.songSilenced = false;
     }
 
     /**
