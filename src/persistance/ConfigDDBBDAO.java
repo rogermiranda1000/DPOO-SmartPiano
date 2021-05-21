@@ -1,6 +1,6 @@
 package persistance;
 
-import entities.Config;
+import entities.KeyboardConstants;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,7 +39,7 @@ public class ConfigDDBBDAO implements ConfigDAO{
             entities.Config config = new entities.Config(rs1.getFloat(1), rs1.getFloat(2));
             ResultSet rs2 = this.ddbb.getSentence("SELECT pk.keyboard FROM PianoKeys AS pk JOIN RegisteredUsers ru ON pk.user = ru.id JOIN Users u on ru.id = u.id WHERE u.username = ? ORDER BY pk.octave ASC, pk.note ASC;", nick);
 
-            char[] characters = new char[12 * Config.NUM_OCTAVES];
+            char[] characters = new char[12 * KeyboardConstants.NUM_OCTAVES];
             for (int i = 0; i < characters.length & rs2.next(); i++) {
                 characters[i] = rs2.getString(1).charAt(0);
             }

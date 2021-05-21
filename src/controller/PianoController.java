@@ -1,6 +1,6 @@
 package controller;
 
-import entities.Note;
+import entities.KeyboardConstants;
 import entities.Song;
 import entities.SongNote;
 import model.NotePlayer;
@@ -14,8 +14,6 @@ public class PianoController implements SongValidator, SongEnder {
      * tick_length [us/tick] * 1 [tick] = 10^3 [us]   (cada tick son 1ms)
      */
     public static final double TICK_LENGTH = 1000;
-    private static final int OCTAVA_INICIAL = 3;
-    private static final int NUM_OCTAVES = 2;
     private boolean songSilenced;
     private boolean recording;
     private final NotePlayer notePlayer;
@@ -111,8 +109,8 @@ public class PianoController implements SongValidator, SongEnder {
      */
     @Override
     public void requestNote(SongNote note) {
-        if (note.getOctave() >= PianoController.OCTAVA_INICIAL && note.getOctave() < (PianoController.OCTAVA_INICIAL + PianoController.NUM_OCTAVES) && this.pianoPresser != null) this.pianoPresser.pressKey(note);
-        if (this.songSilenced && (note.getOctave() >= PianoController.OCTAVA_INICIAL && note.getOctave() < (PianoController.OCTAVA_INICIAL + PianoController.NUM_OCTAVES))) return;
+        if (note.getOctave() >= KeyboardConstants.INIT_OCTAVA && note.getOctave() < (KeyboardConstants.INIT_OCTAVA + KeyboardConstants.NUM_OCTAVES) && this.pianoPresser != null) this.pianoPresser.pressKey(note);
+        if (this.songSilenced && (note.getOctave() >= KeyboardConstants.INIT_OCTAVA && note.getOctave() < (KeyboardConstants.INIT_OCTAVA + KeyboardConstants.NUM_OCTAVES))) return;
         this.notePlayer.executeNote(note);
     }
 

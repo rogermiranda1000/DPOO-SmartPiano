@@ -6,7 +6,6 @@ import java.security.InvalidParameterException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Date;
 
 public class StatisticsDDBBDAO implements StatisticsDAO {
     private final DDBBAccess ddbb;

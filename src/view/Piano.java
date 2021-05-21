@@ -2,6 +2,7 @@ package view;
 
 import controller.RecordingEvent;
 import controller.TeclaEvent;
+import entities.KeyboardConstants;
 import entities.Note;
 import entities.SongNote;
 
@@ -11,21 +12,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Piano extends JPanel implements ActionListener, PianoNotifier {
-    private static final int OCTAVA_INICIAL = 3;
     private static final String TEXT_START_RECORDING = "Start recording";
     private static final String TEXT_SAVE_RECORDING = "Save recording";
 
     public static final boolean IS_BLACK = true;
     public static final boolean IS_WHITE = false;
-    private static final int NUM_OCTAVES = 2;
-    private static final int INIT_OCTAVA = 3;
 
     private final Tecla[] keys;
     private final JButton record;
     private final RecordingEvent recordingEvent;
 
     public Piano(TeclaEvent event, RecordingEvent recording) {
-        this.keys = new Tecla[12 * Piano.NUM_OCTAVES];
+        this.keys = new Tecla[12 * KeyboardConstants.NUM_OCTAVES];
         this.recordingEvent = recording;
 
         record = new JButton(Piano.TEXT_START_RECORDING);
@@ -36,7 +34,7 @@ public class Piano extends JPanel implements ActionListener, PianoNotifier {
 
         // draw piano
         for (int i = 0; i < this.keys.length; i++) {
-            int octava = (i/12) + Piano.INIT_OCTAVA;
+            int octava = (i/12) + KeyboardConstants.INIT_OCTAVA;
             String nota = Note.getNote(i % 12).toString();
 
             Tecla temp = new Tecla(event, Note.getNote(i % 12), (nota.charAt(nota.length() - 1) == 'X') ? IS_BLACK : IS_WHITE, octava).setKeyAssocieted('t');
@@ -53,7 +51,7 @@ public class Piano extends JPanel implements ActionListener, PianoNotifier {
      * @return Coincident key
      */
     private Tecla getKey(Note note, int octava) {
-        return this.keys[12*(octava - Piano.INIT_OCTAVA) + note.ordinal()];
+        return this.keys[12*(octava - KeyboardConstants.INIT_OCTAVA) + note.ordinal()];
     }
 
     /**
@@ -72,11 +70,10 @@ public class Piano extends JPanel implements ActionListener, PianoNotifier {
      */
     public void loadConfig(char[] binds) {
         for (int i = 0; i < binds.length; i++) {
-            this.changeKey(Note.getNote(i), Piano.INIT_OCTAVA + (i/12), binds[i]);
+            this.changeKey(Note.getNote(i), KeyboardConstants.INIT_OCTAVA + (i/12), binds[i]);
         }
     }
 
-    //TODO: connectar amb controller
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == record) {
@@ -112,7 +109,7 @@ public class Piano extends JPanel implements ActionListener, PianoNotifier {
 
     @Override
     public void pressKey(SongNote key) {
-        Tecla note = this.keys[(key.getOctave()-Piano.OCTAVA_INICIAL)*12 + key.getNote().ordinal()];
+        Tecla note = this.keys[(key.getOctave()-KeyboardConstants.INIT_OCTAVA)*12 + key.getNote().ordinal()];
         if (key.isPressed()) note.playNote();
         else note.stopNote();
     }
