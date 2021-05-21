@@ -12,6 +12,14 @@ public interface SongDAO {
     boolean existsSong(Song song);
 
     /**
+     * Checks if the registered user is the author of the song
+     * @param song Song to check
+     * @param name Registered user to check
+     * @return If it's the author (true), or not (false); null if something went wrong
+     */
+    Boolean isAuthor(Song song, String name);
+
+    /**
      * Donada una canço amb la informació bàsica (nom, data, autor) obtè tota la demés informació
      * @param song Canço a omplenar
      * @return Si s'ha realitzat exitosament (true), o no (false)
