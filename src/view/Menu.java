@@ -55,10 +55,18 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
         mainContent.add(this.settings, "settings");
         this.add(mainContent);
         cl = (CardLayout) (mainContent.getLayout());
-        /* DEFAULT VIEW */
-        cl.show(mainContent, ("piano"));
-        pianoButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
 
+        // default view
+        cl.show(mainContent, ("ranking"));
+        rankingButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
+    }
+
+    public void focusPiano() {
+        cl.show(mainContent, ("piano"));
+        piano.requestFocus();
+
+        resetButtonsColors();
+        pianoButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
     }
 
     public JPanel topPanel() {
@@ -151,11 +159,7 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
             resetButtonsColors();
             playlistButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == pianoButton) {
-            cl.show(mainContent, ("piano"));
-            piano.requestFocus();
-
-            resetButtonsColors();
-            pianoButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
+            this.focusPiano();
         } else if (e.getSource() == rankingButton) {
             cl.show(mainContent, ("ranking"));
 
