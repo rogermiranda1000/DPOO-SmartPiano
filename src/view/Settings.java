@@ -22,12 +22,14 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
 
 
     private final KeyChanger kC;
+    private final UpdateKeys uK;
 
     public static final int HEIGHT = 600;
     public static final int WIDTH = 1200;
 
-    public Settings(KeyChanger kC) {
+    public Settings(KeyChanger kC, UpdateKeys uK) {
         this.kC = kC;
+        this.uK = uK;
         this.setBackground(ColorConstants.BACKGROUND.getColor());
 
         this.add(settingsView());
@@ -189,6 +191,7 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
 
     private void saveConfig() {
         JOptionPane.showMessageDialog(this, "Changes on configuration saved.","Configuration saved!",JOptionPane.INFORMATION_MESSAGE);
+        //uK.
     }
 
     private String deleteUser() {
@@ -225,12 +228,13 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        /*if (e.getSource() == saveButton) {
+        if (e.getSource() == saveButton) {
             saveConfig();
         } else if (e.getSource() == deleteButton) {
             String password = deleteUser();
             //passar la pass al controller i eliminar
-        } else if (e.getSource() == Do) {
+        }
+        /* else if (e.getSource() == Do) {
             pressKey("Do");
         } else if (e.getSource() == DoX) {
             pressKey("DoX");
