@@ -10,7 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, PlaylistMenuNotifier, TeclaNotifier, DeleteUserNotifier, SongValidator {
+public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, PlaylistMenuNotifier, DeleteUserNotifier, PianoNotifier {
     public static final int HEIGHT = 900;
     public static final int WIDTH = 1600;
     private JButton songsButton, playlistButton, pianoButton, rankingButton, settingsButton, exitButton;
@@ -232,16 +232,6 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
     }
 
     @Override
-    public void playNote(Note note, int octava) {
-        this.piano.playNote(note, octava);
-    }
-
-    @Override
-    public void stopNote(Note note, int octava) {
-        this.piano.stopNote(note, octava);
-    }
-
-    @Override
     public void userDeleted() {
         this.settings.userDeleted();
     }
@@ -251,12 +241,17 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
         this.settings.userNotDeleted();
     }
 
+    @Override
+    public void unpressAllKeys() {
+        this.piano.unpressAllKeys();
+    }
+
     /**
      * The PianoController wants to tell the view to press a button
-     * @param sn Note to press
+     * @param key Note to press
      */
     @Override
-    public void requestNote(SongNote sn) {
-        this.piano.requestNote(sn);
+    public void pressKey(SongNote key) {
+        this.piano.pressKey(key);
     }
 }

@@ -1,7 +1,6 @@
 package view;
 
 import controller.RecordingEvent;
-import controller.SongValidator;
 import controller.TeclaEvent;
 import entities.Note;
 import entities.SongNote;
@@ -11,7 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Piano extends JPanel implements ActionListener, TeclaNotifier, SongValidator {
+public class Piano extends JPanel implements ActionListener, PianoNotifier {
     private static final int OCTAVA_INICIAL = 3;
     private static final String TEXT_START_RECORDING = "Start recording";
     private static final String TEXT_SAVE_RECORDING = "Save recording";
@@ -77,16 +76,6 @@ public class Piano extends JPanel implements ActionListener, TeclaNotifier, Song
         }
     }
 
-    @Override
-    public void playNote(Note note, int octava) {
-        this.getKey(note, octava).playNote();
-    }
-
-    @Override
-    public void stopNote(Note note, int octava){
-        this.getKey(note, octava).stopNote();
-    }
-
     //TODO: connectar amb controller
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -117,9 +106,14 @@ public class Piano extends JPanel implements ActionListener, TeclaNotifier, Song
     }
 
     @Override
-    public void requestNote(SongNote sn) {
-        Tecla note = this.keys[(sn.getOctave()-Piano.OCTAVA_INICIAL)*12 + sn.getNote().ordinal()];
-        if (sn.isPressed()) note.playNote();
+    public void unpressAllKeys() {
+        for (Tecla t : this.keys) t.stopNote();
+    }
+
+    @Override
+    public void pressKey(SongNote key) {
+        Tecla note = this.keys[(key.getOctave()-Piano.OCTAVA_INICIAL)*12 + key.getNote().ordinal()];
+        if (key.isPressed()) note.playNote();
         else note.stopNote();
     }
 }
