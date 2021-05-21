@@ -115,6 +115,13 @@ public class Piano extends JPanel implements ActionListener, PianoNotifier {
                 if (result == JOptionPane.OK_OPTION && tF.getText().length()>0) this.recordingEvent.saveRecordedSong(tF.getText(), ck.isSelected());
             }
         }
+        else if (e.getSource() == this.mute) {
+            boolean isMuted = this.mute.getText().equalsIgnoreCase(Piano.TEXT_UNMUTE_PIANO); // si el botó mostra 'desmutejar', està mutejat
+            isMuted = !isMuted; // toggle
+            this.mute.setText(isMuted ? Piano.TEXT_UNMUTE_PIANO : Piano.TEXT_MUTE_PIANO);
+            if (isMuted) this.recordingEvent.muteSong();
+            else this.recordingEvent.unmuteSong();
+        }
     }
 
     @Override
