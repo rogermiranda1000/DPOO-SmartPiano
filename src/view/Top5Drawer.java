@@ -3,7 +3,6 @@ package view;
 import entities.Song;
 import controller.RankingEvent;
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -20,7 +19,7 @@ public class Top5Drawer extends JPanel {
     private final String[] columnID= {"#","NAME","ARTIST", "# REPRODUCTIONS"};
     private final Song[] topSongs;
     private int[] numRep = new int[NUM_SONGS];
-    private final String[][] tableData = new String[NUM_SONGS][4];
+    private final String[][] tableData = new String[NUM_SONGS+1][4];
 
 
     public Top5Drawer (RankingEvent rankingE) {
@@ -32,14 +31,7 @@ public class Top5Drawer extends JPanel {
             this.dataFormat();
             String[] columnID = {"POSITION", "SONG NAME", "ARTIST", "REPRODUCTIONS"};
 
-            DefaultTableModel tableModel = new DefaultTableModel(tableData, columnID) {
-
-                @Override
-                public boolean isCellEditable(int row, int column) {
-                    //all cells false
-                    return false;
-                }
-            };
+            DefaultTableModel tableModel = new UneditableTable(tableData, columnID);
             JTable top5 = new JTable();
 
             top5.setModel(tableModel);
@@ -60,14 +52,15 @@ public class Top5Drawer extends JPanel {
             top5.setRowHeight(30);
 
             this.add(top5);
-
+        }
     }
 
     private void dataFormat(){
-            tableData[0][0] = "POSITION";
-            tableData[0][1] = "SONG NAME";
-            tableData[0][2] = "ARTIST";
-            tableData[0][3] = "REPRODUCTIONS";
+        tableData[0][0] = "POSITION";
+        tableData[0][1] = "SONG NAME";
+        tableData[0][2] = "ARTIST";
+        tableData[0][3] = "REPRODUCTIONS";
+
         for(int y = 0; y < NUM_SONGS && topSongs[y] != null; y++){
             if (topSongs[y] == null) break;
             tableData[y+1][0] = '#' + String.valueOf(y + 1);
@@ -75,6 +68,5 @@ public class Top5Drawer extends JPanel {
             tableData[y+1][2] = topSongs[y].getArtist();
             tableData[y+1][3] = String.valueOf(numRep[y]);
         }
-
     }
 }
