@@ -254,7 +254,7 @@ public class BusinessFacade {
         char[] bind = this.loggedUserConfig.getNotesBind();
         bind[(octava-KeyboardConstants.INIT_OCTAVA)*12 + key.ordinal()] = newBind;
         this.loggedUserConfig.setNoteBind(bind); // tecnicament va per referencia; no faria falta
-        // TODO set key binds in DDBB
+        this.configManager.setConfig(this.loggedUser.getName(), bind);
         return true;
     }
 
