@@ -1,6 +1,7 @@
 package persistance;
 
 import entities.Config;
+import entities.Note;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -47,6 +48,19 @@ public class ConfigDDBBDAO implements ConfigDAO{
             return config;
         } catch (SQLException ex) {
             return null;
+        }
+    }
+
+    @Override
+    public boolean setConfig(String nick, char[] characters) {
+        try {
+            for (int i = 0; i < 12 * Config.NUM_OCTAVES; i++) {
+                if (this.ddbb.runSentence("UPDATE PianoKeys SET keyboard = ? WHERE (user = (SELECT u.id FROM Users AS u JOIN RegisteredUsers AS ru ON u.id = ru.id WHERE u.username = ?) AND octave = ? AND note = ?);",
+                        String.valueOf(characters[i]), nick, i/12 + 1, Note.getNote(i).name().replaceAll("X$", "#")) == 0) return false;
+            }
+            return true;
+        } catch (SQLException ex) {
+            return false;
         }
     }
 
