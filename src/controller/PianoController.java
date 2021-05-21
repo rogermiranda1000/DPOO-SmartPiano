@@ -4,6 +4,7 @@ import entities.Note;
 import entities.Song;
 import entities.SongNote;
 import model.NotePlayer;
+import view.PianoNotifier;
 
 import java.util.ArrayList;
 
@@ -25,7 +26,7 @@ public class PianoController implements SongValidator {
     /**
      * Connects the PianoController with the view
      */
-    private SongValidator pianoPresser;
+    private PianoNotifier pianoPresser;
 
     /**
      * Keyboard volume
@@ -44,17 +45,14 @@ public class PianoController implements SongValidator {
         this.notePlayer.setVolume(this.volume);
     }
 
-    public void addEventListener(SongValidator sv) {
+    public void addEventListener(PianoNotifier sv) {
         this.pianoPresser = sv;
     }
 
     public void closeCurrentSong() {
         this.songPlayer.closePlayer();
 
-        // release all notes from piano
-        for (byte octava = PianoController.OCTAVA_INICIAL; octava < PianoController.OCTAVA_INICIAL+PianoController.NUM_OCTAVES; octava++) {
-            for (Note n : Note.values()) this.pianoPresser.requestNote(new SongNote(0, false, (byte) 0, octava, n));
-        }
+        this.pianoPresser.unpressAllKeys(); // release all notes from piano
     }
 
     public void playSong(Song s) {
@@ -113,7 +111,7 @@ public class PianoController implements SongValidator {
      */
     @Override
     public void requestNote(SongNote note) {
-        if (note.getOctave() >= PianoController.OCTAVA_INICIAL && note.getOctave() < (PianoController.OCTAVA_INICIAL + PianoController.NUM_OCTAVES) && this.pianoPresser != null) this.pianoPresser.requestNote(note);
+        if (note.getOctave() >= PianoController.OCTAVA_INICIAL && note.getOctave() < (PianoController.OCTAVA_INICIAL + PianoController.NUM_OCTAVES) && this.pianoPresser != null) this.pianoPresser.pressKey(note);
         if (this.songSilenced && (note.getOctave() >= PianoController.OCTAVA_INICIAL && note.getOctave() < (PianoController.OCTAVA_INICIAL + PianoController.NUM_OCTAVES))) return;
         this.notePlayer.executeNote(note);
     }
