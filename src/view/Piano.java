@@ -1,15 +1,18 @@
 package view;
 
 import controller.RecordingEvent;
+import controller.SongValidator;
 import controller.TeclaEvent;
 import entities.Note;
+import entities.SongNote;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Piano extends JPanel implements ActionListener, TeclaNotifier {
+public class Piano extends JPanel implements ActionListener, TeclaNotifier, SongValidator {
+    private static final int OCTAVA_INICIAL = 3;
     private static final String TEXT_START_RECORDING = "Start recording";
     private static final String TEXT_SAVE_RECORDING = "Save recording";
 
@@ -111,5 +114,12 @@ public class Piano extends JPanel implements ActionListener, TeclaNotifier {
                 if (result == JOptionPane.OK_OPTION && tF.getText().length()>0) this.recordingEvent.saveRecordedSong(tF.getText(), ck.isSelected());
             }
         }
+    }
+
+    @Override
+    public void requestNote(SongNote sn) {
+        Tecla note = this.keys[(sn.getOctave()-Piano.OCTAVA_INICIAL)*12 + sn.getNote().ordinal()];
+        if (sn.isPressed()) note.playNote();
+        else note.stopNote();
     }
 }
