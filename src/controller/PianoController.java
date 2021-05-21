@@ -11,7 +11,7 @@ public class PianoController implements SongValidator {
      * us / tick
      * tick_length [us/tick] * 1 [tick] = 10^3 [us]   (cada tick son 1ms)
      */
-    private static final double TICK_LENGTH = 1000;
+    public static final double TICK_LENGTH = 1000;
     private static final int OCTAVA_INICIAL = 3;
     private static final int NUM_OCTAVES = 2;
     private boolean songSilenced;
