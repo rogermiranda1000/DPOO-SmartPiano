@@ -42,6 +42,7 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
             this.menu = new Menu(this.musicController, this, this, this, this, this, this, this, this, this);
             this.menu.setVisible(true);
             this.menu.loadConfig(this.model.getBinds());
+            this.pianoController.addEventListener(this.menu);
 
             this.musicController.setVolume(this.model.getSongVolume());
         } else this.login.wrongLogin();
@@ -141,7 +142,9 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
 
     @Override
     public void requestSongInPiano(Song song) {
-        //TODO: connectar amb piano
+        this.model.getSong(song);
+        this.menu.focusPiano();
+        this.pianoController.playSong(song);
     }
 
     @Override
@@ -164,8 +167,6 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         return this.model.getTop5(plays);
     }
 
-
-    // TODO
     @Override
     public void isPressed(Note note, int octava) {
         this.pianoController.addNote(new SongNote(0,true,(byte)127,(byte)octava,note));
@@ -179,11 +180,7 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     @Override
     public void startRecording(boolean recording) {
         if (recording) this.pianoController.startRecording();
-        else {
-            this.pianoController.stopRecording();
-            // TODO request song name (or if discarded)
-            this.model.addSong(new Song("test", PianoController.TICK_LENGTH, true, this.pianoController.getSongNotes())); // TODO tmp
-        }
+        else this.pianoController.stopRecording();
     }
 
     @Override
