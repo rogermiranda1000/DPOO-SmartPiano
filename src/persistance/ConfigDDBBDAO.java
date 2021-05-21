@@ -51,6 +51,19 @@ public class ConfigDDBBDAO implements ConfigDAO{
     }
 
     @Override
+    public boolean setConfig(String nick, char[] characters) {
+        try {
+            for (int i = 0; i < 12 * Config.NUM_OCTAVES; i++) {
+                if (this.ddbb.runSentence("UPDATE PianoKeys SET keyboard = ? WHERE (user = (SELECT u.id FROM Users AS u JOIN RegisteredUsers AS ru ON u.id = ru.id WHERE u.username = ?) AND octave = ? AND note = ?);",
+                        String.valueOf(characters[i]), nick, i/12 + 1, Note.getNote(i).name().replaceAll("X$", "#")) == 0) return false;
+            }
+            return true;
+        } catch (SQLException ex) {
+            return false;
+        }
+    }
+
+    @Override
     public boolean deleteUserConfig(String nick) {
         try {
             return (this.ddbb.runSentence("DELETE PianoKeys FROM PianoKeys JOIN Users ON Users.id = PianoKeys.user WHERE Users.username = ?;", nick) > 0);
