@@ -9,15 +9,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Menu extends JFrame implements ActionListener, KeyChanger, PlayingSongNotifier, SongsMenuNotifier, PlaylistMenuNotifier {
+public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMenuNotifier, PlaylistMenuNotifier, TeclaNotifier {
     public static final int HEIGHT = 900;
     public static final int WIDTH = 1600;
-    private JButton playButton, loopButton, nextButton, backButton, shuffleButton;
     private JButton songsButton, playlistButton, pianoButton, rankingButton, settingsButton, exitButton;
-    private JLabel playingSong;
 
     private final MenuEvent event;
-    private final PlaylistBarEvent playE;
     private final JPanel mainContent;
     private final CardLayout cl;
 
@@ -25,13 +22,8 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, PlayingS
     private final Playlist playlist;
     private final Piano piano;
 
-    private final UpdateKeys uK;
-
-    public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE, UpdateKeys uK) {
+    public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE, TeclaEvent keyE) {
         this.event = menuE;
-        this.playE = playE;
-        this.uK = uK;
-        playE.setPlayingSongListner(this);
 
         this.setTitle("Piano TIME!");
         ImageIcon img = new ImageIcon("images\\icon.jpg");
@@ -45,7 +37,7 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, PlayingS
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Add static top & bot panels
-        this.add(botPanel(), BorderLayout.SOUTH);
+        this.add(new BottomPanel(playE), BorderLayout.SOUTH);
         this.add(topPanel(), BorderLayout.NORTH);
 
         // Adding layouts
@@ -55,15 +47,15 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, PlayingS
         mainContent.add(this.songs, "songs");
         mainContent.add(this.playlist, "playlists");
 
-        piano = new Piano();
+        piano = new Piano(keyE);
         mainContent.add(piano, "piano");
         mainContent.add(new Ranking(rankingE), "ranking");
         mainContent.add(new Settings(this, this.uK), "settings");
         this.add(mainContent);
         cl = (CardLayout) (mainContent.getLayout());
         /* DEFAULT VIEW */
-        cl.show(mainContent, ("songs"));
-        songsButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
+        cl.show(mainContent, ("piano"));
+        pianoButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
 
     }
 
@@ -126,83 +118,6 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, PlayingS
         return panel;
     }
 
-    public JPanel botPanel() {
-        JPanel panel = new JPanel();
-        panel.setBackground(ColorConstants.MENU.getColor());
-        // TODO: Upgrade
-        panel.setLayout(new GridLayout(0, 2));
-
-        JPanel currentSong = new JPanel();
-        currentSong.setBackground(ColorConstants.MENU.getColor());
-        playingSong = new JLabel("Select a song or a playlist to play - ♬ლ(▀̿Ĺ̯▀̿ ̿ლ)♬");
-        JPanel playerMenu = songPlayerMenu();
-
-        currentSong.setSize(new Dimension(WIDTH / 2, 150));
-        playerMenu.setSize(new Dimension(WIDTH / 2, 150));
-
-        currentSong.add(playingSong, BorderLayout.CENTER);
-
-        panel.add(currentSong);
-        panel.add(playerMenu);
-
-        return panel;
-    }
-
-    public JPanel songPlayerMenu() {
-        JPanel panel = new JPanel();
-        Font f = new Font(null, Font.PLAIN, 15);
-        panel.setBackground(ColorConstants.MENU.getColor());
-
-        loopButton = new JButton(Icon.LOOP.getIcon());
-        loopButton.setBackground(ColorConstants.BUTTON.getColor());
-        loopButton.setForeground(Color.LIGHT_GRAY);
-        loopButton.setVisible(true);
-        loopButton.setFont(f);
-
-        backButton = new JButton(Icon.BACK.getIcon());
-        backButton.setBackground(ColorConstants.BUTTON.getColor());
-        backButton.setForeground(Color.LIGHT_GRAY);
-        backButton.setVisible(true);
-        backButton.setFont(f);
-
-        playButton = new JButton(Icon.PAUSE.getIcon());
-        playButton.setBackground(ColorConstants.BUTTON.getColor());
-        playButton.setForeground(Color.LIGHT_GRAY);
-        playButton.setVisible(true);
-        playButton.setFont(f);
-
-        nextButton = new JButton(Icon.NEXT.getIcon());
-        nextButton.setBackground(ColorConstants.BUTTON.getColor());
-        nextButton.setForeground(Color.LIGHT_GRAY);
-        nextButton.setVisible(true);
-        nextButton.setFont(f);
-
-        shuffleButton = new JButton(Icon.SHUFFLE.getIcon());
-        shuffleButton.setBackground(ColorConstants.BUTTON.getColor());
-        shuffleButton.setForeground(Color.LIGHT_GRAY);
-        shuffleButton.setVisible(true);
-        shuffleButton.setFont(f);
-
-        loopButton.addActionListener(this);
-        backButton.addActionListener(this);
-        playButton.addActionListener(this);
-        nextButton.addActionListener(this);
-        shuffleButton.addActionListener(this);
-
-        loopButton.setFocusable(false);
-        backButton.setFocusable(false);
-        playButton.setFocusable(false);
-        nextButton.setFocusable(false);
-        shuffleButton.setFocusable(false);
-
-        panel.add(loopButton);
-        panel.add(backButton);
-        panel.add(playButton);
-        panel.add(nextButton);
-        panel.add(shuffleButton);
-
-        return panel;
-    }
 
     private void resetButtonsColors() {
         songsButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
@@ -212,43 +127,14 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, PlayingS
         settingsButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
     }
 
-    public void playNote(char key) {
-        piano.playNote(key);
-    }
-
-    public void stopNote(char key) {
-        piano.stopNote(key);
-    }
-
     private void exitMessage() {
         JOptionPane.showMessageDialog(this, "The user has logout.", "User logout", JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        /* BOTTOM BAR BUTTONS */
-        if (e.getSource() == loopButton) {
-            this.loopButton.setForeground(this.loopButton.getForeground().equals(ColorConstants.ACTIVE_BUTTON.getColor()) ? Color.LIGHT_GRAY : ColorConstants.ACTIVE_BUTTON.getColor()); // toggle button's color
-            this.playE.toggleLoop();
-        } else if (e.getSource() == backButton) {
-            /*if(event.currentSongPos() > 1){
-                //TODO: player.playBackSong();
-                playingSong.setText("back"); // TODO : player.getPlayingSongTitle() + - + player.getPlayingSongArtist
-            }*/
-        } else if (e.getSource() == playButton) {
-            this.playButton.setText(this.playButton.getText().equals(Icon.PAUSE.getIcon()) ? Icon.PLAY.getIcon() : Icon.PAUSE.getIcon()); // toggle button's text
-            this.playE.togglePlaying();
-        } else if (e.getSource() == nextButton) {
-            /*if(event.currentSongPos() < 10){ // TODO: player.playingListSize()
-                //TODO: player.playNextSong();
-                playingSong.setText("next" ); // TODO : player.getPlayingSongTitle() + - + player.getPlayingSongArtist
-            }*/
-        } else if (e.getSource() == this.shuffleButton) {
-            this.shuffleButton.setForeground(this.shuffleButton.getForeground().equals(ColorConstants.ACTIVE_BUTTON.getColor()) ? Color.LIGHT_GRAY : ColorConstants.ACTIVE_BUTTON.getColor()); // toggle button's color
-            this.playE.toggleRandom();
-        }
         /* TOP BAR BUTTONS */
-        else if (e.getSource() == songsButton) {
+        if (e.getSource() == songsButton) {
             // s'entrarà a songs -> recargar
             this.songs.reloadSongs();
             this.songs.reloadPlaylists();
@@ -284,10 +170,6 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, PlayingS
         }
     }
 
-    @Override
-    public void newSongPlaying(String songName) {
-        this.playingSong.setText(songName);
-    }
 
     @Override
     public void songDeleted(Song song) {
@@ -339,9 +221,23 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, PlayingS
         this.playlist.songNotDeletedFromPlaylist();
     }
 
+    public void loadConfig(char[] config) {
+        this.piano.loadConfig(config);
+    }
+
+    @Override
+    public void playNote(Note note, int octava) {
+        this.piano.playNote(note, octava);
+    }
+
+    @Override
+    public void stopNote(Note note, int octava) {
+        this.piano.stopNote(note, octava);
+    }
+
     @Override
     public void changeKey(Note n, char newLetter, int octava) {
-        piano.changeKey(n, newLetter, octava);
+        piano.changeKey(n, octava, newLetter);
         System.out.println("Objecte menu [Tecla: " + newLetter + ", Nota: " + n.toString()
                           + ", Octava: " + octava + "]");
     }

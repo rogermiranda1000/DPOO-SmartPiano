@@ -20,12 +20,19 @@ public class MusicController implements SongEnder, PlaylistBarEvent, SongRequest
     private PlaysManager playsManager;
 
     public MusicController(PlaysManager playsManager) {
+        this.reset();
+        this.volume = 1; // teoricament es sobreescriu
+        this.playsManager = playsManager;
+    }
+
+    public void reset() {
+        this.setPlaying(false); // per si estava sonant
+
+        this.list = null;
         this.isPlaying = true;
         this.songIndex = 0;
-        this.volume = 1;
         this.isRandom = false;
         this.isLooping = false;
-        this.playsManager = playsManager;
     }
 
     private void setPlaying(boolean playing) {

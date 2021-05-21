@@ -1,84 +1,87 @@
 package view;
 
+import controller.TeclaEvent;
+import entities.Config;
 import entities.Note;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Piano extends JPanel implements KeyController {
+public class Piano extends JPanel implements ActionListener, TeclaNotifier {
     public static final boolean IS_BLACK = true;
     public static final boolean IS_WHITE = false;
+    private static final int NUM_OCTAVES = 2;
+    private static final int INIT_OCTAVA = 3;
 
-    private final ArrayList<JPanel> jP = new ArrayList<>();
-    private final JPanel jP2 = new JPanel();
-    private final ArrayList<Tecla> keys = new ArrayList<>();
+    private final Tecla[] keys;
+    private final JButton record;
 
-    public Piano() {
-        drawPiano();
+    public Piano(TeclaEvent event) {
+        this.keys = new Tecla[12 * Piano.NUM_OCTAVES];
+
+        record = new JButton("Record");
+        record.addActionListener(this);
+        record.setFocusable(false);
+        this.add(record, BorderLayout.NORTH);
         this.setBackground(ColorConstants.BACKGROUND.getColor());
-    }
 
-    private void drawPiano(){
-        for (int i = 0; i < 24; i++) {
-            int octava = (i/12) + 1;
+        // draw piano
+        for (int i = 0; i < this.keys.length; i++) {
+            int octava = (i/12) + Piano.INIT_OCTAVA;
             String nota = Note.getNote(i % 12).toString();
 
-            Tecla temp = new Tecla(this, Note.getNote(i % 12), (nota.charAt(nota.length() - 1) == 'X') ? IS_BLACK : IS_WHITE, octava);
-            keys.add(temp);
+            Tecla temp = new Tecla(event, Note.getNote(i % 12), (nota.charAt(nota.length() - 1) == 'X') ? IS_BLACK : IS_WHITE, octava).setKeyAssocieted('t');
+            this.keys[i] = temp;
             this.add(temp, BorderLayout.SOUTH);
+            this.addKeyListener(temp); // per alguna rao li hem d'afegir el KeyListener (potser culpa del request focus?)
         }
     }
 
-    //TODO: Revisat, crec que bé
+    /**
+     * Get the key from the piano
+     * @param note Key
+     * @param octava Octave (from INIT_OCTAVA to INIT_OCTAVA+NUM_OCTAVES)
+     * @return Coincident key
+     */
+    private Tecla getKey(Note note, int octava) {
+        return this.keys[12*(octava - Piano.INIT_OCTAVA) + note.ordinal()];
+    }
+
     /**
      * Funció bucle que actualitza les notes/tecles
-     * @param n
-     * @param letter
-     * @param octava
+     * @param note Tecla a cambiar
+     * @param octava Octava; de 1 a NUM_OCTAVES
+     * @param letter Nova tecla a escoltar
      */
-    public void changeKey(Note n, char letter, int octava){
-        for(int i = 0; i < 24; i++){
-            if(n.equals(keys.get(i).getNote()) && keys.get(i).getOctava() == octava){
-                keys.get(i).setKeyAssocieted(letter);
-                break;
-            }
-        }
+    public void changeKey(Note note, int octava, char letter) {
+        this.getKey(note, octava).setKeyAssocieted(letter);
     }
 
-    public void playNote(char key){
-        for (int i = 0; i < keys.size(); i++) {
-            if(keys.get(i).getKey() == key) keys.get(i).playNote();
-        }
-    }
-
-    public void stopNote(char key){
-        for (int i = 0; i < keys.size(); i++) {
-            if(keys.get(i).getKey() == key) keys.get(i).stopNote();
+    /**
+     * Update all the keys
+     * @param binds Keyboard keys binded to the piano keys
+     */
+    public void loadConfig(char[] binds) {
+        for (int i = 0; i < binds.length; i++) {
+            this.changeKey(Note.getNote(i), Piano.INIT_OCTAVA + (i/12), binds[i]);
         }
     }
 
     @Override
-    public boolean isPressed(Note note) {
-        System.out.println("PRESSED " + note.toString());
-        return true;
+    public void playNote(Note note, int octava) {
+        this.getKey(note, octava).playNote();
     }
 
     @Override
-    public boolean isNotPressed(Note note) {
-        System.out.println("UNPRESSED " + note.toString());
-        return true;
+    public void stopNote(Note note, int octava){
+        this.getKey(note, octava).stopNote();
     }
 
+    //TODO: connectar amb controller
     @Override
-    public boolean keyBoardPressed(char nota) {
-        System.out.println("TIPED " + nota);
-        return true;
-    }
-
-    @Override
-    public boolean keyBoardNotPressed(char nota) {
-        System.out.println("UNTIPED " + nota);
-        return false;
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == record) System.out.println("Connectar amb controller amb PianoRecorder");
     }
 }

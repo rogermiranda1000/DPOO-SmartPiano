@@ -59,9 +59,8 @@ public class PlaylistDDBBDAO implements PlaylistDAO {
             Integer id = this.getPlaylistId(list);
             if (id == null) return false;
 
-            if (this.ddbb.runSentence("DELETE FROM ListSongs WHERE list = ?;", id) == 0) return false;
-            if (this.ddbb.runSentence("DELETE FROM Lists WHERE id = ?;", id) == 0) return false;
-            return true;
+            this.ddbb.runSentence("DELETE FROM ListSongs WHERE list = ?;", id);
+            return (this.ddbb.runSentence("DELETE FROM Lists WHERE id = ?;", id) > 0);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -77,8 +76,8 @@ public class PlaylistDDBBDAO implements PlaylistDAO {
 
     private boolean addSongPlaylist(int id, Song song) {
         try {
-            if (this.ddbb.runSentence("INSERT INTO ListSongs(list, song) VALUES (?, (SELECT Songs.id FROM Songs JOIN Users ON Users.id = Songs.author WHERE Users.username = ? AND Songs.name = ? AND Songs.date = ?) );",
-                    id, song.getArtist(), song.getName(), song.getDate()) == 0) return false;
+            return (this.ddbb.runSentence("INSERT INTO ListSongs(list, song) VALUES (?, (SELECT Songs.id FROM Songs JOIN Users ON Users.id = Songs.author WHERE Users.username = ? AND Songs.name = ? AND Songs.date = ?) );",
+                    id, song.getArtist(), song.getName(), song.getDate()) > 0);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -92,15 +91,34 @@ public class PlaylistDDBBDAO implements PlaylistDAO {
         return this.removeSongPlaylist(id, song);
     }
 
+    /**
+     * Remove the relations between Lists and one Songs
+     * Important: call before removing a Song
+     * @param song Song to remove from the list (if exists)
+     * @return If everythins is OK (true), or something happened (false)
+     */
     @Override
     public boolean removeSongAllPlaylists(Song song) {
-        return true; // TODO
+        try {
+            this.ddbb.runSentence("DELETE FROM ListSongs WHERE song = (SELECT Songs.id FROM Songs JOIN Users ON Songs.author = Users.id WHERE username = ? AND name = ? AND date = ?);",
+                    song.getArtist(), song.getName(), song.getDate());
+            return true;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
     }
 
+    /**
+     * Remove one relation between Lists and one Songs
+     * @param id List ID from the DDBB
+     * @param song Song to remove from the list
+     * @return If the song was deleted (true), or something happened (false)
+     */
     private boolean removeSongPlaylist(int id, Song song) {
         try {
-            if (this.ddbb.runSentence("DELETE FROM ListSongs WHERE list = ? AND song = (SELECT id FROM Songs JOIN Users ON username = ? WHERE name = ? AND date = ?);",
-                    id, song.getArtist(), song.getName(), song.getDate()) == 0) return false;
+            return (this.ddbb.runSentence("DELETE FROM ListSongs WHERE list = ? AND song = (SELECT Songs.id FROM Songs JOIN Users ON Songs.author = Users.id WHERE username = ? AND name = ? AND date = ?);",
+                    id, song.getArtist(), song.getName(), song.getDate()) > 0);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
