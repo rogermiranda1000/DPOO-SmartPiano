@@ -40,7 +40,7 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         if (this.model.login(user, password)) {
             this.login.dispose();
 
-            this.menu = new Menu(this.musicController, this, this, this, this, this, this, this);
+            this.menu = new Menu(this.musicController, this, this, this, this, this, this);
             this.menu.setVisible(true);
             this.menu.loadConfig(this.model.getBinds());
 
@@ -173,13 +173,14 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         this.pianoController.addNote(new SongNote(0,false,(byte)127,(byte)octava,note));
     }
 
+    // TODO review
     @Override
     public char[] keysToArray(ArrayList<Tecla> keys) {
 
         char[] aux = new char[keys.size()];
 
         for (int i = 0; i < keys.size(); i++) {
-            aux[i] = keys.get(i).getKey();
+            //aux[i] = keys.get(i).getKey();
         }
 
         return aux;
