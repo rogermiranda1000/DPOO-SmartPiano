@@ -179,12 +179,11 @@ public class SongDDBBDAO implements SongDAO {
     @Override
     public ArrayList<Song> getAccessibleSongs(String loggedUser) {
         try {
-            // TODO null score?
-            ResultSet rs = this.ddbb.getSentence("SELECT Songs.name, Author.username, Songs.date, COALESCE(AVG(Ranking.points), 0) AS ranking, (MAX(SN.tick)*Songs.tick_length)/(1000 * 1000) AS duration FROM Songs JOIN Users Author ON Songs.author = Author.id JOIN SongNotes SN on Songs.id = SN.song LEFT JOIN Ranking ON Songs.id = Ranking.song WHERE Songs.author = (SELECT Users.id FROM Users JOIN RegisteredUsers RU ON RU.id = Users.id WHERE Users.username = ?) OR Songs.public = true GROUP BY Songs.id;",
+            ResultSet rs = this.ddbb.getSentence("SELECT Songs.name, Author.username, Songs.date, (MAX(SN.tick)*Songs.tick_length)/(1000 * 1000) AS duration FROM Songs JOIN Users Author ON Songs.author = Author.id JOIN SongNotes SN on Songs.id = SN.song LEFT JOIN Listen l on Songs.id = l.song WHERE Songs.author = (SELECT Users.id FROM Users JOIN RegisteredUsers RU ON RU.id = Users.id WHERE Users.username = ?) OR Songs.public = true GROUP BY Songs.id ORDER BY COUNT(DISTINCT l.date) DESC;",
                     loggedUser);
 
             ArrayList<Song> r = new ArrayList<>();
-            while (rs.next()) r.add(new Song(rs.getString(1), rs.getString(2), rs.getDate(3), rs.getFloat(4), rs.getDouble(5)));
+            while (rs.next()) r.add(new Song(rs.getString(1), rs.getString(2), rs.getDate(3), 0.f, rs.getDouble(4)));
             return r;
         } catch (SQLException ex) {
             ex.printStackTrace();
