@@ -1,7 +1,9 @@
 package controller;
 
 import entities.List;
+import entities.Note;
 import entities.Song;
+import entities.SongNote;
 import model.BusinessFacade;
 import persistance.*;
 import view.LogIn;
@@ -9,17 +11,19 @@ import view.Menu;
 
 import java.util.ArrayList;
 
-public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager {
+public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager, TeclaEvent {
     private Menu menu;
     private LogIn login;
     private final BusinessFacade model;
     private final SongDownloader scrapper;
     private final MusicController musicController;
+    private final PianoController pianoController;
 
     public Controller(int scrappingTime, SongDAO songManager, UserDAO userManager, PlaylistDAO playlistManager, ConfigDAO configManager, StatisticsDAO statisticsManager) {
         this.model = new BusinessFacade(songManager, userManager, playlistManager, configManager, statisticsManager);
 
         this.musicController = new MusicController(this);
+        this.pianoController = new PianoController();
 
         this.scrapper = new SongDownloader(this, scrappingTime);
         this.scrapper.start();
@@ -34,8 +38,9 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         if (this.model.login(user, password)) {
             this.login.dispose();
 
-            this.menu = new Menu(this.musicController, this, this, this, this, this);
+            this.menu = new Menu(this.musicController, this, this, this, this, this, this);
             this.menu.setVisible(true);
+            this.menu.loadConfig(this.model.getBinds());
 
             this.musicController.setVolume(this.model.getSongVolume());
         } else this.login.wrongLogin();
@@ -154,4 +159,15 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         return new Song[0];
     }
 
+
+    // TODO
+    @Override
+    public void isPressed(Note note, int octava) {
+        this.pianoController.addNote(new SongNote(0,true,(byte)127,(byte)octava,note));
+    }
+
+    @Override
+    public void isNotPressed(Note note, int octava) {
+        this.pianoController.addNote(new SongNote(0,false,(byte)127,(byte)octava,note));
+    }
 }
