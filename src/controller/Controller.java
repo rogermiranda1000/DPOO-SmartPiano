@@ -154,6 +154,12 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         return new int[0];
     }
 
+    @Override
+    public Song[] getTop5(int[] plays) {
+        return new Song[0];
+    }
+
+
     // TODO
     @Override
     public void isPressed(Note note, int octava) {
