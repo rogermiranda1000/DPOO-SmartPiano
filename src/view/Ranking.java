@@ -38,7 +38,7 @@ public class Ranking extends JPanel {
         this.setVisible(true);
 
     }
-    public void reloadGraphs(){
+    private void reloadGraphs(){
         this.remove(songsGraph);
         songsGraph = new GraphDrawer(this.event.getSongsStadistics(), "Listened Songs per hour", new Color(0xFF0000));
         this.add(songsGraph, BorderLayout.WEST);
