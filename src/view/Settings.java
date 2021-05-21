@@ -13,18 +13,16 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
-public class Settings extends JPanel implements ActionListener, ChangeListener, KeyChanger, DeleteUserNotifier {
+public class Settings extends JPanel implements ActionListener, ChangeListener, KeyChanger, DeleteUserNotifier, ConfigLoadNotifier {
     private JSlider volumePiano, volumeSong;
     private JLabel volumePianoTxt, volumeSongTxt;
+    private JLabel userName, userEmail;
     private JButton deleteButton, saveButton;
     private final UpdateConfigEvent updateEvent;
-    private final ArrayList<ChangeKeyButton> keyBinders;
 
     public Settings(UpdateConfigEvent updateEvent) {
         this.updateEvent = updateEvent;
-        this.keyBinders = new ArrayList<>(KeyboardConstants.NUM_OCTAVES*12);
 
         this.setBackground(ColorConstants.BACKGROUND.getColor());
 
@@ -91,25 +89,17 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
             e.printStackTrace();
         }
 
-        //TODO: Connectar amb BBDD per aconseguir el nom, mail...
-        String[] labelsInfo = {"[USER NAME]", "[EMAIL]", "[DATE]", "[POINTS]"};
+        this.userName = new JLabel();
+        information.add(this.userName);
 
-        for (int i = 0; i < labelsInfo.length; i++) {
-            JPanel temp = new JPanel();
-            temp.setBackground(ColorConstants.BACKGROUND.getColor());
-            temp.add(new JLabel(labelsInfo[i]), BorderLayout.CENTER);
-            information.add(temp, BorderLayout.CENTER);
-        }
+        this.userEmail = new JLabel();
+        information.add(this.userEmail);
 
         deleteButton = new GenericButton("Delete profile", new Font("Arial", Font.PLAIN, 15));
         deleteButton.addActionListener(this);
         deleteButton.setBackground(ColorConstants.RED_BUTTON.getColor());
+        information.add(deleteButton);
 
-        JPanel deleteP = new JPanel();
-        deleteP.setBackground(ColorConstants.BACKGROUND.getColor());
-        deleteP.add(deleteButton);
-
-        information.add(deleteP);
         information.setBackground(ColorConstants.BACKGROUND.getColor());
 
         panel.add(information, BorderLayout.CENTER);
@@ -146,11 +136,7 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
             octave.setFont(new Font("Arial", Font.BOLD, 15));
             panel.add(octave);
 
-            for (int i = 0; i < 12; i++) {
-                ChangeKeyButton current = new ChangeKeyButton(this, octava, Note.getNote(i));
-                this.keyBinders.add(current);
-                panel.add(current);
-            }
+            for (int i = 0; i < 12; i++) panel.add(new ChangeKeyButton(this, octava, Note.getNote(i)));
 
             keys.add(panel);
         }
@@ -214,6 +200,18 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
     @Override
     public void userNotDeleted() {
         JOptionPane.showMessageDialog(this, "This password it's not the current user's one!","Wrong password!", JOptionPane.ERROR_MESSAGE);
+    }
+
+    @Override
+    public void setConfig(float songVolume, float pianoVolume) {
+        this.volumePiano.setValue((int)(pianoVolume*100.f));
+        this.volumeSong.setValue((int)(songVolume*100.f));
+    }
+
+    @Override
+    public void setUserInformation(String name, String email) {
+        this.userName.setText(name);
+        this.userEmail.setText(email);
     }
 }
 
