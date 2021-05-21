@@ -1,5 +1,6 @@
 package controller;
 
+import entities.Note;
 import entities.Song;
 import entities.SongNote;
 import model.NotePlayer;
@@ -47,8 +48,17 @@ public class PianoController implements SongValidator {
         this.pianoPresser = sv;
     }
 
+    public void closeCurrentSong() {
+        this.songPlayer.closePlayer();
+
+        // release all notes from piano
+        for (byte octava = PianoController.OCTAVA_INICIAL; octava < PianoController.OCTAVA_INICIAL+PianoController.NUM_OCTAVES; octava++) {
+            for (Note n : Note.values()) this.pianoPresser.requestNote(new SongNote(0, false, (byte) 0, octava, n));
+        }
+    }
+
     public void playSong(Song s) {
-        if (this.songPlayer != null) this.songPlayer.closePlayer();
+        if (this.songPlayer != null) this.closeCurrentSong();
 
         this.songPlayer = new NotePlayer(s, this.volume, this);
         this.songPlayer.start();
