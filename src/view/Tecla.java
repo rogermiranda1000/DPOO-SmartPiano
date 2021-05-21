@@ -29,7 +29,10 @@ public class Tecla extends JPanel implements MouseListener, KeyListener {
 
         this.setPreferredSize(new Dimension(40,200));
         this.setLayout(new BorderLayout());
-        this.add(new JLabel(note.toString()), BorderLayout.SOUTH);
+
+        JLabel jL = new JLabel(note.toString());
+        jL.setForeground(isBlack ? Color.WHITE : Color.BLACK);
+        this.add(jL, BorderLayout.SOUTH);
 
         this.color = (isBlack ? Color.BLACK : Color.WHITE);
         this.setBackground(this.color);

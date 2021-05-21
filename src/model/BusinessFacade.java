@@ -1,14 +1,16 @@
 package model;
 
+import entities.*;
 import entities.Config;
-import entities.List;
-import entities.Song;
-import entities.User;
 import persistance.*;
+import view.Tecla;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class BusinessFacade {
+    private static final int INIT_OCTAVA = 3;
+
     private final SongDAO songManager;
     private final UserDAO userManager;
     private final PlaylistDAO playlistManager;
@@ -97,12 +99,16 @@ public class BusinessFacade {
     }
 
     /**
-     * Afegeix una canço som autor RegisteredUser
-     * @param song Canço a afegir
-     * @return Si s'ha afegit (true) o hi ha hagut un error (false)
+     * Adds a RegisteredUser's song
+     * @param song Song to add
+     * @return If the song was added (true), or not (false)
      */
     public boolean addSong(Song song) {
+        if (this.loggedUser == null) return false;
+
         //if (!this.userManager.existsUser(song.getArtist())) return false; // no hauria de pasar mai
+        song.setAuthor(this.loggedUser.getName());
+        if (this.existsSong(song)) return false;
         return this.songManager.addSong(song);
     }
 
@@ -126,10 +132,12 @@ public class BusinessFacade {
      */
     public boolean deleteSong(Song song) {
         if (this.loggedUser == null) return false; // si no hi ha usuari loguejat, no pot eliminar una canço
-        if (!song.getArtist().equals(this.loggedUser.getName())) return false; // TODO comprobar si l'usuari és virtual amb el mateix nom
+        Boolean isAuthor = this.songManager.isAuthor(song, this.loggedUser.getName());
+        if (isAuthor == null || !isAuthor) return false;
 
         // elimina les cançons
         if (!this.playlistManager.removeSongAllPlaylists(song)) return false;
+        if (!this.statisticsManager.deleteStatistics(song)) return false;
         return this.songManager.deleteSong(song);
     }
 
@@ -141,8 +149,16 @@ public class BusinessFacade {
         return this.userManager.addUser(new User(nick, email), password);
     }
 
-    public boolean deleteUser(String nick, String email, String password) {
-        return this.userManager.deleteUser(new User(nick, email), password);
+    public boolean deleteLoggedUser(String password) {
+        if (this.loggedUser == null) return false;
+
+        if (!this.configManager.deleteUserConfig(this.loggedUser.getName())) return false;
+        if (!this.statisticsManager.deletePlayerStatistics(this.loggedUser.getName())) return false;
+        for (List l : this.getPlaylists()) {
+            if (!this.playlistManager.removePlaylist(l)) return false;
+        }
+        if (!this.songManager.deleteUserSongs(this.loggedUser.getName())) return false;
+        return this.userManager.deleteUser(this.loggedUser, password);
     }
 
     /**
@@ -159,13 +175,19 @@ public class BusinessFacade {
     public void logout() {
         this.loggedUser = null;
         this.loggedUserPlaylists = null;
+        this.loggedUserConfig = null;
     }
 
     public float getSongVolume() {
-        if (this.loggedUser == null) return 1.f;
         Config c = this.getConfig();
         if (c == null) return 1.f;
         return c.getVolumeSong();
+    }
+
+    public float getPianoVolume() {
+        Config c = this.getConfig();
+        if (c == null) return 1.f;
+        return c.getVolumePiano();
     }
 
     public boolean addPlaylist(String list) {
@@ -224,5 +246,41 @@ public class BusinessFacade {
         Config c = this.getConfig();
         if (c == null) return null;
         return c.getNotesBind();
+    }
+
+    public boolean setKeyBinder(Note key, byte octava, char newBind) {
+        if (this.loggedUser == null) return false;
+
+        char[] bind = this.loggedUserConfig.getNotesBind();
+        bind[(octava-BusinessFacade.INIT_OCTAVA)*12 + key.ordinal()] = newBind;
+        this.loggedUserConfig.setNoteBind(bind); // tecnicament va per referencia; no faria falta
+        // TODO set key binds in DDBB
+        return true;
+    }
+
+    public boolean setVolumePiano(float volume) {
+        if (this.loggedUser == null) return false;
+        if (!this.configManager.setVolumePiano(this.loggedUser.getName(), volume)) return false;
+        this.loggedUserConfig.setVolumePiano(volume);
+        return true;
+    }
+
+    public boolean setVolumeSong(float volume) {
+        if (this.loggedUser == null) return false;
+        if (!this.configManager.setVolumeSong(this.loggedUser.getName(), volume)) return false;
+        this.loggedUserConfig.setVolumeSong(volume);
+        return true;
+    }
+
+    public int[] getSongStatistics() {
+        return this.statisticsManager.getSongStatistics();
+    }
+
+    public int[] getTimeStatistics() {
+        return this.statisticsManager.getTimeStatistics();
+    }
+
+    public Song[] getTop5(int[] plays) {
+        return this.statisticsManager.getTop5(plays);
     }
 }

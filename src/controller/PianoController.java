@@ -1,21 +1,23 @@
 package controller;
 
+import entities.Song;
 import entities.SongNote;
 import model.NotePlayer;
 
 import java.util.ArrayList;
 
-public class PianoController {
+public class PianoController implements SongValidator {
     /**
      * us / tick
      * tick_length [us/tick] * 1 [tick] = 10^3 [us]   (cada tick son 1ms)
      */
-    private static final double TICK_LENGTH = 1000;
+    public static final double TICK_LENGTH = 1000;
     private static final int OCTAVA_INICIAL = 3;
     private static final int NUM_OCTAVES = 2;
     private boolean songSilenced;
     private boolean recording;
     private final NotePlayer notePlayer;
+    private NotePlayer songPlayer;
     private ArrayList<SongNote> songNotes;
     private long startTime;
 
@@ -27,10 +29,22 @@ public class PianoController {
     public PianoController() {
         this.songSilenced = false;
         this.recording = false;
+
+        /**
+         * Single keys player
+         */
         this.notePlayer = new NotePlayer();
+        this.songPlayer = null;
         this.songNotes = null;
         this.volume = 1;
         this.notePlayer.setVolume(this.volume);
+    }
+
+    public void playSong(Song s) {
+        if (this.songPlayer != null) this.songPlayer.closePlayer();
+
+        this.songPlayer = new NotePlayer(s, this.volume, this);
+        this.songPlayer.start();
     }
 
     /**
@@ -80,7 +94,8 @@ public class PianoController {
      * Plays a note from the song
      * @param note Note
      */
-    public void playSongNote(SongNote note) {
+    @Override
+    public void requestNote(SongNote note) {
         if (this.songSilenced && (note.getOctave() >= PianoController.OCTAVA_INICIAL && note.getOctave() < (PianoController.OCTAVA_INICIAL + PianoController.NUM_OCTAVES))) return;
         this.notePlayer.executeNote(note);
     }

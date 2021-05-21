@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMenuNotifier, PlaylistMenuNotifier, TeclaNotifier {
+public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, PlaylistMenuNotifier, TeclaNotifier, DeleteUserNotifier {
     public static final int HEIGHT = 900;
     public static final int WIDTH = 1600;
     private JButton songsButton, playlistButton, pianoButton, rankingButton, settingsButton, exitButton;
@@ -21,8 +21,9 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
     private final Songs songs;
     private final Playlist playlist;
     private final Piano piano;
+    private final Settings settings;
 
-    public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE, TeclaEvent keyE) {
+    public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE, TeclaEvent keyE, UpdateConfigEvent configE, RecordingEvent recordE, SongRequestPiano sRP) {
         this.event = menuE;
 
         this.setTitle("Piano TIME!");
@@ -42,15 +43,16 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
 
         // Adding layouts
         this.playlist = new Playlist(playlistE);
-        this.songs = new Songs(songsE, songRequestE);
+        this.songs = new Songs(songsE, songRequestE, sRP);
         mainContent = new JPanel(new CardLayout());
         mainContent.add(this.songs, "songs");
         mainContent.add(this.playlist, "playlists");
 
-        piano = new Piano(keyE);
+        piano = new Piano(keyE, recordE);
         mainContent.add(piano, "piano");
         mainContent.add(new Ranking(rankingE), "ranking");
-        mainContent.add(new Settings(this), "settings");
+        this.settings = new Settings(configE);
+        mainContent.add(this.settings, "settings");
         this.add(mainContent);
         cl = (CardLayout) (mainContent.getLayout());
         /* DEFAULT VIEW */
@@ -127,6 +129,10 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
         settingsButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
     }
 
+    private void exitMessage() {
+        JOptionPane.showMessageDialog(this, "The user has logout.", "User logout", JOptionPane.INFORMATION_MESSAGE);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         /* TOP BAR BUTTONS */
@@ -161,10 +167,14 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
             resetButtonsColors();
             settingsButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == exitButton) {
+            exitMessage();
             this.event.exitSession();
         }
     }
 
+    public void loadConfig(char[] config) {
+        this.piano.loadConfig(config);
+    }
 
     @Override
     public void songDeleted(Song song) {
@@ -216,10 +226,6 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
         this.playlist.songNotDeletedFromPlaylist();
     }
 
-    public void loadConfig(char[] config) {
-        this.piano.loadConfig(config);
-    }
-
     @Override
     public void playNote(Note note, int octava) {
         this.piano.playNote(note, octava);
@@ -231,30 +237,12 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
     }
 
     @Override
-    public void changeKey(Note n, char newLetter, int octava) {
-        this.piano.changeKey(n, octava, newLetter);
+    public void userDeleted() {
+        this.settings.userDeleted();
     }
 
-
-    /*
     @Override
-    public boolean saveKeyNotes(char[] chars) {
-        return false;
+    public void userNotDeleted() {
+        this.settings.userNotDeleted();
     }
-
-    //TODO: connectar amb BBDD.
-    @Override
-    public boolean saveVolumes(float pianoVolume, float songVolume) {
-        return false;
-    }
-
-
-    //TODO: connectar amb BBDD.
-    //Sé que aquesta funció és molt tonta, però és la manera que se m'ha ocurregut, demano disculpes per possibles atacs de panic al veure aquesta funció. - David
-    @Override
-    public String sendSignal(String type) {
-        return type;
-    }
-    */
-
 }
