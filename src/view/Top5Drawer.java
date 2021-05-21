@@ -7,11 +7,12 @@ import javax.swing.*;
 
 
 public class Top5Drawer extends JPanel {
+    private static final int NUM_SONGS = 5;
 
     private final String[] columnID= {"#","NAME","ARTIST", "# REPRODUCTIONS"};
     private final Song[] topSongs;
-    private int[] numRep = new int[5];
-    private final String[][] tableData = new String[5][4];
+    private int[] numRep = new int[NUM_SONGS];
+    private final String[][] tableData = new String[NUM_SONGS][4];
 
 
     public Top5Drawer (RankingEvent rankingE) {
@@ -29,7 +30,8 @@ public class Top5Drawer extends JPanel {
     }
 
     private void dataFormat(){
-        for(int y = 0; y < 5/*topSongs.length*/; y++){
+        for(int y = 0; y < NUM_SONGS; y++){
+            if (topSongs[y] == null) break;
             tableData[y][0] = '#' + String.valueOf(y + 1);
             tableData[y][1] = topSongs[y].getName();
             tableData[y][2] = topSongs[y].getArtist();
