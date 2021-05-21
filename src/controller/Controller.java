@@ -1,5 +1,6 @@
 package controller;
 
+import entities.Config;
 import entities.List;
 import entities.Note;
 import entities.Song;
@@ -9,11 +10,11 @@ import persistance.*;
 import view.LogIn;
 import view.Menu;
 import view.Tecla;
-import view.UpdateKeys;
+import view.UpdateConfigEvent;
 
 import java.util.ArrayList;
 
-public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager, UpdateKeys, TeclaEvent {
+public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager, UpdateConfigEvent, TeclaEvent {
     private Menu menu;
     private LogIn login;
     private final BusinessFacade model;
@@ -40,7 +41,7 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         if (this.model.login(user, password)) {
             this.login.dispose();
 
-            this.menu = new Menu(this.musicController, this, this, this, this, this, this);
+            this.menu = new Menu(this.musicController, this, this, this, this, this, this, this);
             this.menu.setVisible(true);
             this.menu.loadConfig(this.model.getBinds());
 
@@ -171,17 +172,19 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         this.pianoController.addNote(new SongNote(0,false,(byte)127,(byte)octava,note));
     }
 
-    // TODO review
     @Override
-    public char[] keysToArray(ArrayList<Tecla> keys) {
+    public void updateSongVolume(float volume) {
+        this.model.setVolumeSong(volume);
+    }
 
-        char[] aux = new char[keys.size()];
+    @Override
+    public void updatePianoVolume(float volume) {
+        this.model.setVolumePiano(volume);
+    }
 
-        for (int i = 0; i < keys.size(); i++) {
-            //aux[i] = keys.get(i).getKey();
-        }
-
-        return aux;
-
+    @Override
+    public void updateKeyBinder(Note key, byte octava, char newBind) {
+        if (!this.model.setKeyBinder(key, octava, newBind)) return;
+        this.menu.loadConfig(this.model.getBinds());
     }
 }

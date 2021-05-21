@@ -1,5 +1,6 @@
 package view;
 
+import entities.Config;
 import entities.Note;
 
 import javax.imageio.ImageIO;
@@ -9,31 +10,38 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Settings extends JPanel implements ActionListener, ChangeListener {
-    private JSlider volumePiano, volumeSong;
-    private JLabel volumePianoTxt, volumeSongTxt;
-    private JButton deleteButton, saveButton;
-    private final ArrayList<JButton> notes = new ArrayList<>();
-
-
-    private final KeyChanger kC;
-
-    private static final int INIT_OCTAVA = 3; // primera octava del teclat
+public class Settings extends JPanel implements ActionListener, ChangeListener, KeyChanger {
+    /**
+     * First key octave
+     */
+    private static final int INIT_OCTAVA = 3;
+    /**
+     * Num of octaves shown
+     */
+    private static final int NUM_OCTAVA = 2;
     private static final int HEIGHT = 600;
     private static final int WIDTH = 1200;
 
-    public Settings(KeyChanger kC) {
-        this.kC = kC;
+    private JSlider volumePiano, volumeSong;
+    private JLabel volumePianoTxt, volumeSongTxt;
+    private JButton deleteButton, saveButton;
+    private final UpdateConfigEvent updateEvent;
+    private final ArrayList<ChangeKeyButton> keyBinders;
+
+    public Settings(UpdateConfigEvent updateEvent) {
+        this.updateEvent = updateEvent;
+        this.keyBinders = new ArrayList<>(Settings.NUM_OCTAVA*12);
+
         this.setBackground(ColorConstants.BACKGROUND.getColor());
 
         this.add(settingsView());
         this.setVisible(true);
-
     }
 
     private JPanel settingsView() {
@@ -42,7 +50,6 @@ public class Settings extends JPanel implements ActionListener, ChangeListener {
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         JPanel panel = new JPanel();
 
-        //ABANS ERA 1000,500
         panel.setMinimumSize(new Dimension(800, 300));
         panel.setSize(new Dimension(800, 300));
         panel.setPreferredSize(new Dimension(800, 300));
@@ -138,59 +145,44 @@ public class Settings extends JPanel implements ActionListener, ChangeListener {
     }
 
     private JPanel keysConfig() {
-        JPanel keys = new JPanel(), first = new JPanel(), second = new JPanel(), title = new JPanel();
+        JPanel keys = new JPanel(), title = new JPanel();
 
         keys.setLayout(new BoxLayout(keys, BoxLayout.Y_AXIS));
         keys.setBackground(ColorConstants.BACKGROUND.getColor());
 
-        String[] noteNames = {"Do", "DoX", "Re", "ReX", "Mi", "Fa", "FaX", "Sol", "SolX", "La", "LaX", "Si"};
+        for (byte octava = Settings.INIT_OCTAVA; octava < Settings.NUM_OCTAVA + Settings.INIT_OCTAVA; octava++) {
+            JPanel panel = new JPanel();
+            panel.setBackground(ColorConstants.BACKGROUND.getColor());
 
-        boolean labelsDone = true;
+            JLabel octave = new JLabel("[" + octava + "]");
+            octave.setFont(new Font("Arial", Font.BOLD, 15));
+            panel.add(octave);
 
-        JLabel firstOctave = new JLabel("[1]");
-        firstOctave.setFont(new Font("Arial", Font.BOLD, 15));
-        first.add(firstOctave);
-
-        for (int i = 0; i < noteNames.length * 2; i++) {
-            notes.add(new ChangeKeyButton(kC, Settings.INIT_OCTAVA + (i / 12), Note.getNote(i)));
-
-            if(1 + (i / 12) == 1) {
-                first.add(notes.get(i));
+            for (int i = 0; i < 12; i++) {
+                ChangeKeyButton current = new ChangeKeyButton(this, octava, Note.getNote(i));
+                this.keyBinders.add(current);
+                panel.add(current);
             }
-            if(1 + (i / 12) == 2){
-                if(labelsDone){
-                    JLabel secondOctave = new JLabel("[2]");
-                    secondOctave.setFont(new Font("Arial", Font.BOLD, 15));
-                    second.add(secondOctave);
 
-                    labelsDone = false;
-                }
-                second.add(notes.get(i));
-            }
+            keys.add(panel);
         }
-
-        first.setBackground(ColorConstants.BACKGROUND.getColor());
-        second.setBackground(ColorConstants.BACKGROUND.getColor());
 
         Label keysConfig = new Label("OCTAVES KEYS CONFIGURATION");
         keysConfig.setFont(new Font("Arial", Font.BOLD, 20));
         title.setBackground(ColorConstants.BACKGROUND.getColor());
         title.add(keysConfig);
         keys.add(title);
-        keys.add(first);
-        keys.add(second);
 
         return keys;
     }
 
-    private void pressKey(String note) {
-        JOptionPane.showMessageDialog(this, "Press a key to set up " + note + "." +
-                "\nOr press OK to cancel.", "Key recorder", JOptionPane.PLAIN_MESSAGE);
-    }
-
+    /**
+     * Save the slider's current value
+     */
     private void saveConfig() {
+        this.updateEvent.updatePianoVolume(this.getPianoVolume());
+        this.updateEvent.updateSongVolume(this.getSongVolume());
         JOptionPane.showMessageDialog(this, "Changes on configuration saved.","Configuration saved!",JOptionPane.INFORMATION_MESSAGE);
-        //uK.
     }
 
     private String deleteUser() {
@@ -206,27 +198,6 @@ public class Settings extends JPanel implements ActionListener, ChangeListener {
         return this.volumeSong.getValue();
     }
 
-    private JPanel keysView(){
-        JPanel content = new JPanel();
-        saveButton = new GenericButton("Save changes!", null);
-        saveButton.addActionListener(this);
-        content.add(saveButton, BorderLayout.CENTER);
-        return content;
-    }
-
-    private void changeLetter(Note note, char letter, int octava){
-        kC.changeKey(note, letter, octava);
-    }
-
-    private void addChangeListener(Settings settings) {
-        System.out.println("CANVI " + settings.getName());
-    }
-
-    public JPanel options() {
-        return null;
-    }
-
-
     @Override
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() == volumePiano) volumePianoTxt.setText(Integer.toString(volumePiano.getValue()));
@@ -239,8 +210,13 @@ public class Settings extends JPanel implements ActionListener, ChangeListener {
             saveConfig();
         } else if (e.getSource() == deleteButton) {
             String password = deleteUser();
-            //passar la pass al controller i eliminar
+            // TODO passar la pass al controller i eliminar
         }
+    }
+
+    @Override
+    public void changeKey(Note n, byte octava, char newLetter) {
+        this.updateEvent.updateKeyBinder(n, octava, newLetter);
     }
 }
 

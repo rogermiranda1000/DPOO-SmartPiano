@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMenuNotifier, PlaylistMenuNotifier, TeclaNotifier {
+public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, PlaylistMenuNotifier, TeclaNotifier {
     public static final int HEIGHT = 900;
     public static final int WIDTH = 1600;
     private JButton songsButton, playlistButton, pianoButton, rankingButton, settingsButton, exitButton;
@@ -22,7 +22,7 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
     private final Playlist playlist;
     private final Piano piano;
 
-    public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE, TeclaEvent keyE) {
+    public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE, TeclaEvent keyE, UpdateConfigEvent configE) {
         this.event = menuE;
 
         this.setTitle("Piano TIME!");
@@ -50,7 +50,7 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
         piano = new Piano(keyE);
         mainContent.add(piano, "piano");
         mainContent.add(new Ranking(rankingE), "ranking");
-        mainContent.add(new Settings(this), "settings");
+        mainContent.add(new Settings(configE), "settings");
         this.add(mainContent);
         cl = (CardLayout) (mainContent.getLayout());
         /* DEFAULT VIEW */
@@ -170,6 +170,9 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
         }
     }
 
+    public void loadConfig(char[] config) {
+        this.piano.loadConfig(config);
+    }
 
     @Override
     public void songDeleted(Song song) {
@@ -221,10 +224,6 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
         this.playlist.songNotDeletedFromPlaylist();
     }
 
-    public void loadConfig(char[] config) {
-        this.piano.loadConfig(config);
-    }
-
     @Override
     public void playNote(Note note, int octava) {
         this.piano.playNote(note, octava);
@@ -234,34 +233,4 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
     public void stopNote(Note note, int octava) {
         this.piano.stopNote(note, octava);
     }
-
-    @Override
-    public void changeKey(Note n, char newLetter, int octava) {
-        piano.changeKey(n, octava, newLetter);
-        System.out.println("Objecte menu [Tecla: " + newLetter + ", Nota: " + n.toString()
-                          + ", Octava: " + octava + "]");
-    }
-
-
-    /*
-    @Override
-    public boolean saveKeyNotes(char[] chars) {
-        return false;
-    }
-
-    //TODO: connectar amb BBDD.
-    @Override
-    public boolean saveVolumes(float pianoVolume, float songVolume) {
-        return false;
-    }
-
-
-    //TODO: connectar amb BBDD.
-    //Sé que aquesta funció és molt tonta, però és la manera que se m'ha ocurregut, demano disculpes per possibles atacs de panic al veure aquesta funció. - David
-    @Override
-    public String sendSignal(String type) {
-        return type;
-    }
-    */
-
 }
