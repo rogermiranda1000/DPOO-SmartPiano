@@ -88,7 +88,12 @@ public class Piano extends JPanel implements ActionListener, TeclaNotifier {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == record) {
+
+            //TODO: centrar OK
+            //TODO: arreglar JTextArea (mida normal)
+            //TODO: label que indiqui que s'ha d'introduïr
             JDialog jD = new JDialog();
+            jD.setSize(new Dimension(200,200));
             jD.add(new AddSongOptionPane());
             jD.setVisible(true);
             //JOptionPane.showMessageDialog(this, new AddSongOptionPane(),"Save song",JOptionPane.DEFAULT_OPTION);
