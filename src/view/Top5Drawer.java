@@ -10,7 +10,7 @@ public class Top5Drawer extends JPanel {
 
     private final String[] columnID= {"#","NAME","ARTIST", "# REPRODUCTIONS"};
     private final Song[] topSongs;
-    public int[] numRep = new int[5];
+    private int[] numRep = new int[5];
     private final String[][] tableData = new String[5][4];
 
 
