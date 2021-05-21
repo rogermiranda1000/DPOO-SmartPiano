@@ -3,14 +3,19 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.time.LocalTime;
-import java.util.Date;
+
 
 
 class GraphDrawer extends JPanel {
+
+    private static final int GRAPH_HIGHT = 450;
+    private static final int GRAPH_WIDTH = 700;
+    private static final int INITIAL_POINT_X = 50;
+    private static final int INITIAL_POINT_Y = 20;
+
     protected final int[] yCoords;
-    protected final int startX = 50;
-    protected final int startY = 20;
+    protected final int startX = INITIAL_POINT_X;
+    protected final int startY = INITIAL_POINT_Y;
     protected int endX;
     protected int endY;
     protected int prevX;
@@ -34,18 +39,16 @@ class GraphDrawer extends JPanel {
 
         int topElementY = GetMax(yCoords);
         int numHoritzontalLines = numSections(topElementY);
-        int hour = java.time.LocalTime.now().getHour();
-
-
-        endX = this.getHeight() - 50;
-        endY = this.getWidth() - 160;
+        int hour = yCoords[yCoords.length-1];
+        endX = GRAPH_WIDTH;
+        endY = GRAPH_HIGHT;
         prevX = startX;
         prevY = endY;
         unitX = (endX - startX) / 23;
         unitY = (endY - startY) / numHoritzontalLines;
 
 
-        g2d.setFont(new Font("TimesRoman", Font.BOLD, 14));
+        g2d.setFont(new Font("TimesRoman", Font.PLAIN, 14));
 
         //Dibuix de les lineas verticals
         for (int i = startX; i <= endX; i += unitX) {
@@ -53,7 +56,7 @@ class GraphDrawer extends JPanel {
             g2d.drawLine(i, startY, i, endY);
             g2d.setColor(Color.BLACK);
             g2d.rotate(-0.78, i, endY + 30);
-            g2d.drawString(Integer.toString(hour) + 'h', i - 7, endY + 30);
+            g2d.drawString(hour + ":00", i - 32, endY + 30);
             g2d.setColor(Color.GRAY);
             g2d.rotate(0.78, i, endY + 30);
             hour++;
@@ -72,31 +75,27 @@ class GraphDrawer extends JPanel {
             count++;
         }
 
-
-
-        boolean firstElement = true;
-        g2d.setColor(lineColor);
-        g2d.setStroke(new BasicStroke(4));
-        prevY = endY - (yCoords[0] * unitY * numHoritzontalLines / topElementY);
-        for (int y : yCoords) {
-            if (firstElement) {
-                firstElement = false;
-            } else {
-                g2d.drawLine(prevX, prevY, prevX += unitX, prevY = endY - (y * unitY * numHoritzontalLines / topElementY));
-            }
-        }
-
-        //Drowing the axis of our graph
-         g2d.setColor(Color.BLACK);
-        g2d.drawString(name, endX / 2 + 50, endY + 105);
-        g2d.setColor(lineColor);
-        g2d.drawLine(endX / 2 - 50, endY + 100, endX / 2 + 40, endY + 100);
-
-
         g2d.setColor(Color.BLUE);
         g2d.setStroke(new BasicStroke(2));
         g2d.drawLine(startX, startY, startX, endY);
         g2d.drawLine(startX, endY, endX, endY);
+
+
+        g2d.setColor(lineColor);
+        g2d.setStroke(new BasicStroke(4));
+        prevY = endY - (yCoords[0] * unitY * numHoritzontalLines / topElementY);
+        for (int i = 1; i < yCoords.length - 1; i++) {
+            g2d.drawLine(prevX, prevY, prevX += unitX, prevY = endY - (yCoords[i] * unitY * numHoritzontalLines / topElementY));
+        }
+
+
+         g2d.setColor(Color.BLACK);
+        g2d.drawString(name, 205 , endY + 105);
+        g2d.setColor(lineColor);
+        g2d.drawLine( 150, endY + 100, 200, endY + 100);
+
+
+
     }
 
     private int numSections(int x) {
