@@ -14,22 +14,37 @@ import java.awt.event.ActionListener;
 public class Piano extends JPanel implements ActionListener, PianoNotifier {
     private static final String TEXT_START_RECORDING = "Start recording";
     private static final String TEXT_SAVE_RECORDING = "Save recording";
+    private static final String TEXT_MUTE_PIANO = "Mute shown octaves";
+    private static final String TEXT_UNMUTE_PIANO = "Unmute shown octaves";
 
     public static final boolean IS_BLACK = true;
     public static final boolean IS_WHITE = false;
 
     private final Tecla[] keys;
     private final JButton record;
+    private final JButton mute;
     private final RecordingEvent recordingEvent;
 
     public Piano(TeclaEvent event, RecordingEvent recording) {
         this.keys = new Tecla[12 * KeyboardConstants.NUM_OCTAVES];
         this.recordingEvent = recording;
 
+        JPanel btn = new JPanel();
+        btn.setLayout(new BoxLayout(btn, BoxLayout.PAGE_AXIS));
+        btn.setBackground(ColorConstants.BACKGROUND.getColor());
+
         record = new JButton(Piano.TEXT_START_RECORDING);
         record.addActionListener(this);
         record.setFocusable(false);
-        this.add(record, BorderLayout.NORTH);
+        btn.add(record);
+
+        this.mute = new JButton(Piano.TEXT_MUTE_PIANO);
+        this.mute.addActionListener(this);
+        this.mute.setFocusable(false);
+        btn.add(this.mute);
+
+        this.add(btn);
+
         this.setBackground(ColorConstants.BACKGROUND.getColor());
 
         // draw piano
@@ -39,7 +54,7 @@ public class Piano extends JPanel implements ActionListener, PianoNotifier {
 
             Tecla temp = new Tecla(event, Note.getNote(i % 12), (nota.charAt(nota.length() - 1) == 'X') ? IS_BLACK : IS_WHITE, octava).setKeyAssocieted('t');
             this.keys[i] = temp;
-            this.add(temp, BorderLayout.SOUTH);
+            this.add(temp);
             this.addKeyListener(temp); // per alguna rao li hem d'afegir el KeyListener (potser culpa del request focus?)
         }
     }
