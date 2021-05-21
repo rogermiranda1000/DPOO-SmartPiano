@@ -230,4 +230,16 @@ public class BusinessFacade {
         if (c == null) return null;
         return c.getNotesBind();
     }
+
+    public int[] getSongStatistics() {
+        return this.statisticsManager.getSongStatistics();
+    }
+
+    public int[] getTimeStatistics() {
+        return this.statisticsManager.getTimeStatistics();
+    }
+
+    public Song[] getTop5(int[] plays) {
+        return this.statisticsManager.getTop5(plays);
+    }
 }
