@@ -23,7 +23,7 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
     private final Piano piano;
     private final Settings settings;
 
-    public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE, TeclaEvent keyE, UpdateConfigEvent configE) {
+    public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE, TeclaEvent keyE, UpdateConfigEvent configE, RecordingEvent recordE) {
         this.event = menuE;
 
         this.setTitle("Piano TIME!");
@@ -48,7 +48,7 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
         mainContent.add(this.songs, "songs");
         mainContent.add(this.playlist, "playlists");
 
-        piano = new Piano(keyE);
+        piano = new Piano(keyE, recordE);
         mainContent.add(piano, "piano");
         mainContent.add(new Ranking(rankingE), "ranking");
         this.settings = new Settings(configE);

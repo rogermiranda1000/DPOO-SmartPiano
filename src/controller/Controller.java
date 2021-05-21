@@ -11,8 +11,9 @@ import view.Menu;
 import view.UpdateConfigEvent;
 
 import java.util.ArrayList;
+import java.util.Date;
 
-public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager, UpdateConfigEvent, TeclaEvent {
+public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager, TeclaEvent, RecordingEvent {
     private Menu menu;
     private LogIn login;
     private final BusinessFacade model;
@@ -131,6 +132,7 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         this.menu.dispose();
         this.login = new LogIn(this);
         this.login.setVisible(true);
+        // TODO es lia si s'estava gravant?
     }
 
     @Override
@@ -168,6 +170,21 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     @Override
     public void isNotPressed(Note note, int octava) {
         this.pianoController.addNote(new SongNote(0,false,(byte)127,(byte)octava,note));
+    }
+
+    @Override
+    public void startRecording(boolean recording) {
+        if (recording) this.pianoController.startRecording();
+        else {
+            this.pianoController.stopRecording();
+            // TODO request song name (or if discarded)
+            this.model.addSong(new Song("test", PianoController.TICK_LENGTH, true, this.pianoController.getSongNotes())); // TODO tmp
+        }
+    }
+
+    @Override
+    public void saveRecordedSong(String name, boolean isPublic) {
+        if (!this.model.addSong(new Song(name, PianoController.TICK_LENGTH, isPublic, this.pianoController.getSongNotes()))); // no hauria de succeir mai
     }
 
     @Override

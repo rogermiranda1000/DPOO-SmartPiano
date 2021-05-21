@@ -1,7 +1,7 @@
 package view;
 
+import controller.RecordingEvent;
 import controller.TeclaEvent;
-import entities.Config;
 import entities.Note;
 
 import javax.swing.*;
@@ -10,6 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Piano extends JPanel implements ActionListener, TeclaNotifier {
+    private static final String TEXT_START_RECORDING = "Start recording";
+    private static final String TEXT_SAVE_RECORDING = "Save recording";
+
     public static final boolean IS_BLACK = true;
     public static final boolean IS_WHITE = false;
     private static final int NUM_OCTAVES = 2;
@@ -17,11 +20,13 @@ public class Piano extends JPanel implements ActionListener, TeclaNotifier {
 
     private final Tecla[] keys;
     private final JButton record;
+    private final RecordingEvent recordingEvent;
 
-    public Piano(TeclaEvent event) {
+    public Piano(TeclaEvent event, RecordingEvent recording) {
         this.keys = new Tecla[12 * Piano.NUM_OCTAVES];
+        this.recordingEvent = recording;
 
-        record = new JButton("Record");
+        record = new JButton(Piano.TEXT_START_RECORDING);
         record.addActionListener(this);
         record.setFocusable(false);
         this.add(record, BorderLayout.NORTH);
@@ -82,6 +87,29 @@ public class Piano extends JPanel implements ActionListener, TeclaNotifier {
     //TODO: connectar amb controller
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == record) System.out.println("Connectar amb controller amb PianoRecorder");
+        if(e.getSource() == record) {
+            boolean isRecording = this.record.getText().equalsIgnoreCase(Piano.TEXT_SAVE_RECORDING); // si el botò mostra 'save recording' la canço s'està guardant
+            isRecording = !isRecording; // toggle
+            this.record.setText(isRecording ? Piano.TEXT_SAVE_RECORDING : Piano.TEXT_START_RECORDING);
+            this.recordingEvent.startRecording(isRecording);
+
+            if (!isRecording) {
+                // no està grabant -> s'ha de guardar (o no)
+                JPanel panel = new JPanel();
+                panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+                JLabel text = new JLabel("Song name:");
+                JCheckBox ck = new JCheckBox("Public: ");
+                ck.setSelected(true); // per defecte public
+                JTextField tF = new JTextField();
+
+                panel.add(text);
+                panel.add(tF);
+                panel.add(ck);
+
+                int result = JOptionPane.showConfirmDialog(null, panel, "Add a new song", JOptionPane.OK_CANCEL_OPTION);
+                if (result == JOptionPane.OK_OPTION && tF.getText().length()>0) this.recordingEvent.saveRecordedSong(tF.getText(), ck.isSelected());
+            }
+        }
     }
 }
