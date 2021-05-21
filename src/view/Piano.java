@@ -99,7 +99,8 @@ public class Piano extends JPanel implements ActionListener, TeclaNotifier {
                 panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
                 JLabel text = new JLabel("Song name:");
-                JCheckBox ck = new JCheckBox("Private");
+                JCheckBox ck = new JCheckBox("Public: ");
+                ck.setSelected(true); // per defecte public
                 JTextField tF = new JTextField();
 
                 panel.add(text);
@@ -107,7 +108,7 @@ public class Piano extends JPanel implements ActionListener, TeclaNotifier {
                 panel.add(ck);
 
                 int result = JOptionPane.showConfirmDialog(null, panel, "Add a new song", JOptionPane.OK_CANCEL_OPTION);
-                if (result == JOptionPane.OK_OPTION) this.recordingEvent.saveRecordedSong(tF.getText(), ck.isSelected());
+                if (result == JOptionPane.OK_OPTION && tF.getText().length()>0) this.recordingEvent.saveRecordedSong(tF.getText(), ck.isSelected());
             }
         }
     }
