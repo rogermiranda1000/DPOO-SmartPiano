@@ -13,6 +13,7 @@ public class Ranking extends JPanel{
     private final JPanel tablePanel = new JPanel();
 
 
+
     public Ranking(RankingEvent rankingE) {
 
         this.event = rankingE;
