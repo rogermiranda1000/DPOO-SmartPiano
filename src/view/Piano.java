@@ -88,19 +88,19 @@ public class Piano extends JPanel implements ActionListener, TeclaNotifier {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == record) {
-
-            //TODO: centrar OK
-            //TODO: arreglar JTextArea (mida normal)
-            //TODO: label que indiqui que s'ha d'introduïr
-            JDialog jD = new JDialog();
-            jD.setSize(new Dimension(200,200));
-            jD.add(new AddSongOptionPane());
-            jD.setVisible(true);
-            //JOptionPane.showMessageDialog(this, new AddSongOptionPane(),"Save song",JOptionPane.DEFAULT_OPTION);
             boolean isRecording = this.record.getText().equalsIgnoreCase(Piano.TEXT_SAVE_RECORDING); // si el botò mostra 'save recording' la canço s'està guardant
             isRecording = !isRecording; // toggle
             this.record.setText(isRecording ? Piano.TEXT_SAVE_RECORDING : Piano.TEXT_START_RECORDING);
             this.recordingEvent.startRecording(isRecording);
+
+            if (!isRecording) {
+                // no està grabant -> s'ha de guardar (o no)
+                //TODO: centrar OK
+                //TODO: arreglar JTextField (mida normal)
+                //TODO: label que indiqui que s'ha d'introduïr el nom de la canço
+                AddSongOptionPane jD = new AddSongOptionPane();
+                jD.setVisible(true);
+            }
         }
     }
 }

@@ -7,17 +7,24 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-public class AddSongOptionPane extends JPanel implements ActionListener, ItemListener {
+public class AddSongOptionPane extends JDialog implements ActionListener {
+    private JButton b1;
+    private JCheckBox ck;
+    private JTextField tF;
 
-    private final JButton b1;
-    private final JCheckBox ck;
-    private final JTextField tF;
+    public AddSongOptionPane() {
+        super();
+        this.setSize(new Dimension(200, 200));
+        this.add(this.getPanel());
+        this.setLocationRelativeTo(null);
 
-    private boolean state = true;
+        this.getPanel();
+    }
 
-    public AddSongOptionPane(){
+    private JPanel getPanel() {
+        JPanel panel = new JPanel();
 
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         b1 = new JButton("OK");
         ck = new JCheckBox("Private");
@@ -26,23 +33,19 @@ public class AddSongOptionPane extends JPanel implements ActionListener, ItemLis
         tF.setSize(new Dimension(10, 30));
 
         b1.addActionListener(this);
-        ck.addItemListener(this);
 
-        this.add(tF);
-        this.add(ck);
-        this.add(b1);
+        panel.add(tF);
+        panel.add(ck);
+        panel.add(b1);
+
+        return panel;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == b1){
-            System.out.println(tF.getText());
+            // TODO close & return
+            System.out.println(tF.getText() + " - " + this.ck.isSelected());
         }
-    }
-
-    @Override
-    public void itemStateChanged(ItemEvent e) {
-        System.out.println("Private: " + state);
-        state = !state;
     }
 }
