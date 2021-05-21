@@ -29,6 +29,8 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
         this.event = event;
 
         this.setTitle("Sign In");
+        ImageIcon img = new ImageIcon("images\\icon.jpg");
+        this.setIconImage(img.getImage());
         this.setSize(WIDTH, HEIGHT);
         this.setLocationRelativeTo(null);
         this.setResizable(false);

@@ -1,7 +1,9 @@
 package controller;
 
 import entities.List;
+import entities.Note;
 import entities.Song;
+import entities.SongNote;
 import model.BusinessFacade;
 import persistance.*;
 import view.LogIn;
@@ -11,17 +13,19 @@ import view.UpdateKeys;
 
 import java.util.ArrayList;
 
-public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager, UpdateKeys {
+public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager, UpdateKeys, TeclaEvent {
     private Menu menu;
     private LogIn login;
     private final BusinessFacade model;
     private final SongDownloader scrapper;
     private final MusicController musicController;
+    private final PianoController pianoController;
 
     public Controller(int scrappingTime, SongDAO songManager, UserDAO userManager, PlaylistDAO playlistManager, ConfigDAO configManager, StatisticsDAO statisticsManager) {
         this.model = new BusinessFacade(songManager, userManager, playlistManager, configManager, statisticsManager);
 
         this.musicController = new MusicController(this);
+        this.pianoController = new PianoController();
 
         this.scrapper = new SongDownloader(this, scrappingTime);
         this.scrapper.start();
@@ -36,8 +40,9 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         if (this.model.login(user, password)) {
             this.login.dispose();
 
-            this.menu = new Menu(this.musicController, this, this, this, this, this, this);
+            this.menu = new Menu(this.musicController, this, this, this, this, this, this, this);
             this.menu.setVisible(true);
+            this.menu.loadConfig(this.model.getBinds());
 
             this.musicController.setVolume(this.model.getSongVolume());
         } else this.login.wrongLogin();
@@ -85,7 +90,8 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
 
     @Override
     public void removeSongPlaylist(String playlist, Song song) {
-        // TODO
+        if (this.model.removeSongPlaylist(playlist, song)) this.menu.songDeletedFromPlaylist();
+        else this.menu.songNotDeletedFromPlaylist();
     }
 
     @Override
@@ -121,6 +127,8 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     public void exitSession() {
         this.model.logout();
 
+        this.musicController.reset();
+
         this.menu.dispose();
         this.login = new LogIn(this);
         this.login.setVisible(true);
@@ -146,6 +154,23 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     public int[] getTimeStadistics() {
         //TODO Return the number of seconds listened the las 24h and splited between hours.
         return new int[0];
+    }
+
+    @Override
+    public Song[] getTop5(int[] plays) {
+        return new Song[0];
+    }
+
+
+    // TODO
+    @Override
+    public void isPressed(Note note, int octava) {
+        this.pianoController.addNote(new SongNote(0,true,(byte)127,(byte)octava,note));
+    }
+
+    @Override
+    public void isNotPressed(Note note, int octava) {
+        this.pianoController.addNote(new SongNote(0,false,(byte)127,(byte)octava,note));
     }
 
     @Override

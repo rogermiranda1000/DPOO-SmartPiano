@@ -1,6 +1,7 @@
 package model;
 
 import controller.SongEnder;
+import controller.SongValidator;
 import entities.Song;
 import entities.SongNote;
 
@@ -26,9 +27,10 @@ public class NotePlayer extends Thread {
     private float volume;
 
     private final SongEnder songEnder;
+    private final SongValidator songValidator;
     private final Object notified; //Utilitzat per fer el notify
 
-    public NotePlayer(Song song, float volume, SongEnder songEnder) {
+    public NotePlayer(Song song, float volume, SongEnder songEnder, SongValidator songValidator) {
         this.paused = false;
         this.alive = true;
         this.notified = new Object();
@@ -36,6 +38,7 @@ public class NotePlayer extends Thread {
         this.tickLength = song.getTickLength();
         this.volume = volume;
         this.songEnder = songEnder;
+        this.songValidator = songValidator;
         this.tick = 0;
         this.lastSecondSent = 0;
         MidiChannel[] channels = null;
@@ -51,11 +54,19 @@ public class NotePlayer extends Thread {
         this.synth = synth;
     }
 
+    public NotePlayer(Song song, float volume, SongEnder songEnder) {
+        this(song, volume, songEnder, null);
+    }
+
+    public NotePlayer(Song song, float volume, SongValidator songValidator) {
+        this(song, volume,  null, songValidator);
+    }
+
     /**
      * Constructor del singleton
      */
     public NotePlayer() {
-        this(new Song(), 1, null);
+        this(new Song(), 1, null, null);
     }
 
     /**
@@ -113,7 +124,8 @@ public class NotePlayer extends Thread {
             //Reproduim els events d'aquest tick
             if (this.getAlive()) {
                 while (i < notes.size() && notes.get(i).getTick() == tick) {
-                    executeNote(notes.get(i++));
+                    if (this.songValidator == null) executeNote(notes.get(i++));
+                    else this.songValidator.requestNote(notes.get(i++));
                 }
             }
         }

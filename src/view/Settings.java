@@ -207,7 +207,15 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
         return this.volumeSong.getValue();
     }
 
-    private void changeLetter(Note note, char letter, int octava) {
+    private JPanel keysView(){
+        JPanel content = new JPanel();
+        saveKeysConfigButton = new GenericButton("Save changes!", null);
+        saveKeysConfigButton.addActionListener(this);
+        content.add(saveKeysConfigButton, BorderLayout.CENTER);
+        return content;
+    }
+
+    private void changeLetter(Note note, char letter, int octava){
         kC.changeKey(note, letter, octava);
     }
 
