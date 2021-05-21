@@ -11,14 +11,14 @@ import java.util.Date;
 
 public class SongAdder {
     private static final String[][] SONGS = {
-            /*{"Megalovania", "http://www.vgmusic.com/new-files/UT-Megalovania.mid"},
+            {"Megalovania", "http://www.vgmusic.com/new-files/UT-Megalovania.mid"},
             {"L'himne del Carbassot 100% oficial 1 sol link mega", "https://www.midiworld.com/download/5023"},
             {"Mii Channel", "https://www.midiworld.com/download/5037"},
             {"L'himne d'Espanya", "https://www.midiworld.com/download/4163"},
             {"All star", "https://www.midiworld.com/download/854"},
             {"Windows startup", "https://www.midiworld.com/download/4806"},
             {"Living la Vida Loca", "https://www.midiworld.com/download/800"},
-            {"River flows in you", "https://bitmidi.com/uploads/112145.mid"},*/
+            {"River flows in you", "https://bitmidi.com/uploads/112145.mid"},
             {"Doom", "http://www.midishrine.com/midipp/mpc/Doom/level1.mid"},
             {"Coffin dance", "https://rogermiranda1000.com/personal/CoffinDance.mid"}
     };
