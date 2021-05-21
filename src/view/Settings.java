@@ -23,8 +23,9 @@ public class Settings extends JPanel implements ActionListener, ChangeListener {
 
     private final KeyChanger kC;
 
-    public static final int HEIGHT = 600;
-    public static final int WIDTH = 1200;
+    private static final int INIT_OCTAVA = 3; // primera octava del teclat
+    private static final int HEIGHT = 600;
+    private static final int WIDTH = 1200;
 
     public Settings(KeyChanger kC) {
         this.kC = kC;
@@ -151,7 +152,7 @@ public class Settings extends JPanel implements ActionListener, ChangeListener {
         first.add(firstOctave);
 
         for (int i = 0; i < noteNames.length * 2; i++) {
-            notes.add(new ChangeKeyButton(kC, 1 + (i / 12), Note.getNote(i)));
+            notes.add(new ChangeKeyButton(kC, Settings.INIT_OCTAVA + (i / 12), Note.getNote(i)));
 
             if(1 + (i / 12) == 1) {
                 first.add(notes.get(i));
