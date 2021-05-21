@@ -31,9 +31,9 @@ public class Top5Drawer extends JPanel {
     private void dataFormat(){
         for(int y = 0; y < 5/*topSongs.length*/; y++){
             tableData[y][0] = '#' + String.valueOf(y + 1);
-            tableData[y][1] = "Voy contigo Pipo"; //topSongs[y].getName();
-            tableData[y][2] = "Alexelcapo"; //topSongs[y].getArtist();
-            tableData[y][3] = "10000000";//String.valueOf(numRep[y]);
+            tableData[y][1] = topSongs[y].getName();
+            tableData[y][2] = topSongs[y].getArtist();
+            tableData[y][3] = String.valueOf(numRep[y]);
         }
 
     }
