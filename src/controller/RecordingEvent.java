@@ -13,4 +13,14 @@ public interface RecordingEvent {
      * @param isPublic Song's visibility
      */
     void saveRecordedSong(String name, boolean isPublic);
+
+    /**
+     * Mute the octave INIT_OCTAVA to (INIT_OCTAVA+NUM_OCTAVES)
+     */
+    void muteSong();
+
+    /**
+     * Unmute the octave INIT_OCTAVA to (INIT_OCTAVA+NUM_OCTAVES)
+     */
+    void unmuteSong();
 }
