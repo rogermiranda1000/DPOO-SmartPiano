@@ -1,14 +1,15 @@
 package model;
 
+import entities.*;
 import entities.Config;
-import entities.List;
-import entities.Song;
-import entities.User;
 import persistance.*;
+import view.Tecla;
 
 import java.util.ArrayList;
 
 public class BusinessFacade {
+    private static final int INIT_OCTAVA = 3;
+
     private final SongDAO songManager;
     private final UserDAO userManager;
     private final PlaylistDAO playlistManager;
@@ -162,10 +163,15 @@ public class BusinessFacade {
     }
 
     public float getSongVolume() {
-        if (this.loggedUser == null) return 1.f;
         Config c = this.getConfig();
         if (c == null) return 1.f;
         return c.getVolumeSong();
+    }
+
+    public float getPianoVolume() {
+        Config c = this.getConfig();
+        if (c == null) return 1.f;
+        return c.getVolumePiano();
     }
 
     public boolean addPlaylist(String list) {
@@ -224,6 +230,30 @@ public class BusinessFacade {
         Config c = this.getConfig();
         if (c == null) return null;
         return c.getNotesBind();
+    }
+
+    public boolean setKeyBinder(Note key, byte octava, char newBind) {
+        if (this.loggedUser == null) return false;
+
+        char[] bind = this.loggedUserConfig.getNotesBind();
+        bind[(octava-BusinessFacade.INIT_OCTAVA)*12 + key.ordinal()] = newBind;
+        this.loggedUserConfig.setNoteBind(bind); // tecnicament va per referencia; no faria falta
+        // TODO set key binds in DDBB
+        return true;
+    }
+
+    public boolean setVolumePiano(float volume) {
+        if (this.loggedUser == null) return false;
+        if (!this.configManager.setVolumePiano(this.loggedUser.getName(), volume)) return false;
+        this.loggedUserConfig.setVolumePiano(volume);
+        return true;
+    }
+
+    public boolean setVolumeSong(float volume) {
+        if (this.loggedUser == null) return false;
+        if (!this.configManager.setVolumeSong(this.loggedUser.getName(), volume)) return false;
+        this.loggedUserConfig.setVolumeSong(volume);
+        return true;
     }
 
     public int[] getSongStatistics() {
