@@ -145,20 +145,18 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     }
 
     @Override
-    public int[] getSongsStadistics() {
-        //TODO Return the number of songs listened the las 24h and splited between hours.
-        return new int[0];
+    public int[] getSongsStatistics() {
+        return this.model.getSongStatistics();
     }
 
     @Override
-    public int[] getTimeStadistics() {
-        //TODO Return the number of seconds listened the las 24h and splited between hours.
-        return new int[0];
+    public int[] getTimeStatistics() {
+        return this.model.getTimeStatistics();
     }
 
     @Override
     public Song[] getTop5(int[] plays) {
-        return new Song[0];
+        return this.model.getTop5(plays);
     }
 
 

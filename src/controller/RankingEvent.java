@@ -8,12 +8,12 @@ public interface RankingEvent {
      * Retorna el nombre de cançons escoltades les ultimes 24h
      * @return Array amb els valors de cançons desde (horaActual - 23h) fins l'hora actual
      */
-    int[] getSongsStadistics();
+    int[] getSongsStatistics();
     /**
      * Retorna el nombre de segons escoltades les ultimes 24h
      * @return Array amb els valors de segons desde (horaActual - 23h) fins l'hora actual
      */
-    int[] getTimeStadistics();
+    int[] getTimeStatistics();
 
     /**
      * Busca les 5 cançons més escoltades a la base de dades.
