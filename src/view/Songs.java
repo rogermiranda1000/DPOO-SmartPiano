@@ -1,6 +1,7 @@
 package view;
 
 import controller.SongRequest;
+import controller.SongRequestPiano;
 import controller.SongsEvent;
 import entities.Song;
 
@@ -19,12 +20,13 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
 
     private final SongsEvent event;
     private final SongRequest requestEvent;
+    private final SongRequestPiano playSongPiano;
 
-    private JButton playSongButton, addSongButton, removeSongButton, backToSongsButton, addToPlaylistButton;
+    private JButton playSongButton, playSongButtonInPiano, addSongButton, removeSongButton, backToSongsButton, addToPlaylistButton;
     private final JPanel mainContent;
     private final CardLayout cl;
 
-    public Songs(SongsEvent songE, SongRequest requestE) {
+    public Songs(SongsEvent songE, SongRequest requestE, SongRequestPiano playSongP) {
         this.songs = new UneditableTable();
         this.songsTable = new JTable(this.songs);
 
@@ -33,6 +35,7 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
 
         this.event = songE;
         this.requestEvent = requestE;
+        this.playSongPiano = playSongP;
 
         mainContent = new JPanel(new CardLayout());
         mainContent.add(songsList(), "songs");
@@ -138,13 +141,16 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
         panel.setBackground(ColorConstants.MENU.getColor());
 
         playSongButton = new GenericButton(view.Icon.PLAY.getIcon());
+        playSongButtonInPiano = new GenericButton("Play in piano");
         addSongButton = new GenericButton("+");
         removeSongButton = new GenericButton("x");
 
         playSongButton.addActionListener(this);
+        playSongButtonInPiano.addActionListener(this);
         addSongButton.addActionListener(this);
         removeSongButton.addActionListener(this);
 
+        panel.add(playSongButtonInPiano);
         panel.add(playSongButton);
         panel.add(addSongButton);
         panel.add(removeSongButton);
@@ -216,7 +222,13 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
             } else {
                 this.requestEvent.requestSong(this.getSongFromTable(selectedSongs[0])); // TODO multiple
             }
-        } else if (e.getSource() == addSongButton) {
+        } else if(e.getSource() == playSongButtonInPiano){
+            if (selectedSongs.length == 0) {
+                popUpNoSongSelected();
+            } else {
+                this.playSongPiano.requestSongInPiano(this.getSongFromTable(selectedSongs[0]));
+            }
+        }else if (e.getSource() == addSongButton) {
             if (selectedSongs.length == 0) {
                 popUpNoSongSelected();
             } else {
