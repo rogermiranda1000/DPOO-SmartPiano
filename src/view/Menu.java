@@ -216,9 +216,8 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
         this.playlist.songNotDeletedFromPlaylist();
     }
 
-    @Override
-    public void changeKey(Note n, char newLetter, int octava) {
-        piano.changeKey(n, octava, newLetter);
+    public void loadConfig(char[] config) {
+        this.piano.loadConfig(config);
     }
 
     @Override
@@ -229,6 +228,11 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
     @Override
     public void stopNote(Note note, int octava) {
         this.piano.stopNote(note, octava);
+    }
+
+    @Override
+    public void changeKey(Note n, char newLetter, int octava) {
+        this.piano.changeKey(n, octava, newLetter);
     }
 
 

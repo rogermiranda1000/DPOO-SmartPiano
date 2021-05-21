@@ -1,6 +1,7 @@
 package view;
 
 import controller.TeclaEvent;
+import entities.Config;
 import entities.Note;
 
 import javax.swing.*;
@@ -12,6 +13,7 @@ public class Piano extends JPanel implements ActionListener, TeclaNotifier {
     public static final boolean IS_BLACK = true;
     public static final boolean IS_WHITE = false;
     private static final int NUM_OCTAVES = 2;
+    private static final int INIT_OCTAVA = 3;
 
     private final Tecla[] keys;
     private final JButton record;
@@ -27,7 +29,7 @@ public class Piano extends JPanel implements ActionListener, TeclaNotifier {
 
         // draw piano
         for (int i = 0; i < this.keys.length; i++) {
-            int octava = (i/12) + 1;
+            int octava = (i/12) + Piano.INIT_OCTAVA;
             String nota = Note.getNote(i % 12).toString();
 
             Tecla temp = new Tecla(event, Note.getNote(i % 12), (nota.charAt(nota.length() - 1) == 'X') ? IS_BLACK : IS_WHITE, octava).setKeyAssocieted('t');
@@ -37,8 +39,14 @@ public class Piano extends JPanel implements ActionListener, TeclaNotifier {
         }
     }
 
+    /**
+     * Get the key from the piano
+     * @param note Key
+     * @param octava Octave (from INIT_OCTAVA to INIT_OCTAVA+NUM_OCTAVES)
+     * @return Coincident key
+     */
     private Tecla getKey(Note note, int octava) {
-        return this.keys[12*(octava-1) + note.ordinal()];
+        return this.keys[12*(octava - Piano.INIT_OCTAVA) + note.ordinal()];
     }
 
     /**
@@ -49,6 +57,16 @@ public class Piano extends JPanel implements ActionListener, TeclaNotifier {
      */
     public void changeKey(Note note, int octava, char letter) {
         this.getKey(note, octava).setKeyAssocieted(letter);
+    }
+
+    /**
+     * Update all the keys
+     * @param binds Keyboard keys binded to the piano keys
+     */
+    public void loadConfig(char[] binds) {
+        for (int i = 0; i < binds.length; i++) {
+            this.changeKey(Note.getNote(i), Piano.INIT_OCTAVA + (i/12), binds[i]);
+        }
     }
 
     @Override
