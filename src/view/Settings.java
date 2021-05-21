@@ -15,7 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Settings extends JPanel implements ActionListener, ChangeListener, KeyChanger, DeleteUserNotifier {
+public class Settings extends JPanel implements ActionListener, ChangeListener, KeyChanger, DeleteUserNotifier, ConfigLoadNotifier {
     private JSlider volumePiano, volumeSong;
     private JLabel volumePianoTxt, volumeSongTxt;
     private JButton deleteButton, saveButton;
@@ -214,6 +214,12 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
     @Override
     public void userNotDeleted() {
         JOptionPane.showMessageDialog(this, "This password it's not the current user's one!","Wrong password!", JOptionPane.ERROR_MESSAGE);
+    }
+
+    @Override
+    public void setConfig(float songVolume, float pianoVolume) {
+        this.volumePiano.setValue((int)(pianoVolume*100.f));
+        this.volumeSong.setValue((int)(songVolume*100.f));
     }
 }
 
