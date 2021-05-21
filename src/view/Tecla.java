@@ -1,5 +1,6 @@
 package view;
 
+import controller.TeclaEvent;
 import entities.Note;
 
 import javax.swing.*;
@@ -7,57 +8,61 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class Tecla extends JPanel implements MouseListener, KeyListener {
+    private static final Color PLAY_COLOR = new Color(68, 108, 234);
+    private static final Color PRESS_COLOR = new Color(99, 99, 99);
+
     private final Note note;
     private final int ocatava;
 
-    private final JPanel tecla = new JPanel();
-    private final KeyController kC;
+    private final TeclaEvent kC;
     private char keyAssocieted;
-    private final boolean isBlack;
+    private final Color color;
+    private boolean isPressing;
+    private boolean isHolding;
 
-    public Tecla(Piano p, Note note, boolean isBlack, int octava) {
+    public Tecla(TeclaEvent p, Note note, boolean isBlack, int octava) {
         this.note = note;
         this.kC = p;
         this.ocatava = octava;
-        this.isBlack = isBlack;
+        this.isPressing = false;
+        this.isHolding = false;
 
         this.setPreferredSize(new Dimension(40,200));
         this.setLayout(new BorderLayout());
         this.add(new JLabel(note.toString()), BorderLayout.SOUTH);
 
-        if(isBlack) this.setBackground(new Color(0, 0, 0));
-        else this.setBackground(new Color(255, 255, 255));
+        this.color = (isBlack ? Color.BLACK : Color.WHITE);
+        this.setBackground(this.color);
 
         this.addMouseListener(this);
-        p.addMouseListener(this);
         this.addKeyListener(this);
-        p.addKeyListener(this);
-
     }
 
     public Note getNote(){
         return this.note;
     }
 
-    public char getKey() {
-        return keyAssocieted;
-    }
-
-    public int getOctava(){
-        return this.ocatava;
-    }
-
-    public void setKeyAssocieted(char keyAssocieted) {
+    public Tecla setKeyAssocieted(char keyAssocieted) {
         this.keyAssocieted = keyAssocieted;
+        return this;
     }
 
     public void playNote(){
-        this.setBackground(new Color(68, 108, 234));
+        this.setBackground(Tecla.PLAY_COLOR);
     }
 
     public void stopNote(){
-        if(isBlack) this.setBackground(new Color(0, 0, 0));
-        else this.setBackground(new Color(255, 255, 255));
+        this.setBackground(this.color);
+    }
+
+    private void press() {
+        this.setBackground(Tecla.PRESS_COLOR);
+        kC.isPressed(this.note, this.ocatava);
+    }
+
+    private void release() {
+        this.setBackground(this.color);
+        kC.isNotPressed(this.note, this.ocatava);
     }
 
     @Override
@@ -65,17 +70,17 @@ public class Tecla extends JPanel implements MouseListener, KeyListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if(this.contains(e.getPoint())){
-            this.setBackground(new Color(99, 99, 99));
-            kC.isPressed(note);
-        }
+        if(!this.contains(e.getPoint())) return;
+
+        this.isHolding = true;
+        this.press();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if(isBlack) this.setBackground(new Color(0, 0, 0));
-        else this.setBackground(new Color(255, 255, 255));
-        kC.isNotPressed(note);
+        if(!this.isHolding) return; // TODO compatibilitat amb pantalles tactils (pulsacions simultanies clicant)
+
+        this.release();
     }
 
     @Override
@@ -85,17 +90,22 @@ public class Tecla extends JPanel implements MouseListener, KeyListener {
     public void mouseExited(MouseEvent e) { }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-        if(this.note.toString().charAt(0) == e.getKeyChar()){
-            System.out.println("NOTA: " + note + " - Octava: " + ocatava);
-        }
-        /*System.out.println(e.getKeyChar());
-        kC.keyBoardPressed(e.getKeyChar());*/
+    public void keyTyped(KeyEvent e) { }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (this.keyAssocieted != e.getKeyChar()) return;
+        if (this.isPressing) return; // ja s'ha apretat i no s'ha deixat anar (l'event es repeteix varis cops)
+
+        this.isPressing = true;
+        this.press();
     }
 
     @Override
-    public void keyPressed(KeyEvent e) { }
+    public void keyReleased(KeyEvent e) {
+        if (this.keyAssocieted != e.getKeyChar()) return;
 
-    @Override
-    public void keyReleased(KeyEvent e) { }
+        this.isPressing = false;
+        this.release();
+    }
 }
