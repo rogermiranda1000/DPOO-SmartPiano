@@ -8,7 +8,7 @@ import java.io.*;
 import java.util.Scanner;
 
 public class Config {
-    private static Gson gson = new Gson();
+    private static final Gson gson = new Gson();
 
     private int scrapping;
     private final File configFile;

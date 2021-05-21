@@ -1,6 +1,6 @@
 package view;
 
-import entities.Config;
+import entities.KeyboardConstants;
 import entities.Note;
 
 import javax.imageio.ImageIO;
@@ -10,24 +10,12 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class Settings extends JPanel implements ActionListener, ChangeListener, KeyChanger, DeleteUserNotifier {
-    /**
-     * First key octave
-     */
-    private static final int INIT_OCTAVA = 3;
-    /**
-     * Num of octaves shown
-     */
-    private static final int NUM_OCTAVA = 2;
-    private static final int HEIGHT = 600;
-    private static final int WIDTH = 1200;
-
     private JSlider volumePiano, volumeSong;
     private JLabel volumePianoTxt, volumeSongTxt;
     private JButton deleteButton, saveButton;
@@ -36,7 +24,7 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
 
     public Settings(UpdateConfigEvent updateEvent) {
         this.updateEvent = updateEvent;
-        this.keyBinders = new ArrayList<>(Settings.NUM_OCTAVA*12);
+        this.keyBinders = new ArrayList<>(KeyboardConstants.NUM_OCTAVES*12);
 
         this.setBackground(ColorConstants.BACKGROUND.getColor());
 
@@ -150,7 +138,7 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
         keys.setLayout(new BoxLayout(keys, BoxLayout.Y_AXIS));
         keys.setBackground(ColorConstants.BACKGROUND.getColor());
 
-        for (byte octava = Settings.INIT_OCTAVA; octava < Settings.NUM_OCTAVA + Settings.INIT_OCTAVA; octava++) {
+        for (byte octava = KeyboardConstants.INIT_OCTAVA; octava < KeyboardConstants.NUM_OCTAVES + KeyboardConstants.INIT_OCTAVA; octava++) {
             JPanel panel = new JPanel();
             panel.setBackground(ColorConstants.BACKGROUND.getColor());
 

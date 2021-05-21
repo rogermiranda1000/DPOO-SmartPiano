@@ -2,7 +2,6 @@ package view;
 
 import controller.*;
 import entities.Song;
-import entities.Note;
 import entities.SongNote;
 
 import javax.swing.*;

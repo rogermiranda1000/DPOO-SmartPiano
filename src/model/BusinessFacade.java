@@ -3,14 +3,10 @@ package model;
 import entities.*;
 import entities.Config;
 import persistance.*;
-import view.Tecla;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class BusinessFacade {
-    private static final int INIT_OCTAVA = 3;
-
     private final SongDAO songManager;
     private final UserDAO userManager;
     private final PlaylistDAO playlistManager;
@@ -252,7 +248,7 @@ public class BusinessFacade {
         if (this.loggedUser == null) return false;
 
         char[] bind = this.loggedUserConfig.getNotesBind();
-        bind[(octava-BusinessFacade.INIT_OCTAVA)*12 + key.ordinal()] = newBind;
+        bind[(octava-KeyboardConstants.INIT_OCTAVA)*12 + key.ordinal()] = newBind;
         this.loggedUserConfig.setNoteBind(bind); // tecnicament va per referencia; no faria falta
         // TODO set key binds in DDBB
         return true;

@@ -1,7 +1,6 @@
 package entities;
 
 public class Config {
-    public static final int NUM_OCTAVES = 2;
     private float volumePiano;
     private float volumeSong;
 
