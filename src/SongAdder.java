@@ -20,7 +20,8 @@ public class SongAdder {
             {"Living la Vida Loca", "https://www.midiworld.com/download/800"},
             {"River flows in you", "https://bitmidi.com/uploads/112145.mid"},
             {"Doom", "http://www.midishrine.com/midipp/mpc/Doom/level1.mid"},
-            {"Coffin dance", "https://rogermiranda1000.com/personal/CoffinDance.mid"}
+            {"Coffin dance", "https://rogermiranda1000.com/personal/CoffinDance.mid"},
+            {"Crab rave", "https://joeybabcock.me/blog/wp-content/uploads/2019/02/Crab-Rave_4.mid"}
     };
 
     public static void main (String[] args) throws ClassNotFoundException {
