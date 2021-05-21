@@ -29,7 +29,7 @@ public class ChangeKeyButton extends GenericButton implements ActionListener {
 
     private boolean pressKey(String note) {
         String input = JOptionPane.showInputDialog(this, "Enter the new key: ");
-        if(input.length() == 1) {
+        if(input != null && input.length() == 1) {
             this.key = input.charAt(0);
             return true;
 
