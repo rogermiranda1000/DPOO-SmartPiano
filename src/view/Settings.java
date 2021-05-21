@@ -14,22 +14,20 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Settings extends JPanel implements ActionListener, ChangeListener, KeyController {
+public class Settings extends JPanel implements ActionListener, ChangeListener {
     private JSlider volumePiano, volumeSong;
     private JLabel volumePianoTxt, volumeSongTxt;
     private JButton deleteButton, saveButton;
-    private ArrayList<JButton> notes = new ArrayList<>();
+    private final ArrayList<JButton> notes = new ArrayList<>();
 
 
     private final KeyChanger kC;
-    private final UpdateKeys uK;
 
     public static final int HEIGHT = 600;
     public static final int WIDTH = 1200;
 
-    public Settings(KeyChanger kC, UpdateKeys uK) {
+    public Settings(KeyChanger kC) {
         this.kC = kC;
-        this.uK = uK;
         this.setBackground(ColorConstants.BACKGROUND.getColor());
 
         this.add(settingsView());
@@ -209,9 +207,9 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
 
     private JPanel keysView(){
         JPanel content = new JPanel();
-        saveKeysConfigButton = new GenericButton("Save changes!", null);
-        saveKeysConfigButton.addActionListener(this);
-        content.add(saveKeysConfigButton, BorderLayout.CENTER);
+        saveButton = new GenericButton("Save changes!", null);
+        saveButton.addActionListener(this);
+        content.add(saveButton, BorderLayout.CENTER);
         return content;
     }
 
@@ -242,75 +240,6 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
             String password = deleteUser();
             //passar la pass al controller i eliminar
         }
-        /* else if (e.getSource() == Do) {
-            pressKey("Do");
-        } else if (e.getSource() == DoX) {
-            pressKey("DoX");
-        } else if (e.getSource() == Re) {
-            pressKey("Re");
-        } else if (e.getSource() == ReX) {
-            pressKey("ReX");
-        } else if (e.getSource() == Mi) {
-            pressKey("Mi");
-        } else if (e.getSource() == Fa) {
-            pressKey("Fa");
-        } else if (e.getSource() == FaX) {
-            pressKey("FaX");
-        } else if (e.getSource() == Sol) {
-            pressKey("Sol");
-        } else if (e.getSource() == SolX) {
-            pressKey("SolX");
-        } else if (e.getSource() == La) {
-            pressKey("La");
-        } else if (e.getSource() == LaX) {
-            pressKey("LaX");
-        } else if (e.getSource() == Si) {
-            pressKey("Si");
-        } else if (e.getSource() == Do2) {
-            pressKey("Do2");
-        } else if (e.getSource() == DoX2) {
-            pressKey("DoX2");
-        } else if (e.getSource() == Re2) {
-            pressKey("Re2");
-        } else if (e.getSource() == ReX2) {
-            pressKey("ReX2");
-        } else if (e.getSource() == Mi2) {
-            pressKey("Mi2");
-        } else if (e.getSource() == Fa2) {
-            pressKey("Fa2");
-        } else if (e.getSource() == FaX2) {
-            pressKey("FaX2");
-        } else if (e.getSource() == Sol2) {
-            pressKey("Sol2");
-        } else if (e.getSource() == SolX2) {
-            pressKey("SolX2");
-        } else if (e.getSource() == La2) {
-            pressKey("La2");
-        } else if (e.getSource() == LaX2) {
-            pressKey("LaX2");
-        } else if (e.getSource() == Si2) {
-            pressKey("Si2");
-        }*/
-    }
-
-    @Override
-    public boolean isPressed(Note note) {
-        return false;
-    }
-
-    @Override
-    public boolean isNotPressed(Note note) {
-        return false;
-    }
-
-    @Override
-    public boolean keyBoardPressed(char nota) {
-        return false;
-    }
-
-    @Override
-    public boolean keyBoardNotPressed(char nota) {
-        return false;
     }
 }
 

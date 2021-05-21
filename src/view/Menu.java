@@ -50,7 +50,7 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
         piano = new Piano(keyE);
         mainContent.add(piano, "piano");
         mainContent.add(new Ranking(rankingE), "ranking");
-        mainContent.add(new Settings(this, this.uK), "settings");
+        mainContent.add(new Settings(this), "settings");
         this.add(mainContent);
         cl = (CardLayout) (mainContent.getLayout());
         /* DEFAULT VIEW */
