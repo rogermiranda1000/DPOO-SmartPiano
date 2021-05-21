@@ -142,8 +142,16 @@ public class BusinessFacade {
         return this.userManager.addUser(new User(nick, email), password);
     }
 
-    public boolean deleteUser(String nick, String email, String password) {
-        return this.userManager.deleteUser(new User(nick, email), password);
+    public boolean deleteLoggedUser(String password) {
+        if (this.loggedUser == null) return false;
+
+        if (!this.configManager.deleteUserConfig(this.loggedUser.getName())) return false;
+        if (!this.statisticsManager.deletePlayerStatistics(this.loggedUser.getName())) return false;
+        for (List l : this.getPlaylists()) {
+            if (!this.playlistManager.removePlaylist(l)) return false;
+        }
+        if (!this.songManager.deleteUserSongs(this.loggedUser.getName())) return false;
+        return this.userManager.deleteUser(this.loggedUser, password);
     }
 
     /**
@@ -160,6 +168,7 @@ public class BusinessFacade {
     public void logout() {
         this.loggedUser = null;
         this.loggedUserPlaylists = null;
+        this.loggedUserConfig = null;
     }
 
     public float getSongVolume() {

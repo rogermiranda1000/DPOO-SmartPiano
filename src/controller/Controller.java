@@ -1,6 +1,5 @@
 package controller;
 
-import entities.Config;
 import entities.List;
 import entities.Note;
 import entities.Song;
@@ -9,7 +8,6 @@ import model.BusinessFacade;
 import persistance.*;
 import view.LogIn;
 import view.Menu;
-import view.Tecla;
 import view.UpdateConfigEvent;
 
 import java.util.ArrayList;
@@ -188,5 +186,14 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     public void updateKeyBinder(Note key, byte octava, char newBind) {
         if (!this.model.setKeyBinder(key, octava, newBind)) return;
         this.menu.loadConfig(this.model.getBinds());
+    }
+
+    @Override
+    public void deleteUser(String password) {
+        if (this.model.deleteLoggedUser(password)) {
+            this.menu.userDeleted();
+            this.exitSession();
+        }
+        else this.menu.userNotDeleted();
     }
 }
