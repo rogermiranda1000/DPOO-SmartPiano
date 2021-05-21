@@ -12,7 +12,7 @@ import view.Menu;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager, TeclaEvent, RecordingEvent {
+public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager, TeclaEvent, RecordingEvent, SongRequestPiano {
     private Menu menu;
     private LogIn login;
     private final BusinessFacade model;
@@ -39,7 +39,7 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         if (this.model.login(user, password)) {
             this.login.dispose();
 
-            this.menu = new Menu(this.musicController, this, this, this, this, this, this, this);
+            this.menu = new Menu(this.musicController, this, this, this, this, this, this, this, this);
             this.menu.setVisible(true);
             this.menu.loadConfig(this.model.getBinds());
 
@@ -137,6 +137,11 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     @Override
     public void requestSong(Song song) {
         this.musicController.requestSong(this.model.getSong(song));
+    }
+
+    @Override
+    public void requestSongInPiano(Song song) {
+        //TODO: connectar amb piano
     }
 
     @Override

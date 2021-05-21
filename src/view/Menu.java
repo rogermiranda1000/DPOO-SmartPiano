@@ -22,7 +22,7 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
     private final Playlist playlist;
     private final Piano piano;
 
-    public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE, TeclaEvent keyE, RecordingEvent recordE) {
+    public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE, TeclaEvent keyE, RecordingEvent recordE, SongRequestPiano sRP) {
         this.event = menuE;
 
         this.setTitle("Piano TIME!");
@@ -42,7 +42,7 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
 
         // Adding layouts
         this.playlist = new Playlist(playlistE);
-        this.songs = new Songs(songsE, songRequestE);
+        this.songs = new Songs(songsE, songRequestE, sRP);
         mainContent = new JPanel(new CardLayout());
         mainContent.add(this.songs, "songs");
         mainContent.add(this.playlist, "playlists");
