@@ -10,6 +10,7 @@ public interface SongDAO {
     boolean addVirtualSong(Song song);
     boolean deleteSong(Song song);
     boolean existsSong(Song song);
+    boolean deleteUserSongs(String user);
 
     /**
      * Donada una canço amb la informació bàsica (nom, data, autor) obtè tota la demés informació

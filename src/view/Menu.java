@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, PlaylistMenuNotifier, TeclaNotifier {
+public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, PlaylistMenuNotifier, TeclaNotifier, DeleteUserNotifier {
     public static final int HEIGHT = 900;
     public static final int WIDTH = 1600;
     private JButton songsButton, playlistButton, pianoButton, rankingButton, settingsButton, exitButton;
@@ -21,6 +21,7 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
     private final Songs songs;
     private final Playlist playlist;
     private final Piano piano;
+    private final Settings settings;
 
     public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE, TeclaEvent keyE, UpdateConfigEvent configE) {
         this.event = menuE;
@@ -50,7 +51,8 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
         piano = new Piano(keyE);
         mainContent.add(piano, "piano");
         mainContent.add(new Ranking(rankingE), "ranking");
-        mainContent.add(new Settings(configE), "settings");
+        this.settings = new Settings(configE);
+        mainContent.add(this.settings, "settings");
         this.add(mainContent);
         cl = (CardLayout) (mainContent.getLayout());
         /* DEFAULT VIEW */
@@ -232,5 +234,15 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
     @Override
     public void stopNote(Note note, int octava) {
         this.piano.stopNote(note, octava);
+    }
+
+    @Override
+    public void userDeleted() {
+        this.settings.userDeleted();
+    }
+
+    @Override
+    public void userNotDeleted() {
+        this.settings.userNotDeleted();
     }
 }

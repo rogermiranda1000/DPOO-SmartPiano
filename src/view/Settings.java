@@ -16,7 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Settings extends JPanel implements ActionListener, ChangeListener, KeyChanger {
+public class Settings extends JPanel implements ActionListener, ChangeListener, KeyChanger, DeleteUserNotifier {
     /**
      * First key octave
      */
@@ -209,14 +209,23 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
         if (e.getSource() == saveButton) {
             saveConfig();
         } else if (e.getSource() == deleteButton) {
-            String password = deleteUser();
-            // TODO passar la pass al controller i eliminar
+            this.updateEvent.deleteUser(this.deleteUser());
         }
     }
 
     @Override
     public void changeKey(Note n, byte octava, char newLetter) {
         this.updateEvent.updateKeyBinder(n, octava, newLetter);
+    }
+
+    @Override
+    public void userDeleted() {
+        JOptionPane.showMessageDialog(this, "Bye! :'(","Did I do something wrong? owo", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    @Override
+    public void userNotDeleted() {
+        JOptionPane.showMessageDialog(this, "This password it's not the current user's one!","Wrong password!", JOptionPane.ERROR_MESSAGE);
     }
 }
 
