@@ -8,7 +8,7 @@ import view.PianoNotifier;
 
 import java.util.ArrayList;
 
-public class PianoController implements SongValidator {
+public class PianoController implements SongValidator, SongEnder {
     /**
      * us / tick
      * tick_length [us/tick] * 1 [tick] = 10^3 [us]   (cada tick son 1ms)
@@ -58,7 +58,7 @@ public class PianoController implements SongValidator {
     public void playSong(Song s) {
         if (this.songPlayer != null) this.closeCurrentSong();
 
-        this.songPlayer = new NotePlayer(s, this.volume, this);
+        this.songPlayer = new NotePlayer(s, this.volume, this, this);
         this.songPlayer.start();
     }
 
@@ -133,5 +133,10 @@ public class PianoController implements SongValidator {
         this.volume = volume;
         if (this.volume > 1) this.volume = 1;
         else if (this.volume < 0) this.volume = 0;
+    }
+
+    @Override
+    public void songEnded() {
+        this.pianoPresser.unpressAllKeys();
     }
 }
