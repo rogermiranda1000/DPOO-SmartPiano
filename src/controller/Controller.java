@@ -11,9 +11,8 @@ import view.Menu;
 import view.UpdateConfigEvent;
 
 import java.util.ArrayList;
-import java.util.Date;
 
-public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager, TeclaEvent, RecordingEvent {
+public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager, TeclaEvent, UpdateConfigEvent, RecordingEvent {
     private Menu menu;
     private LogIn login;
     private final BusinessFacade model;
@@ -40,7 +39,7 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         if (this.model.login(user, password)) {
             this.login.dispose();
 
-            this.menu = new Menu(this.musicController, this, this, this, this, this, this, this);
+            this.menu = new Menu(this.musicController, this, this, this, this, this, this, this, this);
             this.menu.setVisible(true);
             this.menu.loadConfig(this.model.getBinds());
 
