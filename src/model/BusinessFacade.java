@@ -7,6 +7,7 @@ import entities.User;
 import persistance.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class BusinessFacade {
     private final SongDAO songManager;
@@ -97,12 +98,16 @@ public class BusinessFacade {
     }
 
     /**
-     * Afegeix una canço som autor RegisteredUser
-     * @param song Canço a afegir
-     * @return Si s'ha afegit (true) o hi ha hagut un error (false)
+     * Adds a RegisteredUser's song
+     * @param song Song to add
+     * @return If the song was added (true), or not (false)
      */
     public boolean addSong(Song song) {
+        if (this.loggedUser == null) return false;
+
         //if (!this.userManager.existsUser(song.getArtist())) return false; // no hauria de pasar mai
+        song.setAuthor(this.loggedUser.getName());
+        if (this.existsSong(song)) return false;
         return this.songManager.addSong(song);
     }
 

@@ -45,8 +45,17 @@ public class SongDDBBDAO implements SongDAO {
         try {
             int songId;
             synchronized (this) {
-                if (this.ddbb.runSentence("INSERT INTO Songs(public, name, date, author, tick_length) VALUES (?,?,?,?,?);",
-                    song.getPublic(), song.getName(), song.getDate() == null ? "CURRENT_DATE()" : song.getDate(), id, song.getTickLength()) == 0) return false;
+                if (song.getDate() != null) {
+                    // song with date:
+                    if (this.ddbb.runSentence("INSERT INTO Songs(public, name, date, author, tick_length) VALUES (?,?,?,?,?);",
+                            song.getPublic(), song.getName(), song.getDate(), id, song.getTickLength()) == 0) return false;
+                }
+                else {
+                    // song without date:
+                    if (this.ddbb.runSentence("INSERT INTO Songs(public, name, date, author, tick_length) VALUES (?,?,CURDATE(),?,?);",
+                            song.getPublic(), song.getName(), id, song.getTickLength()) == 0) return false;
+                }
+
                 // obté l'últim ID insertat (el de Songs)
                 ResultSet rs = this.ddbb.getSentence("SELECT LAST_INSERT_ID();");
                 if (!rs.next()) return false;
@@ -81,7 +90,7 @@ public class SongDDBBDAO implements SongDAO {
             }
             sb.setLength(sb.length()-1); // eliminem la ',' final
             sb.append(';');
-            this.ddbb.runSentence(sb.toString());
+            if (song.getNotes().size() > 0) this.ddbb.runSentence(sb.toString());
 
             return true;
         } catch (SQLException ex) {
@@ -159,8 +168,15 @@ public class SongDDBBDAO implements SongDAO {
 
     private Integer getSongId(Song song) {
         try {
-            ResultSet rs = this.ddbb.getSentence("SELECT Songs.id FROM Songs JOIN Users ON Users.id = Songs.author WHERE name = ? AND username = ? AND date = ?;",
-                    song.getName(), song.getArtist(), song.getDate());
+            ResultSet rs;
+            if (song.getDate() != null) {
+                rs = this.ddbb.getSentence("SELECT Songs.id FROM Songs JOIN Users ON Users.id = Songs.author WHERE name = ? AND username = ? AND date = ?;",
+                        song.getName(), song.getArtist(), song.getDate());
+            }
+            else {
+                rs = this.ddbb.getSentence("SELECT Songs.id FROM Songs JOIN Users ON Users.id = Songs.author WHERE name = ? AND username = ? AND date = CURDATE();",
+                        song.getName(), song.getArtist());
+            }
 
             if (!rs.next()) return null; // no hi ha coincidencies
             return rs.getInt(1);
