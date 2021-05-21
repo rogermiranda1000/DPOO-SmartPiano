@@ -98,12 +98,8 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
         deleteButton = new GenericButton("Delete profile", new Font("Arial", Font.PLAIN, 15));
         deleteButton.addActionListener(this);
         deleteButton.setBackground(ColorConstants.RED_BUTTON.getColor());
+        information.add(deleteButton);
 
-        JPanel deleteP = new JPanel();
-        deleteP.setBackground(ColorConstants.BACKGROUND.getColor());
-        deleteP.add(deleteButton);
-
-        information.add(deleteP);
         information.setBackground(ColorConstants.BACKGROUND.getColor());
 
         panel.add(information, BorderLayout.CENTER);
