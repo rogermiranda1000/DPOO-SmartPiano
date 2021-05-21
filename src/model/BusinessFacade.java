@@ -7,6 +7,7 @@ import entities.User;
 import persistance.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class BusinessFacade {
     private final SongDAO songManager;
@@ -106,6 +107,7 @@ public class BusinessFacade {
 
         //if (!this.userManager.existsUser(song.getArtist())) return false; // no hauria de pasar mai
         song.setAuthor(this.loggedUser.getName());
+        if (this.existsSong(song)) return false;
         return this.songManager.addSong(song);
     }
 

@@ -10,6 +10,7 @@ import view.LogIn;
 import view.Menu;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager, TeclaEvent, RecordingEvent {
     private Menu menu;
@@ -174,5 +175,10 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
             // TODO request song name (or if discarded)
             this.model.addSong(new Song("test", PianoController.TICK_LENGTH, true, this.pianoController.getSongNotes())); // TODO tmp
         }
+    }
+
+    @Override
+    public void saveRecordedSong(String name, boolean isPublic) {
+        if (!this.model.addSong(new Song(name, PianoController.TICK_LENGTH, isPublic, this.pianoController.getSongNotes()))); // no hauria de succeir mai
     }
 }

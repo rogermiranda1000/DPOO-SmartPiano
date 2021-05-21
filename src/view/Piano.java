@@ -95,11 +95,19 @@ public class Piano extends JPanel implements ActionListener, TeclaNotifier {
 
             if (!isRecording) {
                 // no està grabant -> s'ha de guardar (o no)
-                //TODO: centrar OK
-                //TODO: arreglar JTextField (mida normal)
-                //TODO: label que indiqui que s'ha d'introduïr el nom de la canço
-                AddSongOptionPane jD = new AddSongOptionPane();
-                jD.setVisible(true);
+                JPanel panel = new JPanel();
+                panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+                JLabel text = new JLabel("Song name:");
+                JCheckBox ck = new JCheckBox("Private");
+                JTextField tF = new JTextField();
+
+                panel.add(text);
+                panel.add(tF);
+                panel.add(ck);
+
+                int result = JOptionPane.showConfirmDialog(null, panel, "Add a new song", JOptionPane.OK_CANCEL_OPTION);
+                if (result == JOptionPane.OK_OPTION) this.recordingEvent.saveRecordedSong(tF.getText(), ck.isSelected());
             }
         }
     }
