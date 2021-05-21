@@ -258,4 +258,9 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
     public void setConfig(float songVolume, float pianoVolume) {
         this.settings.setConfig(songVolume, pianoVolume);
     }
+
+    @Override
+    public void setUserInformation(String name, String email) {
+        this.settings.setUserInformation(name, email);
+    }
 }

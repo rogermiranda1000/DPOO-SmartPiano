@@ -82,6 +82,10 @@ public class BusinessFacade {
         return null; // not found
     }
 
+    public User getLoggedUser() {
+        return this.loggedUser;
+    }
+
 
     /**
      * Obtè les cançons del usuari loguejat i les públiques
