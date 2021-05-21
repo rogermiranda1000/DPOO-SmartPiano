@@ -97,12 +97,15 @@ public class BusinessFacade {
     }
 
     /**
-     * Afegeix una canço som autor RegisteredUser
-     * @param song Canço a afegir
-     * @return Si s'ha afegit (true) o hi ha hagut un error (false)
+     * Adds a RegisteredUser's song
+     * @param song Song to add
+     * @return If the song was added (true), or not (false)
      */
     public boolean addSong(Song song) {
+        if (this.loggedUser == null) return false;
+
         //if (!this.userManager.existsUser(song.getArtist())) return false; // no hauria de pasar mai
+        song.setAuthor(this.loggedUser.getName());
         return this.songManager.addSong(song);
     }
 
