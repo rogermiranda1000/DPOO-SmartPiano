@@ -132,10 +132,12 @@ public class BusinessFacade {
      */
     public boolean deleteSong(Song song) {
         if (this.loggedUser == null) return false; // si no hi ha usuari loguejat, no pot eliminar una canço
-        if (!song.getArtist().equals(this.loggedUser.getName())) return false; // TODO comprobar si l'usuari és virtual amb el mateix nom
+        Boolean isAuthor = this.songManager.isAuthor(song, this.loggedUser.getName());
+        if (isAuthor == null || !isAuthor) return false;
 
         // elimina les cançons
         if (!this.playlistManager.removeSongAllPlaylists(song)) return false;
+        if (!this.statisticsManager.deleteStatistics(song)) return false;
         return this.songManager.deleteSong(song);
     }
 
