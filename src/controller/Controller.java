@@ -12,7 +12,7 @@ import view.UpdateConfigEvent;
 
 import java.util.ArrayList;
 
-public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager, TeclaEvent, UpdateConfigEvent, RecordingEvent {
+public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager, TeclaEvent, UpdateConfigEvent, RecordingEvent, SongRequestPiano {
     private Menu menu;
     private LogIn login;
     private final BusinessFacade model;
@@ -137,6 +137,11 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     @Override
     public void requestSong(Song song) {
         this.musicController.requestSong(this.model.getSong(song));
+    }
+
+    @Override
+    public void requestSongInPiano(Song song) {
+        //TODO: connectar amb piano
     }
 
     @Override
