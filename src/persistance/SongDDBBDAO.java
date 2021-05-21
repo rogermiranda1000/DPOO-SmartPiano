@@ -52,7 +52,7 @@ public class SongDDBBDAO implements SongDAO {
                 }
                 else {
                     // song without date:
-                    if (this.ddbb.runSentence("INSERT INTO Songs(public, name, author, tick_length) VALUES (?,?,?,?);",
+                    if (this.ddbb.runSentence("INSERT INTO Songs(public, name, date, author, tick_length) VALUES (?,?,CURDATE(),?,?);",
                             song.getPublic(), song.getName(), id, song.getTickLength()) == 0) return false;
                 }
 
@@ -168,8 +168,15 @@ public class SongDDBBDAO implements SongDAO {
 
     private Integer getSongId(Song song) {
         try {
-            ResultSet rs = this.ddbb.getSentence("SELECT Songs.id FROM Songs JOIN Users ON Users.id = Songs.author WHERE name = ? AND username = ? AND date = ?;",
-                    song.getName(), song.getArtist(), song.getDate());
+            ResultSet rs;
+            if (song.getDate() != null) {
+                rs = this.ddbb.getSentence("SELECT Songs.id FROM Songs JOIN Users ON Users.id = Songs.author WHERE name = ? AND username = ? AND date = ?;",
+                        song.getName(), song.getArtist(), song.getDate());
+            }
+            else {
+                rs = this.ddbb.getSentence("SELECT Songs.id FROM Songs JOIN Users ON Users.id = Songs.author WHERE name = ? AND username = ? AND date = CURDATE();",
+                        song.getName(), song.getArtist());
+            }
 
             if (!rs.next()) return null; // no hi ha coincidencies
             return rs.getInt(1);
