@@ -5,11 +5,14 @@ import entities.Note;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
 
 public class ChangeKeyButton extends GenericButton implements ActionListener {
     private Note nota;
     private String name;
     private byte octava;
+
+    private char key;
 
     private KeyChanger kC;
 
@@ -24,13 +27,19 @@ public class ChangeKeyButton extends GenericButton implements ActionListener {
         this.nota = nota;
     }
 
-    private void pressKey(String note) {
-        JOptionPane.showMessageDialog(this, "Press a key to set up " + note + "." + "\nOr press OK to cancel.", "Key recorder", JOptionPane.PLAIN_MESSAGE);
+    private boolean pressKey(String note) {
+        String input = JOptionPane.showInputDialog(this, "Enter the new key: ");
+        if(input.length() == 1) {
+            this.key = input.charAt(0);
+            return true;
+
+        }
+        return false;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        pressKey(name);
-        kC.changeKey(this.nota, this.octava, 'a'); // TODO new key
+        if(pressKey(name)) kC.changeKey(this.nota, this.octava, this.key);
+        else JOptionPane.showMessageDialog(this, "You have to enter one character!","Wrong input!", JOptionPane.ERROR_MESSAGE);
     }
 }
