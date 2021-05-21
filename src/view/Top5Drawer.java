@@ -15,15 +15,15 @@ public class Top5Drawer extends JPanel {
     private static final int ARTIST_WIDTH = 250;
     private static final int REPRODUCTIONS_WIDTH = 180;
     private static final int ROW_HEIGHT = 30;
-    private final Song[] topSongs;
+    private static final int NUM_SONGS = 5;
 
-    private final int[] numRep = new int[5];
-    private final String[][] tableData = new String[6][4];
+    private final String[] columnID= {"#","NAME","ARTIST", "# REPRODUCTIONS"};
+    private final Song[] topSongs;
+    private int[] numRep = new int[NUM_SONGS];
+    private final String[][] tableData = new String[NUM_SONGS][4];
 
 
     public Top5Drawer (RankingEvent rankingE) {
-
-
         topSongs = rankingE.getTop5(numRep);
         if (topSongs.length == 0) {
             JLabel emptyMsg = new JLabel("No songs reproduced yet");
@@ -60,23 +60,21 @@ public class Top5Drawer extends JPanel {
             top5.setRowHeight(30);
 
             this.add(top5);
-        }
+
     }
 
     private void dataFormat(){
-        tableData[0][0] = "POSITION";
-        tableData[0][1] = "SONG NAME";
-        tableData[0][2] = "ARTIST";
-        tableData[0][3] = "REPRODUCTIONS";
-        for(int y = 0; y < topSongs.length && topSongs[y] != null; y++){
-            tableData[y+1][0] = "# " + (y + 1);
+            tableData[0][0] = "POSITION";
+            tableData[0][1] = "SONG NAME";
+            tableData[0][2] = "ARTIST";
+            tableData[0][3] = "REPRODUCTIONS";
+        for(int y = 0; y < NUM_SONGS && topSongs[y] != null; y++){
+            if (topSongs[y] == null) break;
+            tableData[y+1][0] = '#' + String.valueOf(y + 1);
             tableData[y+1][1] = topSongs[y].getName();
             tableData[y+1][2] = topSongs[y].getArtist();
             tableData[y+1][3] = String.valueOf(numRep[y]);
         }
 
     }
-
-
-
 }

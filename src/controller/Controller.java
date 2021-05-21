@@ -8,10 +8,11 @@ import model.BusinessFacade;
 import persistance.*;
 import view.LogIn;
 import view.Menu;
+import view.UpdateConfigEvent;
 
 import java.util.ArrayList;
 
-public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager, TeclaEvent {
+public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager, TeclaEvent, UpdateConfigEvent, RecordingEvent, SongRequestPiano {
     private Menu menu;
     private LogIn login;
     private final BusinessFacade model;
@@ -38,7 +39,7 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         if (this.model.login(user, password)) {
             this.login.dispose();
 
-            this.menu = new Menu(this.musicController, this, this, this, this, this, this);
+            this.menu = new Menu(this.musicController, this, this, this, this, this, this, this, this, this);
             this.menu.setVisible(true);
             this.menu.loadConfig(this.model.getBinds());
 
@@ -130,11 +131,17 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         this.menu.dispose();
         this.login = new LogIn(this);
         this.login.setVisible(true);
+        // TODO es lia si s'estava gravant?
     }
 
     @Override
     public void requestSong(Song song) {
         this.musicController.requestSong(this.model.getSong(song));
+    }
+
+    @Override
+    public void requestSongInPiano(Song song) {
+        //TODO: connectar amb piano
     }
 
     @Override
@@ -167,5 +174,47 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     @Override
     public void isNotPressed(Note note, int octava) {
         this.pianoController.addNote(new SongNote(0,false,(byte)127,(byte)octava,note));
+    }
+
+    @Override
+    public void startRecording(boolean recording) {
+        if (recording) this.pianoController.startRecording();
+        else {
+            this.pianoController.stopRecording();
+            // TODO request song name (or if discarded)
+            this.model.addSong(new Song("test", PianoController.TICK_LENGTH, true, this.pianoController.getSongNotes())); // TODO tmp
+        }
+    }
+
+    @Override
+    public void saveRecordedSong(String name, boolean isPublic) {
+        if (!this.model.addSong(new Song(name, PianoController.TICK_LENGTH, isPublic, this.pianoController.getSongNotes()))); // no hauria de succeir mai
+    }
+
+    @Override
+    public void updateSongVolume(float volume) {
+        if (!this.model.setVolumeSong(volume)) return;
+        this.musicController.setVolume(volume);
+    }
+
+    @Override
+    public void updatePianoVolume(float volume) {
+        if (!this.model.setVolumePiano(volume)) return;
+        this.pianoController.setVolume(volume);
+    }
+
+    @Override
+    public void updateKeyBinder(Note key, byte octava, char newBind) {
+        if (!this.model.setKeyBinder(key, octava, newBind)) return;
+        this.menu.loadConfig(this.model.getBinds());
+    }
+
+    @Override
+    public void deleteUser(String password) {
+        if (this.model.deleteLoggedUser(password)) {
+            this.menu.userDeleted();
+            this.exitSession();
+        }
+        else this.menu.userNotDeleted();
     }
 }
