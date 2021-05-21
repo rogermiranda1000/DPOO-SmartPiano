@@ -174,12 +174,14 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
 
     @Override
     public void updateSongVolume(float volume) {
-        this.model.setVolumeSong(volume);
+        if (!this.model.setVolumeSong(volume)) return;
+        this.musicController.setVolume(volume);
     }
 
     @Override
     public void updatePianoVolume(float volume) {
-        this.model.setVolumePiano(volume);
+        if (!this.model.setVolumePiano(volume)) return;
+        this.pianoController.setVolume(volume);
     }
 
     @Override
