@@ -21,6 +21,7 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
     private final Songs songs;
     private final Playlist playlist;
     private final Piano piano;
+    private final Ranking ranking;
 
     public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE, TeclaEvent keyE) {
         this.event = menuE;
@@ -49,7 +50,8 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
 
         piano = new Piano(keyE);
         mainContent.add(piano, "piano");
-        mainContent.add(new Ranking(rankingE), "ranking");
+        ranking = new Ranking(rankingE);
+        mainContent.add(ranking, "ranking");
         mainContent.add(new Settings(this), "settings");
         this.add(mainContent);
         cl = (CardLayout) (mainContent.getLayout());
@@ -125,6 +127,10 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
         pianoButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
         rankingButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
         settingsButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
+    }
+
+    public void reloadRankingData() {
+        this.ranking.reloadGraphs();
     }
 
     @Override
