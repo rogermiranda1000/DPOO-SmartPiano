@@ -182,7 +182,7 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
     private void saveConfig() {
         this.updateEvent.updatePianoVolume(this.getPianoVolume());
         this.updateEvent.updateSongVolume(this.getSongVolume());
-        JOptionPane.showMessageDialog(this, "Changes on configuration saved.","Configuration saved!",JOptionPane.INFORMATION_MESSAGE);
+        //JOptionPane.showMessageDialog(this, "Changes on configuration saved.","Configuration saved!",JOptionPane.INFORMATION_MESSAGE);
     }
 
     private String deleteUser() {
@@ -190,12 +190,12 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
                 "\nAre you sure you want to delete this account?\nConfirm your password:", "Delete confirmation",JOptionPane.WARNING_MESSAGE);
     }
 
-    private int getPianoVolume() {
-        return this.volumePiano.getValue();
+    private float getPianoVolume() {
+        return this.volumePiano.getValue()/100.f;
     }
 
-    private int getSongVolume() {
-        return this.volumeSong.getValue();
+    private float getSongVolume() {
+        return this.volumeSong.getValue()/100.f;
     }
 
     @Override
