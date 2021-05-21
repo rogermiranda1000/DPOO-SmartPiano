@@ -117,6 +117,17 @@ public class SongDDBBDAO implements SongDAO {
     }
 
     @Override
+    public boolean deleteUserSongs(String user) {
+        try {
+            this.ddbb.runSentence("DELETE SongNotes FROM SongNotes JOIN Songs ON Songs.id = SongNotes.song JOIN Users ON Users.id = Songs.author WHERE Users.username = ?;", user);
+            this.ddbb.runSentence("DELETE Songs FROM Songs JOIN Users ON Users.id = Songs.author WHERE Users.username = ?;", user);
+            return true;
+        } catch (SQLException ex) {
+            return false;
+        }
+    }
+
+    @Override
     public Boolean isAuthor(Song song, String name) {
         try {
             ResultSet rs = this.ddbb.getSentence("SELECT COUNT(*) FROM Songs JOIN Users ON Users.id = Songs.author JOIN RegisteredUsers ON Users.id = RegisteredUsers.id WHERE name = ? AND username = ? AND date = ?;",

@@ -98,6 +98,17 @@ public class StatisticsDDBBDAO implements StatisticsDAO {
     }
 
     @Override
+    public boolean deletePlayerStatistics(String s) {
+        try {
+            this.ddbb.runSentence("DELETE Listen FROM Listen JOIN Users ON Users.id = Listen.user WHERE Users.username = ?;",
+                    s);
+            return true;
+        } catch (SQLException ex) {
+            return false;
+        }
+    }
+
+    @Override
     public boolean deleteStatistics(Song s) {
         try {
             this.ddbb.runSentence("DELETE Listen FROM Listen JOIN Songs ON Listen.song = Songs.id JOIN Users ON Users.id = Songs.author WHERE Users.username = ? AND Songs.name = ? AND Songs.date = ?;",
