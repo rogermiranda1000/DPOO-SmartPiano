@@ -50,5 +50,12 @@ public class ConfigDDBBDAO implements ConfigDAO{
         }
     }
 
-
+    @Override
+    public boolean deleteUserConfig(String nick) {
+        try {
+            return (this.ddbb.runSentence("DELETE PianoKeys FROM PianoKeys JOIN Users ON Users.id = PianoKeys.user WHERE Users.username = ?;", nick) > 0);
+        } catch (SQLException ex) {
+            return false;
+        }
+    }
 }

@@ -81,8 +81,8 @@ public class UserDDBBDAO implements UserDAO {
             if (!rs.next()) return false; // no hi ha coincidencies
             int id = rs.getInt(1);
 
-            if (this.ddbb.runSentence("DELETE FROM Users WHERE id = ?;", id) == 0) return false;
-            return (this.ddbb.runSentence("DELETE FROM RegisteredUsers WHERE id = ?;", id) > 0);
+            if (this.ddbb.runSentence("DELETE FROM RegisteredUsers WHERE id = ?;", id) == 0) return false;
+            return (this.ddbb.runSentence("DELETE FROM Users WHERE id = ?;", id) > 0);
         } catch (SQLException ex) {
             return false;
         }

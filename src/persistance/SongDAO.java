@@ -10,6 +10,7 @@ public interface SongDAO {
     boolean addVirtualSong(Song song);
     boolean deleteSong(Song song);
     boolean existsSong(Song song);
+    boolean deleteUserSongs(String user);
 
     /**
      * Checks if the registered user is the author of the song
