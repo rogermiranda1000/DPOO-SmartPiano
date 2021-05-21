@@ -22,6 +22,11 @@ public class PianoController implements SongValidator {
     private long startTime;
 
     /**
+     * Connects the PianoController with the view
+     */
+    private SongValidator pianoPresser;
+
+    /**
      * Keyboard volume
      */
     private float volume;
@@ -30,14 +35,16 @@ public class PianoController implements SongValidator {
         this.songSilenced = false;
         this.recording = false;
 
-        /**
-         * Single keys player
-         */
+        // Single keys player
         this.notePlayer = new NotePlayer();
         this.songPlayer = null;
         this.songNotes = null;
         this.volume = 1;
         this.notePlayer.setVolume(this.volume);
+    }
+
+    public void addEventListener(SongValidator sv) {
+        this.pianoPresser = sv;
     }
 
     public void playSong(Song s) {
@@ -96,6 +103,7 @@ public class PianoController implements SongValidator {
      */
     @Override
     public void requestNote(SongNote note) {
+        if (note.getOctave() >= PianoController.OCTAVA_INICIAL && note.getOctave() < (PianoController.OCTAVA_INICIAL + PianoController.NUM_OCTAVES) && this.pianoPresser != null) this.pianoPresser.requestNote(note);
         if (this.songSilenced && (note.getOctave() >= PianoController.OCTAVA_INICIAL && note.getOctave() < (PianoController.OCTAVA_INICIAL + PianoController.NUM_OCTAVES))) return;
         this.notePlayer.executeNote(note);
     }

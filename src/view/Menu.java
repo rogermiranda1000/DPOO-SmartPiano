@@ -3,13 +3,14 @@ package view;
 import controller.*;
 import entities.Song;
 import entities.Note;
+import entities.SongNote;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, PlaylistMenuNotifier, TeclaNotifier, DeleteUserNotifier {
+public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, PlaylistMenuNotifier, TeclaNotifier, DeleteUserNotifier, SongValidator {
     public static final int HEIGHT = 900;
     public static final int WIDTH = 1600;
     private JButton songsButton, playlistButton, pianoButton, rankingButton, settingsButton, exitButton;
@@ -248,5 +249,14 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
     @Override
     public void userNotDeleted() {
         this.settings.userNotDeleted();
+    }
+
+    /**
+     * The PianoController wants to tell the view to press a button
+     * @param sn Note to press
+     */
+    @Override
+    public void requestNote(SongNote sn) {
+        this.piano.requestNote(sn);
     }
 }
