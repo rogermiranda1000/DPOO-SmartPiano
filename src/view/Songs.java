@@ -48,7 +48,7 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
     public JPanel songsList(){
         JPanel songsList = new JPanel();
         Font f = new Font(null, Font.PLAIN, 16);
-        //TODO: Listers de la taula: https://www.javatpoint.com/java-jtable
+
         this.setBackground(ColorConstants.BACKGROUND.getColor());
 
         // Create columns
@@ -88,7 +88,7 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
     public JPanel addToPlaylist(){
         JPanel playlistsList = new JPanel();
         Font f = new Font(null, Font.PLAIN, 16);
-        //TODO: Listers de la taula: https://www.javatpoint.com/java-jtable
+
         this.setBackground(ColorConstants.BACKGROUND.getColor());
 
         // Create columns
