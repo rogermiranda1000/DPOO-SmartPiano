@@ -1,0 +1,42 @@
+package view;
+
+import entities.Song;
+import controller.RankingEvent;
+import javax.swing.*;
+
+
+
+public class Top5Drawer extends JPanel {
+    private static final int NUM_SONGS = 5;
+
+    private final String[] columnID= {"#","NAME","ARTIST", "# REPRODUCTIONS"};
+    private final Song[] topSongs;
+    private int[] numRep = new int[NUM_SONGS];
+    private final String[][] tableData = new String[NUM_SONGS][4];
+
+
+    public Top5Drawer (RankingEvent rankingE) {
+        topSongs = rankingE.getTop5(numRep);
+        /*if (topSongs.length == 0) {
+            JLabel emptyMsg = new JLabel("No songs reproduced yet");
+            this.add(emptyMsg);
+        } else {
+        */
+
+            this.dataFormat();
+            JTable top5 = new JTable(tableData, columnID);
+            this.add(top5);
+
+    }
+
+    private void dataFormat(){
+        for(int y = 0; y < NUM_SONGS; y++){
+            if (topSongs[y] == null) break;
+            tableData[y][0] = '#' + String.valueOf(y + 1);
+            tableData[y][1] = topSongs[y].getName();
+            tableData[y][2] = topSongs[y].getArtist();
+            tableData[y][3] = String.valueOf(numRep[y]);
+        }
+
+    }
+}
