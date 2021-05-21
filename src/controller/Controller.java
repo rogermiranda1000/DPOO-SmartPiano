@@ -189,6 +189,16 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     }
 
     @Override
+    public void muteSong() {
+        this.pianoController.mute();
+    }
+
+    @Override
+    public void unmuteSong() {
+        this.pianoController.unMute();
+    }
+
+    @Override
     public void updateSongVolume(float volume) {
         if (!this.model.setVolumeSong(volume)) return;
         this.musicController.setVolume(volume);
