@@ -2,14 +2,14 @@ package view;
 
 import controller.*;
 import entities.Song;
-import entities.Note;
+import entities.SongNote;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, PlaylistMenuNotifier, TeclaNotifier, DeleteUserNotifier {
+public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, PlaylistMenuNotifier, DeleteUserNotifier, PianoNotifier {
     public static final int HEIGHT = 900;
     public static final int WIDTH = 1600;
     private JButton songsButton, playlistButton, pianoButton, rankingButton, settingsButton, exitButton;
@@ -55,10 +55,18 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
         mainContent.add(this.settings, "settings");
         this.add(mainContent);
         cl = (CardLayout) (mainContent.getLayout());
-        /* DEFAULT VIEW */
-        cl.show(mainContent, ("piano"));
-        pianoButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
 
+        // default view
+        cl.show(mainContent, ("ranking"));
+        rankingButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
+    }
+
+    public void focusPiano() {
+        cl.show(mainContent, ("piano"));
+        piano.requestFocus();
+
+        resetButtonsColors();
+        pianoButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
     }
 
     public JPanel topPanel() {
@@ -151,11 +159,7 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
             resetButtonsColors();
             playlistButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == pianoButton) {
-            cl.show(mainContent, ("piano"));
-            piano.requestFocus();
-
-            resetButtonsColors();
-            pianoButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
+            this.focusPiano();
         } else if (e.getSource() == rankingButton) {
             cl.show(mainContent, ("ranking"));
 
@@ -227,16 +231,6 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
     }
 
     @Override
-    public void playNote(Note note, int octava) {
-        this.piano.playNote(note, octava);
-    }
-
-    @Override
-    public void stopNote(Note note, int octava) {
-        this.piano.stopNote(note, octava);
-    }
-
-    @Override
     public void userDeleted() {
         this.settings.userDeleted();
     }
@@ -244,5 +238,19 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
     @Override
     public void userNotDeleted() {
         this.settings.userNotDeleted();
+    }
+
+    @Override
+    public void unpressAllKeys() {
+        this.piano.unpressAllKeys();
+    }
+
+    /**
+     * The PianoController wants to tell the view to press a button
+     * @param key Note to press
+     */
+    @Override
+    public void pressKey(SongNote key) {
+        this.piano.pressKey(key);
     }
 }

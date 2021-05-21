@@ -1,6 +1,6 @@
 package persistance;
 
-import entities.Config;
+import entities.KeyboardConstants;
 import entities.Note;
 
 import java.sql.ResultSet;
@@ -40,7 +40,7 @@ public class ConfigDDBBDAO implements ConfigDAO{
             entities.Config config = new entities.Config(rs1.getFloat(1), rs1.getFloat(2));
             ResultSet rs2 = this.ddbb.getSentence("SELECT pk.keyboard FROM PianoKeys AS pk JOIN RegisteredUsers ru ON pk.user = ru.id JOIN Users u on ru.id = u.id WHERE u.username = ? ORDER BY pk.octave ASC, pk.note ASC;", nick);
 
-            char[] characters = new char[12 * Config.NUM_OCTAVES];
+            char[] characters = new char[12 * KeyboardConstants.NUM_OCTAVES];
             for (int i = 0; i < characters.length & rs2.next(); i++) {
                 characters[i] = rs2.getString(1).charAt(0);
             }
@@ -54,7 +54,7 @@ public class ConfigDDBBDAO implements ConfigDAO{
     @Override
     public boolean setConfig(String nick, char[] characters) {
         try {
-            for (int i = 0; i < 12 * Config.NUM_OCTAVES; i++) {
+            for (int i = 0; i < 12 * KeyboardConstants.NUM_OCTAVES; i++) {
                 if (this.ddbb.runSentence("UPDATE PianoKeys SET keyboard = ? WHERE (user = (SELECT u.id FROM Users AS u JOIN RegisteredUsers AS ru ON u.id = ru.id WHERE u.username = ?) AND octave = ? AND note = ?);",
                         String.valueOf(characters[i]), nick, i/12 + 1, Note.getNote(i).name().replaceAll("X$", "#")) == 0) return false;
             }
