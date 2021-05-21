@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, PlaylistMenuNotifier, DeleteUserNotifier, PianoNotifier {
+public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, PlaylistMenuNotifier, DeleteUserNotifier, PianoNotifier, ConfigLoadNotifier {
     public static final int HEIGHT = 900;
     public static final int WIDTH = 1600;
     private JButton songsButton, playlistButton, pianoButton, rankingButton, settingsButton, exitButton;
@@ -252,5 +252,15 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
     @Override
     public void pressKey(SongNote key) {
         this.piano.pressKey(key);
+    }
+
+    @Override
+    public void setConfig(float songVolume, float pianoVolume) {
+        this.settings.setConfig(songVolume, pianoVolume);
+    }
+
+    @Override
+    public void setUserInformation(String name, String email) {
+        this.settings.setUserInformation(name, email);
     }
 }
