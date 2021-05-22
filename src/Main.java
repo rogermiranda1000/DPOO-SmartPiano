@@ -1,6 +1,7 @@
 import controller.Controller;
 import persistance.*;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
@@ -15,8 +16,7 @@ public class Main {
         System.out.println( "╔══╦═╦═╦══╦═╦══╗╔═╦══╦══╦═╦╦═╗\n" +
                             "║══╣║║║║╔╗║╬╠╗╔╝║╬╠║║╣╔╗║║║║║║\n" +
                             "╠══║║║║║╠╣║╗╣║║░║╔╬║║╣╠╣║║║║║║\n" +
-                            "╚══╩╩═╩╩╝╚╩╩╝╚╝░╚╝╚══╩╝╚╩╩═╩═╝"); //Roger, no borris.
-
+                            "╚══╩╩═╩╩╝╚╩╩╝╚╝░╚╝╚══╩╝╚╩╩═╩═╝");
 
         try {
             Config c = new Config(new File("config.json"));
@@ -25,21 +25,21 @@ public class Main {
 
             /* FILE EXCEPTIONS */
         } catch (FileNotFoundException ex) {
-            System.err.println("El fitxer config.json no existeix!");
+            JOptionPane.showMessageDialog(new JFrame(), "El fitxer config.json no existeix!", "ERROR!", JOptionPane.ERROR_MESSAGE);
 
             /* DDBB EXCEPTIONS */
         } catch (ClassNotFoundException ex) {
-            System.err.println("No tens la dependencia del driver de MariaDB!");
+            JOptionPane.showMessageDialog(new JFrame(), "No tens la dependencia del driver de MariaDB!", "ERROR!", JOptionPane.ERROR_MESSAGE);
         } catch (SQLInvalidAuthorizationSpecException ex) {
-            System.err.println("Les credencials especificades en config.json (usuari/password) son incorrectes!");
+            JOptionPane.showMessageDialog(new JFrame(), "Les credencials especificades en config.json (usuari/password) son incorrectes!", "ERROR!", JOptionPane.ERROR_MESSAGE);
         } catch (SQLNonTransientConnectionException ex) {
-            System.err.println("Les dades especificades en config.json (ip/port) son incorrectes!");
+            JOptionPane.showMessageDialog(new JFrame(), "Les dades especificades en config.json (ip/port) son incorrectes!", "ERROR!", JOptionPane.ERROR_MESSAGE);
         } catch (SQLSyntaxErrorException ex) {
-            System.err.println("El nom de la base de dades especificat al config.json és incorrecte!");
+            JOptionPane.showMessageDialog(new JFrame(), "El nom de la base de dades especificat al config.json és incorrecte!", "ERROR!", JOptionPane.ERROR_MESSAGE);
 
             /* OTHER EXCEPTIONS */
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(new JFrame(), "Hi hagut un error de tipus SQLException", "ERROR!", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
