@@ -8,15 +8,15 @@ import model.BusinessFacade;
 import persistance.*;
 import view.LogIn;
 import view.Menu;
+import view.NewPlayNotifier;
 import view.UpdateConfigEvent;
 
 import java.util.ArrayList;
 
-public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager, TeclaEvent, UpdateConfigEvent, RecordingEvent, SongRequestPiano {
+public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEvent, SongNotifier, SongRequest, RankingEvent, PlaysManager, TeclaEvent, UpdateConfigEvent, RecordingEvent, SongRequestPiano, NewPlayNotifier {
     private Menu menu;
     private LogIn login;
     private final BusinessFacade model;
-    private final SongDownloader scrapper;
     private final MusicController musicController;
     private final PianoController pianoController;
 
@@ -26,8 +26,8 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         this.musicController = new MusicController(this);
         this.pianoController = new PianoController();
 
-        this.scrapper = new SongDownloader(this, scrappingTime);
-        this.scrapper.start();
+        new SongDownloader(this, scrappingTime).start();
+        new RankingHourUpdater(this).start();
 
         this.login = new LogIn(this);
         this.login.setVisible(true);
@@ -38,6 +38,7 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     public void requestLogin(String user, String password) {
         if (this.model.login(user, password)) {
             this.login.dispose();
+            this.login = null;
 
             this.menu = new Menu(this.musicController, this, this, this, this, this, this, this, this, this);
             this.menu.setVisible(true);
@@ -132,6 +133,8 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
         this.musicController.reset();
 
         this.menu.dispose();
+        this.menu = null;
+
         this.login = new LogIn(this);
         this.login.setVisible(true);
         // TODO es lia si s'estava gravant?
@@ -152,7 +155,7 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     @Override
     public void addPlay(int secondsPlayed, Song song) {
         this.model.addPlay(secondsPlayed, song);
-        this.menu.reloadGraphs();
+        this.reloadGraphs();
     }
 
     @Override
@@ -226,5 +229,10 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
             this.exitSession();
         }
         else this.menu.userNotDeleted();
+    }
+
+    @Override
+    public void reloadGraphs() {
+        if (this.menu != null) this.menu.reloadGraphs();
     }
 }
