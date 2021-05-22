@@ -45,7 +45,7 @@ public class Piano extends JPanel implements ActionListener, PianoNotifier {
         this.mute.setFocusable(false);
         btn.add(this.mute);
 
-        this.add(btn);
+        this.add(btn, BorderLayout.NORTH);
 
         this.setBackground(ColorConstants.BACKGROUND.getColor());
 
