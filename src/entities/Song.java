@@ -12,7 +12,7 @@ public class Song {
      */
     private double tickLength;
     private final String songName;
-    private final String author;
+    private String author;
     private final Date creationDate;
     private boolean isPublic;
     private Float score;
@@ -42,6 +42,19 @@ public class Song {
         this(songName, author, Song.parseDate(creationDate), -1, false, null);
     }
 
+    /**
+     * User song to add
+     * Important: it doesn't have creator not date (yet)
+     * @param songName Name of the song
+     * @param tickLength Tick length
+     * @param isPublic Public song, or private
+     * @param notes Notes that builds the song
+     */
+    public Song(String songName, double tickLength, boolean isPublic, ArrayList<SongNote> notes) {
+        this(songName, "", null, tickLength, isPublic, 0.f);
+        this.notes.addAll(notes);
+    }
+
     public Song() {
         this(null, null, null, -1, false, null);
     }
@@ -67,6 +80,7 @@ public class Song {
     }
 
     public String getDate() {
+        if (this.creationDate == null) return null;
         return new SimpleDateFormat("yyyy-MM-dd").format(this.creationDate);
     }
 
@@ -100,6 +114,10 @@ public class Song {
 
     public void setPublic(boolean isPublic) {
         this.isPublic = isPublic;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     /**
