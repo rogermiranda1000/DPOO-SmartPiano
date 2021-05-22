@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import controller.RankingEvent;
 
-public class Ranking extends JPanel{
+public class Ranking extends JPanel implements NewPlayNotifier {
     private GraphDrawer songsGraph;
     private GraphDrawer timeGraph;
     private Top5Drawer top5Table;
@@ -15,7 +15,6 @@ public class Ranking extends JPanel{
 
 
     public Ranking(RankingEvent rankingE) {
-
         this.event = rankingE;
         songsGraph = new GraphDrawer(this.event.getSongsStatistics(), "Songs listened per hour", new Color(0xFF0000));
         timeGraph = new GraphDrawer(this.event.getTimeStatistics(), "Seconds listened per hour", new Color(0x016618));
@@ -35,8 +34,8 @@ public class Ranking extends JPanel{
 
     }
 
-    //TODO Utilitzar a quest metode per actualiztar les estadistiques amb un event.
-    private void reloadGraphs(){
+    @Override
+    public void reloadGraphs(){
         graphPanel.remove(songsGraph);
         songsGraph = new GraphDrawer(this.event.getSongsStatistics(), "Songs listened per hour", new Color(0xFF0000));
         graphPanel.add(songsGraph);
@@ -47,14 +46,8 @@ public class Ranking extends JPanel{
 
         tablePanel.remove(top5Table);
         top5Table = new Top5Drawer(this.event);
-        top5Table.add(top5Table);
+        tablePanel.add(top5Table);
 
-
-        /*this.remove(songsGraph);
-        songsGraph = new GraphDrawer(this.event.getSongsStatistics(), "Listened Songs per hour", new Color(0xFF0000));
-        this.add(songsGraph, BorderLayout.WEST);
-        this.remove(timeGraph);
-        timeGraph = new GraphDrawer(this.event.getTimeStatistics(), "Listened Time per hour", new Color(0x016618));
-        this.add(timeGraph, BorderLayout.EAST);*/
+        this.repaint(); // li diu a la GUI que actualitzi la vista
     }
 }
