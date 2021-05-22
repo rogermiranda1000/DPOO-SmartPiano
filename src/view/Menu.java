@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, PlaylistMenuNotifier, DeleteUserNotifier, PianoNotifier, ConfigLoadNotifier {
+public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, PlaylistMenuNotifier, DeleteUserNotifier, PianoNotifier, ConfigLoadNotifier, NewPlayNotifier {
     public static final int HEIGHT = 900;
     public static final int WIDTH = 1600;
     private JButton songsButton, playlistButton, pianoButton, rankingButton, settingsButton, exitButton;
@@ -22,6 +22,7 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
     private final Playlist playlist;
     private final Piano piano;
     private final Settings settings;
+    private final Ranking ranking;
 
     public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE, TeclaEvent keyE, UpdateConfigEvent configE, RecordingEvent recordE, SongRequestPiano sRP) {
         this.event = menuE;
@@ -50,7 +51,8 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
 
         piano = new Piano(keyE, recordE);
         mainContent.add(piano, "piano");
-        mainContent.add(new Ranking(rankingE), "ranking");
+        ranking = new Ranking(rankingE);
+        mainContent.add(ranking, "ranking");
         this.settings = new Settings(configE);
         mainContent.add(this.settings, "settings");
         this.add(mainContent);
@@ -262,5 +264,13 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
     @Override
     public void setUserInformation(String name, String email) {
         this.settings.setUserInformation(name, email);
+    }
+
+    /**
+     * There's a new play -> the graphs needs to be updated
+     */
+    @Override
+    public void reloadGraphs() {
+        SwingUtilities.invokeLater(()->this.ranking.reloadGraphs());
     }
 }
