@@ -55,9 +55,9 @@ public class Piano extends JPanel implements ActionListener, PianoNotifier {
         // draw piano
         for (int i = 0; i < this.keys.length; i++) {
             int octava = (i/12) + KeyboardConstants.INIT_OCTAVA;
-            String nota = Note.getNote(i % 12).toString();
+            Note nota = Note.getNote(i);
 
-            Tecla temp = new Tecla(event, Note.getNote(i % 12), (nota.charAt(nota.length() - 1) == 'X') ? IS_BLACK : IS_WHITE, octava).setKeyAssocieted('t');
+            Tecla temp = new Tecla(event, nota, nota.isBlack() ? IS_BLACK : IS_WHITE, octava).setKeyAssocieted('t');
             this.keys[i] = temp;
             jPtemp.add(temp);
             this.addKeyListener(temp); // per alguna rao li hem d'afegir el KeyListener (potser culpa del request focus?)

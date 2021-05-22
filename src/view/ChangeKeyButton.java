@@ -17,12 +17,11 @@ public class ChangeKeyButton extends GenericButton implements ActionListener {
     private KeyChanger kC;
 
     public ChangeKeyButton(KeyChanger kC, byte octava, Note nota) {
-        super(nota.name());
-        //this.setText(name);
+        super(nota.toString());
         this.addActionListener(this);
 
         this.kC = kC;
-        this.name = nota.name();
+        this.name = nota.toString();
         this.octava = octava;
         this.nota = nota;
     }
