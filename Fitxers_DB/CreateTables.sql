@@ -36,7 +36,7 @@ CREATE TABLE PianoKeys (
     octave TINYINT,
     user MEDIUMINT,      -- User that configured these settings
     keyboard CHAR(1),    -- Character/key related to the note
-    PRIMARY KEY (note),
+    PRIMARY KEY (note, octave, user),
     FOREIGN KEY (user)
     REFERENCES RegisteredUsers(id)
 );
