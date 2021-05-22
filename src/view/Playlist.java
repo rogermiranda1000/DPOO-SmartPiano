@@ -98,7 +98,7 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
         return panel;
     }
 
-    protected void updateSongsSelectedList() {
+    private void updateSongsSelectedList() {
         this.songsName.clear();
 
         if (this.playlistList.getSelectedValuesList().size() == 0) return;
@@ -132,8 +132,7 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
 
     @Override
     public void playlistCreated() {
-        this.reloadPlaylists();
-        //JOptionPane.showMessageDialog(this, "Playlist created.");
+        SwingUtilities.invokeLater(()->this.reloadPlaylists());
     }
 
     @Override
@@ -143,9 +142,10 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
 
     @Override
     public void playlistDeleted() {
-        this.reloadPlaylists();
-        this.updateSongsSelectedList();
-        //JOptionPane.showMessageDialog(this, "Playlist deleted.");
+        SwingUtilities.invokeLater(()-> {
+            this.reloadPlaylists();
+            this.updateSongsSelectedList();
+        });
     }
 
     @Override
@@ -156,7 +156,7 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
 
     @Override
     public void songDeletedFromPlaylist() {
-        this.updateSongsSelectedList();
+        SwingUtilities.invokeLater(()->this.updateSongsSelectedList());
     }
 
     @Override
