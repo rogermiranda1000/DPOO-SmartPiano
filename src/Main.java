@@ -25,21 +25,27 @@ public class Main {
 
             /* FILE EXCEPTIONS */
         } catch (FileNotFoundException ex) {
-            JOptionPane.showMessageDialog(new JFrame(), "El fitxer config.json no existeix!", "ERROR!", JOptionPane.ERROR_MESSAGE);
+            Main.showErrorAndClose("El fitxer config.json no existeix!");
 
             /* DDBB EXCEPTIONS */
         } catch (ClassNotFoundException ex) {
-            JOptionPane.showMessageDialog(new JFrame(), "No tens la dependencia del driver de MariaDB!", "ERROR!", JOptionPane.ERROR_MESSAGE);
+            Main.showErrorAndClose("No tens la dependencia del driver de MariaDB!");
         } catch (SQLInvalidAuthorizationSpecException ex) {
-            JOptionPane.showMessageDialog(new JFrame(), "Les credencials especificades en config.json (usuari/password) son incorrectes!", "ERROR!", JOptionPane.ERROR_MESSAGE);
+            Main.showErrorAndClose("Les credencials especificades en config.json (usuari/password) son incorrectes!");
         } catch (SQLNonTransientConnectionException ex) {
-            JOptionPane.showMessageDialog(new JFrame(), "Les dades especificades en config.json (ip/port) son incorrectes!", "ERROR!", JOptionPane.ERROR_MESSAGE);
+            Main.showErrorAndClose("Les dades especificades en config.json (ip/port) son incorrectes!");
         } catch (SQLSyntaxErrorException ex) {
-            JOptionPane.showMessageDialog(new JFrame(), "El nom de la base de dades especificat al config.json és incorrecte!", "ERROR!", JOptionPane.ERROR_MESSAGE);
+            Main.showErrorAndClose("El nom de la base de dades especificat al config.json és incorrecte!");
 
             /* OTHER EXCEPTIONS */
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(new JFrame(), "Hi hagut un error de tipus SQLException", "ERROR!", JOptionPane.ERROR_MESSAGE);
+            Main.showErrorAndClose("Error d'SQL desconegut! (" + ex.getMessage() + ")");
         }
+    }
+
+    private static void showErrorAndClose(String error) {
+        JFrame frame = new JFrame();
+        JOptionPane.showMessageDialog(frame, error, "ERROR!", JOptionPane.ERROR_MESSAGE);
+        frame.dispose();
     }
 }
