@@ -8,13 +8,29 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * Class that manages database operations regarding songs
+ */
 public class SongDDBBDAO implements SongDAO {
+
+    /**
+     * Object used to access the database
+     */
     private final DDBBAccess ddbb;
 
+    /**
+     * Initiates the class, saving the DDBBAccess
+     * @param ddbb Object used to access the database
+     */
     public SongDDBBDAO(DDBBAccess ddbb) {
         this.ddbb = ddbb;
     }
 
+    /**
+     * Adds a song with a virtual creator to the database
+     * @param song Song to be added
+     * @return True if the operation was successful
+     */
     @Override
     public boolean addVirtualSong(Song song) {
         try {
@@ -28,6 +44,11 @@ public class SongDDBBDAO implements SongDAO {
         }
     }
 
+    /**
+     * Adds a song to the database
+     * @param song Song to add
+     * @return True if the operation was successful
+     */
     @Override
     public boolean addSong(Song song) {
         try {
@@ -41,6 +62,12 @@ public class SongDDBBDAO implements SongDAO {
         }
     }
 
+    /**
+     * Adds a song to the database given an internal id of the author
+     * @param id Database id of the author
+     * @param song Song to add
+     * @return True if the operation was successful
+     */
     private boolean addSongGivenId(int id, Song song) {
         try {
             int songId;
@@ -62,14 +89,6 @@ public class SongDDBBDAO implements SongDAO {
                 songId = rs.getInt(1);
             }
 
-            // v1.0
-            /*for (SongNote sn : song.getNotes()) {
-                // hi han cançons que començen/acaben 2 tecles idéntiques al mateix moment (?); ignorem aquestes
-                this.ddbb.runSentence("INSERT IGNORE INTO SongNotes(note, tick, pressed, song, velocity, octave) VALUES (?,?,?,?,?,?);",
-                        sn.getNote().toString().replaceAll("X$", "#"), sn.getTick(), sn.isPressed(), songId, sn.getVelocity(), sn.getOctave());
-            }*/
-
-            // v2.0 aka. SQL Injection
             StringBuilder sb = new StringBuilder();
             // hi han cançons que començen/acaben 2 tecles idéntiques al mateix moment (?); ignorem aquestes
             sb.append("INSERT IGNORE INTO SongNotes(note, tick, pressed, song, velocity, octave) VALUES ");
@@ -99,6 +118,11 @@ public class SongDDBBDAO implements SongDAO {
         return false;
     }
 
+    /**
+     * Deletes a song from the database
+     * @param song Song to be deleted
+     * @return True if the operation was successful
+     */
     @Override
     public boolean deleteSong(Song song) {
         Integer id = this.getSongId(song);
@@ -111,11 +135,21 @@ public class SongDDBBDAO implements SongDAO {
         }
     }
 
+    /**
+     * Checks if the specified song exists in the database
+     * @param song Song to look for
+     * @return True if the song exists
+     */
     @Override
     public boolean existsSong(Song song) {
         return (this.getSongId(song) != null);
     }
 
+    /**
+     * Deletes all the songs created by the specified user
+     * @param user User to delete the songs from
+     * @return True if the operation was successful
+     */
     @Override
     public boolean deleteUserSongs(String user) {
         try {
@@ -127,6 +161,12 @@ public class SongDDBBDAO implements SongDAO {
         }
     }
 
+    /**
+     * Checks if the registered user is the author of the song
+     * @param song Song to check
+     * @param name Registered user to check
+     * @return If it's the author (true), or not (false); null if something went wrong
+     */
     @Override
     public Boolean isAuthor(Song song, String name) {
         try {
@@ -142,6 +182,11 @@ public class SongDDBBDAO implements SongDAO {
         return false;
     }
 
+    /**
+     * Given a song with basic attributes (name, date, author), obtains the rest of the information
+     * @param song Song to fill
+     * @return True if the operation was successful
+     */
     @Override
     public boolean updateSong(Song song) {
         try {
@@ -161,6 +206,12 @@ public class SongDDBBDAO implements SongDAO {
         return false;
     }
 
+    /**
+     * Fills a song with its notes
+     * @param song Song to fill
+     * @param id Internal id of the song
+     * @return True if the operation was successful
+     */
     private boolean updateSongNotes(Song song, int id) {
         try {
             ResultSet songNotes = this.ddbb.getSentence("SELECT tick, pressed, velocity, octave, note FROM SongNotes WHERE song = ? ORDER BY tick ASC;",
@@ -176,6 +227,12 @@ public class SongDDBBDAO implements SongDAO {
         return false;
     }
 
+    /**
+     * Obtains all the songs from the user and the public ones,
+     * /!\ Only the basic information of every song is loaded (there are no notes)
+     * @param loggedUser User logged in the app
+     * @return The songs the user should be able to see
+     */
     @Override
     public ArrayList<Song> getAccessibleSongs(String loggedUser) {
         try {
@@ -191,6 +248,11 @@ public class SongDDBBDAO implements SongDAO {
         return null;
     }
 
+    /**
+     * Returns the internal Id of the specified song
+     * @param song Song to get the id from
+     * @return Internal database id of the song
+     */
     private Integer getSongId(Song song) {
         try {
             ResultSet rs;

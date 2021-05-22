@@ -8,13 +8,29 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * Class that manages database operations regarding a user's configuration
+ */
 public class PlaylistDDBBDAO implements PlaylistDAO {
+
+    /**
+     * Object used to access the database
+     */
     private final DDBBAccess ddbb;
 
+    /**
+     * Initiates the class, saving the DDBBAccess
+     * @param ddbb Object used to access the database
+     */
     public PlaylistDDBBDAO(DDBBAccess ddbb) {
         this.ddbb = ddbb;
     }
 
+    /**
+     * Creates a playlist in the database
+     * @param list Playlist to create
+     * @return True if the operation was successful
+     */
     @Override
     public boolean createPlaylist(List list) {
         try {
@@ -36,11 +52,21 @@ public class PlaylistDDBBDAO implements PlaylistDAO {
         return false;
     }
 
+    /**
+     * Checks if a playlist exists in the database
+     * @param list Playlist to look for
+     * @return True if it exists, false if it doesn't and null if there was an error
+     */
     @Override
     public Boolean existsPlaylist(List list) {
         return this.getPlaylistId(list) != null;
     }
 
+    /**
+     * Returns the id of a playlist
+     * @param list Playlist to get the id from
+     * @return The internal database id from the playlist
+     */
     private Integer getPlaylistId(List list) {
         try {
             ResultSet rs = this.ddbb.getSentence("SELECT id FROM Lists WHERE author = (SELECT Users.id FROM Users JOIN RegisteredUsers ON Users.id = RegisteredUsers.id WHERE username = ?) AND name = ?;",
@@ -53,6 +79,11 @@ public class PlaylistDDBBDAO implements PlaylistDAO {
         return null;
     }
 
+    /**
+     * Removes a playlist from the database
+     * @param list Playlist to remove
+     * @return True if the operation was successful
+     */
     @Override
     public boolean removePlaylist(List list) {
         try {
@@ -67,6 +98,12 @@ public class PlaylistDDBBDAO implements PlaylistDAO {
         return false;
     }
 
+    /**
+     * Adds a song to a playlist in the database
+     * @param list Playlist to add the song to
+     * @param song Song to add
+     * @return True if the operation was successful
+     */
     @Override
     public boolean addSongPlaylist(List list, Song song) {
         Integer id = this.getPlaylistId(list);
@@ -74,6 +111,12 @@ public class PlaylistDDBBDAO implements PlaylistDAO {
         return this.addSongPlaylist(id, song);
     }
 
+    /**
+     * Adds a song to a playlist in the database
+     * @param id Id of the playlist to add the song to
+     * @param song Song to add
+     * @return True if the operation was successful
+     */
     private boolean addSongPlaylist(int id, Song song) {
         try {
             return (this.ddbb.runSentence("INSERT INTO ListSongs(list, song) VALUES (?, (SELECT Songs.id FROM Songs JOIN Users ON Users.id = Songs.author WHERE Users.username = ? AND Songs.name = ? AND Songs.date = ?) );",
@@ -84,6 +127,12 @@ public class PlaylistDDBBDAO implements PlaylistDAO {
         return false;
     }
 
+    /**
+     * Removes a song from a playlist in the database
+     * @param list Playlist to remove a song from
+     * @param song Song to remove
+     * @return True if the operation was successful
+     */
     @Override
     public boolean removeSongPlaylist(List list, Song song) {
         Integer id = this.getPlaylistId(list);
@@ -92,10 +141,9 @@ public class PlaylistDDBBDAO implements PlaylistDAO {
     }
 
     /**
-     * Remove the relations between Lists and one Songs
-     * Important: call before removing a Song
-     * @param song Song to remove from the list (if exists)
-     * @return If everythins is OK (true), or something happened (false)
+     * Removes the relation between a song and it's playlists
+     * @param song Song to remove the connections from
+     * @return True if the operation was successful
      */
     @Override
     public boolean removeSongAllPlaylists(Song song) {
@@ -110,10 +158,10 @@ public class PlaylistDDBBDAO implements PlaylistDAO {
     }
 
     /**
-     * Remove one relation between Lists and one Songs
-     * @param id List ID from the DDBB
+     * Removes one relation between Lists and one Song
+     * @param id Playlist ID from the DDBB
      * @param song Song to remove from the list
-     * @return If the song was deleted (true), or something happened (false)
+     * @return True if the relation was deleted successfully
      */
     private boolean removeSongPlaylist(int id, Song song) {
         try {
@@ -125,8 +173,12 @@ public class PlaylistDDBBDAO implements PlaylistDAO {
         return false;
     }
 
-
-
+    /**
+     * Returns all the playlists from a user
+     * Attention: The songs inside the playlist only contain the necessary information to find them (name, author, creation date); They don't have notes
+     * @param user User that owns the playlists
+     * @return The user's playlists
+     */
     @Override
     public ArrayList<List> getPlaylists(User user) {
         ArrayList<List> retorn = new ArrayList<>();

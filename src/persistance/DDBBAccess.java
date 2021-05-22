@@ -5,24 +5,39 @@ import entities.DDBBInfo;
 import java.sql.*;
 
 /**
- * Estableix la conexió amb la base de dades especificada en connect()
+ * Establishes a connection with the database specified in connect()
  */
 public class DDBBAccess {
+
+    /**
+     * The driver used to access the database
+     */
     private static final String DRIVER = "org.mariadb.jdbc.Driver";
+
+    /**
+     * The protocol used to access the database
+     */
     private static final String PROTOCOL = "jdbc:mariadb:";
 
+    /**
+     * Connection queue for the database
+     */
     private final Connection[] ddbb;
+
+    /**
+     * Array that idicates which connections are being used
+     */
     private final boolean[] using;
 
     /**
-     * Es conecta a la base de dades segons els parà
-     * @throws SQLException Error al conectar
-     * @throws ClassNotFoundException No es té el driver de MariaDB
-     * @throws SQLInvalidAuthorizationSpecException Credencials invàl·lides
-     * @throws SQLNonTransientConnectionException IP de la base de dades invàl·lida
-     * @throws SQLSyntaxErrorException DB nom invàl·lid
+     * Connects to the database using the parameters
+     * @throws SQLException Error when connecting to the database
+     * @throws ClassNotFoundException The driver is missing
+     * @throws SQLInvalidAuthorizationSpecException Invalid credentials
+     * @throws SQLNonTransientConnectionException The database IP address is invalid
+     * @throws SQLSyntaxErrorException The database name is invalid
      */
-    public DDBBAccess(DDBBInfo info, int maxConnections) throws SQLException, ClassNotFoundException, SQLInvalidAuthorizationSpecException {
+    public DDBBAccess(DDBBInfo info, int maxConnections) throws SQLException, ClassNotFoundException, SQLInvalidAuthorizationSpecException, SQLNonTransientConnectionException, SQLSyntaxErrorException {
         DDBBAccess.loadDriver();
 
         this.ddbb = new Connection[maxConnections];
@@ -35,18 +50,18 @@ public class DDBBAccess {
     }
 
     /**
-     * Carga el driver de MariaDB
-     * Si no el tens, l'has d'afegir com dependència. El pots descargar en https://mariadb.com/kb/en/about-mariadb-connector-j/
-     * @throws ClassNotFoundException No s'ha instalat el driver
+     * Charges the database driver
+     * If you don't have it you have to add the dependency. You can download it here https://mariadb.com/kb/en/about-mariadb-connector-j/
+     * @throws ClassNotFoundException The driver is not installed
      */
     public static void loadDriver() throws ClassNotFoundException {
         Class.forName(DRIVER);
     }
 
     /**
-     * Obtè la primera conexió lliure de la llista
-     * @return ID de la conexió
-     * @throws OutOfConnectionsException S'han demanat més conexions de les disponibles
+     * Obtains the first available connection
+     * @return ID of the connection
+     * @throws OutOfConnectionsException There have been more connections requested than the maximum
      */
     private synchronized int getConnection() throws OutOfConnectionsException {
         for (int x = 0; x < this.using.length; x++) {
@@ -58,16 +73,20 @@ public class DDBBAccess {
         throw new OutOfConnectionsException();
     }
 
+    /**
+     * Closes the connection for the specified handler
+     * @param handler Handler of the connection to close
+     */
     private synchronized void closeConnection(int handler) {
         this.using[handler] = false;
     }
 
     /**
-     * Executa una sentència SQL i retorna els objectes obtinguts
-     * @param sql Sentència a executar
-     * @param params Paràmetres de la sentència
-     * @return ResultSet de la consulta
-     * @throws SQLException No s'ha pogut executar la sentència
+     * Executes an SQL query and returns the resulting objects
+     * @param sql Query to execute
+     * @param params Query parameters
+     * @return ResultSet of the query
+     * @throws SQLException The query couldn't be executed
      */
     public ResultSet getSentence(String sql, Object... params) throws SQLException {
         int connectionId = this.getConnection();
@@ -88,11 +107,11 @@ public class DDBBAccess {
     }
 
     /**
-     * Executa una sentencia SQL sense retorn (UPDATE, DELETE, INSERT)
-     * @param sql Sentència SQL
-     * @param params Paràmetres de la sentència
-     * @return Nº files afectades
-     * @throws SQLException No s'ha pogut executar la sentència
+     * Executes an SQL query without return values
+     * @param sql SQL query
+     * @param params Query parameters
+     * @return Nº of rows affected by the query
+     * @throws SQLException The query couldn't be executed
      */
     public int runSentence(String sql, Object... params) throws SQLException {
         int connectionId = this.getConnection();
