@@ -271,6 +271,6 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
      */
     @Override
     public void reloadGraphs() {
-        this.ranking.reloadGraphs();
+        SwingUtilities.invokeLater(()->this.ranking.reloadGraphs());
     }
 }
