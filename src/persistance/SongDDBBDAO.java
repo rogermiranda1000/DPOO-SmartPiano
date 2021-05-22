@@ -45,8 +45,17 @@ public class SongDDBBDAO implements SongDAO {
         try {
             int songId;
             synchronized (this) {
-                if (this.ddbb.runSentence("INSERT INTO Songs(public, name, date, author, tick_length) VALUES (?,?,?,?,?);",
-                    song.getPublic(), song.getName(), song.getDate() == null ? "CURRENT_DATE()" : song.getDate(), id, song.getTickLength()) == 0) return false;
+                if (song.getDate() != null) {
+                    // song with date:
+                    if (this.ddbb.runSentence("INSERT INTO Songs(public, name, date, author, tick_length) VALUES (?,?,?,?,?);",
+                            song.getPublic(), song.getName(), song.getDate(), id, song.getTickLength()) == 0) return false;
+                }
+                else {
+                    // song without date:
+                    if (this.ddbb.runSentence("INSERT INTO Songs(public, name, date, author, tick_length) VALUES (?,?,CURDATE(),?,?);",
+                            song.getPublic(), song.getName(), id, song.getTickLength()) == 0) return false;
+                }
+
                 // obté l'últim ID insertat (el de Songs)
                 ResultSet rs = this.ddbb.getSentence("SELECT LAST_INSERT_ID();");
                 if (!rs.next()) return false;
@@ -81,7 +90,7 @@ public class SongDDBBDAO implements SongDAO {
             }
             sb.setLength(sb.length()-1); // eliminem la ',' final
             sb.append(';');
-            this.ddbb.runSentence(sb.toString());
+            if (song.getNotes().size() > 0) this.ddbb.runSentence(sb.toString());
 
             return true;
         } catch (SQLException ex) {
@@ -105,6 +114,32 @@ public class SongDDBBDAO implements SongDAO {
     @Override
     public boolean existsSong(Song song) {
         return (this.getSongId(song) != null);
+    }
+
+    @Override
+    public boolean deleteUserSongs(String user) {
+        try {
+            this.ddbb.runSentence("DELETE SongNotes FROM SongNotes JOIN Songs ON Songs.id = SongNotes.song JOIN Users ON Users.id = Songs.author WHERE Users.username = ?;", user);
+            this.ddbb.runSentence("DELETE Songs FROM Songs JOIN Users ON Users.id = Songs.author WHERE Users.username = ?;", user);
+            return true;
+        } catch (SQLException ex) {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean isAuthor(Song song, String name) {
+        try {
+            ResultSet rs = this.ddbb.getSentence("SELECT COUNT(*) FROM Songs JOIN Users ON Users.id = Songs.author JOIN RegisteredUsers ON Users.id = RegisteredUsers.id WHERE name = ? AND username = ? AND date = ?;",
+                    song.getName(), song.getArtist(), song.getDate());
+
+            if (!rs.next()) return false;
+
+            return rs.getInt(1)>0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
     }
 
     @Override
@@ -144,12 +179,18 @@ public class SongDDBBDAO implements SongDAO {
     @Override
     public ArrayList<Song> getAccessibleSongs(String loggedUser) {
         try {
-            // TODO null score?
-            ResultSet rs = this.ddbb.getSentence("SELECT Songs.name, Author.username, Songs.date, COALESCE(AVG(Ranking.points), 0) AS ranking, (MAX(SN.tick)*Songs.tick_length)/(1000 * 1000) AS duration FROM Songs JOIN Users Author ON Songs.author = Author.id JOIN SongNotes SN on Songs.id = SN.song LEFT JOIN Ranking ON Songs.id = Ranking.song WHERE Songs.author = (SELECT Users.id FROM Users JOIN RegisteredUsers RU ON RU.id = Users.id WHERE Users.username = ?) OR Songs.public = true GROUP BY Songs.id;",
+            ResultSet rs = this.ddbb.getSentence("SELECT Songs.name, Author.username, Songs.date, (MAX(SN.tick)*Songs.tick_length)/(1000 * 1000) AS duration " +
+                            "FROM Songs JOIN Users AS Author ON Songs.author = Author.id" +
+                            "    JOIN SongNotes SN ON Songs.id = SN.song" +
+                            "    LEFT JOIN RegisteredUsers AS RegisteredAuthor ON RegisteredAuthor.id = Author.id" +
+                            "    LEFT JOIN Listen ON Songs.id = Listen.song " +
+                            "WHERE (RegisteredAuthor.id IS NOT NULL AND Author.username = ?) OR Songs.public = true " +
+                            "GROUP BY Songs.id " +
+                            "ORDER BY COUNT(DISTINCT Listen.date) DESC, MAX(Author.username) ASC, MAX(Songs.name) ASC;",
                     loggedUser);
 
             ArrayList<Song> r = new ArrayList<>();
-            while (rs.next()) r.add(new Song(rs.getString(1), rs.getString(2), rs.getDate(3), rs.getFloat(4), rs.getDouble(5)));
+            while (rs.next()) r.add(new Song(rs.getString(1), rs.getString(2), rs.getDate(3), 0.f, rs.getDouble(4)));
             return r;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -159,8 +200,15 @@ public class SongDDBBDAO implements SongDAO {
 
     private Integer getSongId(Song song) {
         try {
-            ResultSet rs = this.ddbb.getSentence("SELECT Songs.id FROM Songs JOIN Users ON Users.id = Songs.author WHERE name = ? AND username = ? AND date = ?;",
-                    song.getName(), song.getArtist(), song.getDate());
+            ResultSet rs;
+            if (song.getDate() != null) {
+                rs = this.ddbb.getSentence("SELECT Songs.id FROM Songs JOIN Users ON Users.id = Songs.author WHERE name = ? AND username = ? AND date = ?;",
+                        song.getName(), song.getArtist(), song.getDate());
+            }
+            else {
+                rs = this.ddbb.getSentence("SELECT Songs.id FROM Songs JOIN Users ON Users.id = Songs.author WHERE name = ? AND username = ? AND date = CURDATE();",
+                        song.getName(), song.getArtist());
+            }
 
             if (!rs.next()) return null; // no hi ha coincidencies
             return rs.getInt(1);

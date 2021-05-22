@@ -2,14 +2,14 @@ package view;
 
 import controller.*;
 import entities.Song;
-import entities.Note;
+import entities.SongNote;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMenuNotifier, PlaylistMenuNotifier, TeclaNotifier {
+public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, PlaylistMenuNotifier, DeleteUserNotifier, PianoNotifier, ConfigLoadNotifier {
     public static final int HEIGHT = 900;
     public static final int WIDTH = 1600;
     private JButton songsButton, playlistButton, pianoButton, rankingButton, settingsButton, exitButton;
@@ -21,9 +21,10 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
     private final Songs songs;
     private final Playlist playlist;
     private final Piano piano;
+    private final Settings settings;
     private final Ranking ranking;
 
-    public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE, TeclaEvent keyE) {
+    public Menu(PlaylistBarEvent playE, SongRequest songRequestE, MenuEvent menuE, SongsEvent songsE, PlaylistEvent playlistE, RankingEvent rankingE, TeclaEvent keyE, UpdateConfigEvent configE, RecordingEvent recordE, SongRequestPiano sRP) {
         this.event = menuE;
 
         this.setTitle("Piano TIME!");
@@ -43,22 +44,31 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
 
         // Adding layouts
         this.playlist = new Playlist(playlistE);
-        this.songs = new Songs(songsE, songRequestE);
+        this.songs = new Songs(songsE, songRequestE, sRP);
         mainContent = new JPanel(new CardLayout());
         mainContent.add(this.songs, "songs");
         mainContent.add(this.playlist, "playlists");
 
-        piano = new Piano(keyE);
+        piano = new Piano(keyE, recordE);
         mainContent.add(piano, "piano");
         ranking = new Ranking(rankingE);
         mainContent.add(ranking, "ranking");
-        mainContent.add(new Settings(this), "settings");
+        this.settings = new Settings(configE);
+        mainContent.add(this.settings, "settings");
         this.add(mainContent);
         cl = (CardLayout) (mainContent.getLayout());
-        /* DEFAULT VIEW */
-        cl.show(mainContent, ("piano"));
-        pianoButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
 
+        // default view
+        cl.show(mainContent, ("ranking"));
+        rankingButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
+    }
+
+    public void focusPiano() {
+        cl.show(mainContent, ("piano"));
+        piano.requestFocus();
+
+        resetButtonsColors();
+        pianoButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
     }
 
     public JPanel topPanel() {
@@ -133,6 +143,10 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
         this.ranking.reloadGraphs();
     }
 
+    private void exitMessage() {
+        JOptionPane.showMessageDialog(this, "The user has logout.", "User logout", JOptionPane.INFORMATION_MESSAGE);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         /* TOP BAR BUTTONS */
@@ -151,11 +165,7 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
             resetButtonsColors();
             playlistButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == pianoButton) {
-            cl.show(mainContent, ("piano"));
-            piano.requestFocus();
-
-            resetButtonsColors();
-            pianoButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
+            this.focusPiano();
         } else if (e.getSource() == rankingButton) {
             cl.show(mainContent, ("ranking"));
 
@@ -167,10 +177,14 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
             resetButtonsColors();
             settingsButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == exitButton) {
+            exitMessage();
             this.event.exitSession();
         }
     }
 
+    public void loadConfig(char[] config) {
+        this.piano.loadConfig(config);
+    }
 
     @Override
     public void songDeleted(Song song) {
@@ -222,45 +236,37 @@ public class Menu extends JFrame implements ActionListener, KeyChanger, SongsMen
         this.playlist.songNotDeletedFromPlaylist();
     }
 
-    public void loadConfig(char[] config) {
-        this.piano.loadConfig(config);
+    @Override
+    public void userDeleted() {
+        this.settings.userDeleted();
     }
 
     @Override
-    public void playNote(Note note, int octava) {
-        this.piano.playNote(note, octava);
+    public void userNotDeleted() {
+        this.settings.userNotDeleted();
     }
 
     @Override
-    public void stopNote(Note note, int octava) {
-        this.piano.stopNote(note, octava);
+    public void unpressAllKeys() {
+        this.piano.unpressAllKeys();
+    }
+
+    /**
+     * The PianoController wants to tell the view to press a button
+     * @param key Note to press
+     */
+    @Override
+    public void pressKey(SongNote key) {
+        this.piano.pressKey(key);
     }
 
     @Override
-    public void changeKey(Note n, char newLetter, int octava) {
-        this.piano.changeKey(n, octava, newLetter);
+    public void setConfig(float songVolume, float pianoVolume) {
+        this.settings.setConfig(songVolume, pianoVolume);
     }
 
-
-    /*
     @Override
-    public boolean saveKeyNotes(char[] chars) {
-        return false;
+    public void setUserInformation(String name, String email) {
+        this.settings.setUserInformation(name, email);
     }
-
-    //TODO: connectar amb BBDD.
-    @Override
-    public boolean saveVolumes(float pianoVolume, float songVolume) {
-        return false;
-    }
-
-
-    //TODO: connectar amb BBDD.
-    //Sé que aquesta funció és molt tonta, però és la manera que se m'ha ocurregut, demano disculpes per possibles atacs de panic al veure aquesta funció. - David
-    @Override
-    public String sendSignal(String type) {
-        return type;
-    }
-    */
-
 }
