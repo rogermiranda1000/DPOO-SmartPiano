@@ -6,13 +6,30 @@ import entities.Note;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Class that manages database operations regarding a user's configuration
+ */
 public class ConfigDDBBDAO implements ConfigDAO{
+
+    /**
+     * Object used to access the database
+     */
     private final DDBBAccess ddbb;
 
+    /**
+     * Initiates the class, saving the DDBBAccess
+     * @param ddbb Object used to access the database
+     */
     public ConfigDDBBDAO(DDBBAccess ddbb) {
         this.ddbb = ddbb;
     }
 
+    /**
+     * Saves the piano volume for the specified user on the database
+     * @param nick Username of the logged user
+     * @param value Value of the new piano volume (1 = full volume, 0 = silent)
+     * @return True if the operation was successful
+     */
     @Override
     public boolean setVolumePiano(String nick, float value) {
         try {
@@ -22,6 +39,12 @@ public class ConfigDDBBDAO implements ConfigDAO{
         }
     }
 
+    /**
+     * Saves the song volume for the specified user on the database
+     * @param nick Username of the logged user
+     * @param value Value of the new song volume (1 = full volume, 0 = silent)
+     * @return True if the operation was successful
+     */
     @Override
     public boolean setVolumeSong(String nick, float value) {
         try {
@@ -31,6 +54,11 @@ public class ConfigDDBBDAO implements ConfigDAO{
         }
     }
 
+    /**
+     * Returns the configuration of the specified user on the database
+     * @param nick Username of the logged user
+     * @return A Config object with the full configuration of the user (piano volume, music volume and note binds)
+     */
     @Override
     public entities.Config getConfig(String nick) {
         try {
@@ -51,6 +79,12 @@ public class ConfigDDBBDAO implements ConfigDAO{
         }
     }
 
+    /**
+     * Saves the note binds of the specified user on the database
+     * @param nick Username of the logged user
+     * @param characters Array of characters corresponding to the new configuration,
+     * @return True if the operation was successful
+     */
     @Override
     public boolean setConfig(String nick, char[] characters) {
         try {
@@ -64,6 +98,11 @@ public class ConfigDDBBDAO implements ConfigDAO{
         }
     }
 
+    /**
+     * Deletes the configuration of the specified user from the database
+     * @param nick Username of the user
+     * @return True if the operation was successful
+     */
     @Override
     public boolean deleteUserConfig(String nick) {
         try {
