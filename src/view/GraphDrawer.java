@@ -9,6 +9,7 @@ class GraphDrawer extends JPanel {
     private static final int GRAPH_WIDTH = 700;
     private static final int INITIAL_POINT_X = 50;
     private static final int INITIAL_POINT_Y = 20;
+    private static final Font font = new Font("TimesRoman", Font.PLAIN, 14);
 
     private final int[] yCoords;
     private final String name;
@@ -36,19 +37,20 @@ class GraphDrawer extends JPanel {
         int unitX = (endX - GraphDrawer.INITIAL_POINT_X) / 23;
         int unitY = (endY - GraphDrawer.INITIAL_POINT_Y) / numHoritzontalLines;
 
-        g2d.setFont(new Font("TimesRoman", Font.PLAIN, 14));
+        g2d.setFont(GraphDrawer.font);
 
         //Dibuix de les lineas verticals
+        int drawingHour = hour+1;
         for (int i = GraphDrawer.INITIAL_POINT_X; i <= endX; i += unitX) {
             g2d.drawLine(i, GraphDrawer.INITIAL_POINT_Y, i, endY);
             g2d.setColor(Color.BLACK);
             g2d.rotate(-0.78, i, endY + 30);
-            g2d.drawString(hour + ":00", i - 32, endY + 30);
+            g2d.drawString(drawingHour + ":00", i - 32, endY + 30);
             g2d.setColor(Color.GRAY);
             g2d.rotate(0.78, i, endY + 30);
-            hour++;
-            if (hour > 23) {
-                hour = 0;
+            drawingHour++;
+            if (drawingHour > 23) {
+                drawingHour = 0;
             }
         }
 
