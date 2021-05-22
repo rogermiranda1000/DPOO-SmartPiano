@@ -20,6 +20,9 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
     private JLabel userName, userEmail;
     private JButton deleteButton, saveButton;
     private final UpdateConfigEvent updateEvent;
+    private JPasswordField passwordInput;
+    private JButton confirm;
+    private JDialog dialog;
 
     public Settings(UpdateConfigEvent updateEvent) {
         this.updateEvent = updateEvent;
@@ -41,37 +44,6 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
         panel.setPreferredSize(new Dimension(800, 300));
         panel.setBackground(ColorConstants.BACKGROUND.getColor());
 
-        JPanel options = new JPanel();
-        options.setLayout(new BoxLayout(options, BoxLayout.Y_AXIS));
-        options.setBackground(ColorConstants.BACKGROUND.getColor());
-
-        //Barra de volum
-        JPanel pianoVolumePanel = new JPanel();
-        pianoVolumePanel.setBackground(ColorConstants.BACKGROUND.getColor());
-        pianoVolumePanel.setSize(new Dimension(200,40));
-        volumePiano = new JSlider(0, 100, 50);
-        volumePiano.addChangeListener(this);
-        volumePianoTxt = new JLabel("50");
-
-        //Barra de velocitat
-        JPanel songVolumePanel = new JPanel();
-        songVolumePanel.setBackground(ColorConstants.BACKGROUND.getColor());
-        songVolumePanel.setSize(new Dimension(200,40));
-        volumeSong = new JSlider(0, 100, 50);
-        volumeSong.addChangeListener(this);
-        volumeSongTxt = new JLabel("50");
-
-        pianoVolumePanel.add(new Label("Piano volume"));
-        pianoVolumePanel.add(volumePiano);
-        pianoVolumePanel.add(volumePianoTxt);
-        songVolumePanel.add(new Label("Song volume"));
-        songVolumePanel.add(volumeSong);
-        songVolumePanel.add(volumeSongTxt);
-
-        options.add(pianoVolumePanel);
-        options.add(songVolumePanel);
-        options.setBackground(ColorConstants.BACKGROUND.getColor());
-
         JPanel information = new JPanel();
         information.setSize(new Dimension(300, 300));
         information.setLayout(new BoxLayout(information, BoxLayout.Y_AXIS));
@@ -90,22 +62,52 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
         }
 
         this.userName = new JLabel();
-        information.add(this.userName);
-
         this.userEmail = new JLabel();
-        information.add(this.userEmail);
 
         deleteButton = new GenericButton("Delete profile", new Font("Arial", Font.PLAIN, 15));
         deleteButton.addActionListener(this);
         deleteButton.setBackground(ColorConstants.RED_BUTTON.getColor());
-        information.add(deleteButton);
+        JPanel deleteB = new JPanel();
+        deleteB.setBackground(ColorConstants.BACKGROUND.getColor());
+        deleteB.add(deleteButton);
 
+        information.add(this.userName, BorderLayout.WEST);
+        information.add(this.userEmail, BorderLayout.EAST);
+        information.add(deleteB);
         information.setBackground(ColorConstants.BACKGROUND.getColor());
+
+        JPanel options = new JPanel();
+        options.setLayout(new BoxLayout(options, BoxLayout.Y_AXIS));
+        options.setBackground(ColorConstants.BACKGROUND.getColor());
+
+        JPanel pianoVolumePanel = new JPanel();
+        pianoVolumePanel.setBackground(ColorConstants.BACKGROUND.getColor());
+        pianoVolumePanel.setSize(new Dimension(200,40));
+        volumePiano = new JSlider(0, 100, 50);
+        volumePiano.addChangeListener(this);
+        volumePianoTxt = new JLabel("50");
+
+        JPanel songVolumePanel = new JPanel();
+        songVolumePanel.setBackground(ColorConstants.BACKGROUND.getColor());
+        songVolumePanel.setSize(new Dimension(200,40));
+        volumeSong = new JSlider(0, 100, 50);
+        volumeSong.addChangeListener(this);
+        volumeSongTxt = new JLabel("50");
+
+        pianoVolumePanel.add(new Label("Piano volume"));
+        pianoVolumePanel.add(volumePiano);
+        pianoVolumePanel.add(volumePianoTxt);
+        songVolumePanel.add(new Label("Song volume"));
+        songVolumePanel.add(volumeSong);
+        songVolumePanel.add(volumeSongTxt);
+
+        options.add(pianoVolumePanel);
+        options.add(songVolumePanel);
+        options.setBackground(ColorConstants.BACKGROUND.getColor());
 
         panel.add(information, BorderLayout.CENTER);
         panel.add(options, BorderLayout.CENTER);
         content.add(panel, BorderLayout.CENTER);
-
         content.add(keysConfig(), BorderLayout.CENTER);
 
         JPanel saveB = new JPanel();
@@ -122,11 +124,50 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
         return content;
     }
 
+    private JDialog confirmPassword(){
+        JDialog dialog = new JDialog();
+        dialog.setTitle("Confirm password");
+        dialog.setSize(400, 120);
+        dialog.setLocationRelativeTo(null);
+        dialog.setResizable(false);
+        dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JPanel container = new JPanel(new BorderLayout());
+        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+        container.setBackground(ColorConstants.BACKGROUND.getColor());
+
+        JPanel input = new JPanel();
+        input.setBackground(ColorConstants.BACKGROUND.getColor());
+        input.setVisible(true);
+        input.setPreferredSize(new Dimension(180, 45));
+
+        Label passwordTxt = new Label("Password :");
+        passwordTxt.setPreferredSize(new Dimension(75, 20));
+
+        passwordInput = new JPasswordField();
+        passwordInput.setPreferredSize(new Dimension(180, 20));
+
+        input.add(passwordTxt);
+        input.add(passwordInput);
+
+        confirm = new GenericButton("Confirm");
+
+        // Add of all the components
+        container.add(input, BorderLayout.CENTER);
+        container.add(confirm, BorderLayout.CENTER);
+
+        dialog.add(container, BorderLayout.CENTER);
+        confirm.addActionListener(this);
+        dialog.setVisible(true);
+        return dialog;
+    }
+
     private JPanel keysConfig() {
         JPanel keys = new JPanel(), title = new JPanel();
 
         keys.setLayout(new BoxLayout(keys, BoxLayout.Y_AXIS));
         keys.setBackground(ColorConstants.BACKGROUND.getColor());
+        keys.add(title);
 
         for (byte octava = KeyboardConstants.INIT_OCTAVA; octava < KeyboardConstants.NUM_OCTAVES + KeyboardConstants.INIT_OCTAVA; octava++) {
             JPanel panel = new JPanel();
@@ -145,7 +186,6 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
         keysConfig.setFont(new Font("Arial", Font.BOLD, 20));
         title.setBackground(ColorConstants.BACKGROUND.getColor());
         title.add(keysConfig);
-        keys.add(title);
 
         return keys;
     }
@@ -156,12 +196,7 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
     private void saveConfig() {
         this.updateEvent.updatePianoVolume(this.getPianoVolume());
         this.updateEvent.updateSongVolume(this.getSongVolume());
-        //JOptionPane.showMessageDialog(this, "Changes on configuration saved.","Configuration saved!",JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    private String deleteUser() {
-        return JOptionPane.showInputDialog(this, "All data from this user will be removed from LSPiano." +
-                "\nAre you sure you want to delete this account?\nConfirm your password:", "Delete confirmation",JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Changes on configuration saved.","Configuration saved!",JOptionPane.INFORMATION_MESSAGE);
     }
 
     private float getPianoVolume() {
@@ -183,7 +218,10 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
         if (e.getSource() == saveButton) {
             saveConfig();
         } else if (e.getSource() == deleteButton) {
-            this.updateEvent.deleteUser(this.deleteUser());
+            dialog = confirmPassword();
+        } else if(e.getSource() == confirm){
+            dialog.dispose();
+            this.updateEvent.deleteUser(String.valueOf(passwordInput.getPassword()));
         }
     }
 
