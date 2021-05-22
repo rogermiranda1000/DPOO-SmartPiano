@@ -53,6 +53,5 @@ public class Ranking extends JPanel implements NewPlayNotifier {
 
         // repintar
         this.setVisible(true);
-        //this.repaint();
     }
 }
