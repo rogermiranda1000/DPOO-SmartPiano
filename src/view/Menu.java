@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 /**
  * JFrame that contains everything in the app once the user has logged in
  */
-public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, PlaylistMenuNotifier, DeleteUserNotifier, PianoNotifier, ConfigLoadNotifier {
+public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, PlaylistMenuNotifier, DeleteUserNotifier, PianoNotifier, ConfigLoadNotifier, NewPlayNotifier {
 
     /**
      * Height of the window
@@ -90,6 +90,11 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
     private final Settings settings;
 
     /**
+     * Panel with the contents of the "Ranking" tab
+     */
+    private final Ranking ranking;
+
+    /**
      * Sets up all the content in the panel and initiates every tab and the bottom player
      * @param playE Manages events from the Music player
      * @param songRequestE Manages new songs to be played on the music player
@@ -129,7 +134,8 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
 
         piano = new Piano(keyE, recordE);
         mainContent.add(piano, "piano");
-        mainContent.add(new Ranking(rankingE), "ranking");
+        ranking = new Ranking(rankingE);
+        mainContent.add(ranking, "ranking");
         this.settings = new Settings(configE);
         mainContent.add(this.settings, "settings");
         this.add(mainContent);
@@ -144,7 +150,11 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
      * Puts the focus on piano to enable the key listeners to work
      */
     public void focusPiano() {
+        cl.show(mainContent, ("piano"));
         piano.requestFocus();
+
+        resetButtonsColors();
+        pianoButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
     }
 
     /**
@@ -153,38 +163,22 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
      */
     public JPanel topPanel() {
         JPanel panel = new JPanel();
-        // TODO: Upgrade
         panel.setLayout(new GridLayout(0, 6));
+        Font f = new Font("Arial", Font.BOLD, 20);
 
-        songsButton = new JButton("Songs");
-        songsButton.setBackground(ColorConstants.BUTTON.getColor());
+        songsButton = new GenericButton("Songs",f);
+        playlistButton = new GenericButton("Playlist",f);
+        pianoButton = new GenericButton("Piano",f);
+        rankingButton = new GenericButton("Ranking",f);
+        settingsButton = new GenericButton("Settings",f);
+        exitButton = new GenericButton("Log out",f);
+
         songsButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
-        songsButton.setFont(new Font("Arial", Font.BOLD, 20));
-
-        playlistButton = new JButton("Playlists");
-        playlistButton.setBackground(ColorConstants.BUTTON.getColor());
         playlistButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
-        playlistButton.setFont(new Font("Arial", Font.BOLD, 20));
-
-        pianoButton = new JButton("Piano");
-        pianoButton.setBackground(ColorConstants.BUTTON.getColor());
         pianoButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
-        pianoButton.setFont(new Font("Arial", Font.BOLD, 20));
-
-        rankingButton = new JButton("Ranking");
-        rankingButton.setBackground(ColorConstants.BUTTON.getColor());
         rankingButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
-        rankingButton.setFont(new Font("Arial", Font.BOLD, 20));
-
-        settingsButton = new JButton("Settings");
-        settingsButton.setBackground(ColorConstants.BUTTON.getColor());
         settingsButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
-        settingsButton.setFont(new Font("Arial", Font.BOLD, 20));
-
-        exitButton = new JButton("Log out");
-        exitButton.setBackground(ColorConstants.BUTTON.getColor());
         exitButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
-        exitButton.setFont(new Font("Arial", Font.BOLD, 20));
 
         songsButton.addActionListener(this);
         playlistButton.addActionListener(this);
@@ -250,10 +244,7 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
             resetButtonsColors();
             playlistButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == pianoButton) {
-            cl.show(mainContent, ("piano"));
             this.focusPiano();
-            resetButtonsColors();
-            pianoButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == rankingButton) {
             cl.show(mainContent, ("ranking"));
 
@@ -413,5 +404,13 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
     @Override
     public void setUserInformation(String name, String email) {
         this.settings.setUserInformation(name, email);
+    }
+
+    /**
+     * There's a new play -> the graphs needs to be updated
+     */
+    @Override
+    public void reloadGraphs() {
+        SwingUtilities.invokeLater(()->this.ranking.reloadGraphs());
     }
 }

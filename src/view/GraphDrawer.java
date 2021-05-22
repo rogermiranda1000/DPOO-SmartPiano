@@ -31,6 +31,11 @@ class GraphDrawer extends JPanel {
     private static final int INITIAL_POINT_Y = 20;
 
     /**
+     * Font used when printing the graph
+     */
+    private static final Font font = new Font("TimesRoman", Font.PLAIN, 14);
+
+    /**
      * List fo the values to create the graph from
      */
     private final int[] yCoords;
@@ -38,52 +43,13 @@ class GraphDrawer extends JPanel {
     /**
      * Starting x position of the graph
      */
-    private final int startX = INITIAL_POINT_X;
+    private final String name;
 
     /**
      * Starting y position of the graph
      */
-    private final int startY = INITIAL_POINT_Y;
+    private final Color lineColor;
 
-    /**
-     * Ending x position of the graph
-     */
-    private int endX;
-
-    /**
-     * Ending y position of the graph
-     */
-    private int endY;
-
-    /**
-     * X position of the previous line ending point
-     */
-    private int prevX;
-
-    /**
-     * Y position of the previous line ending point
-     */
-    private int prevY;
-
-    /**
-     * Increment of the x axis for each graph unit
-     */
-    private int unitX;
-
-    /**
-     * Increment of the y value in relationship to the previous one
-     */
-    private int unitY;
-
-    /**
-     * Name of the graph to be displayed
-     */
-    private String name;
-
-    /**
-     * Color of the graph's main line
-     */
-    private Color lineColor;
 
     /**
      * Initializes the variables with the values sent
@@ -102,52 +68,51 @@ class GraphDrawer extends JPanel {
      * @param g Graphics object to be drawn
      */
     @Override
-    protected void paintComponent(Graphics g) {
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        int topElementY = GetMax(yCoords);
-        int numHoritzontalLines = numSections(topElementY);
+        int topElementY = this.maxValue(yCoords);
+        int numHoritzontalLines = this.numSections(topElementY);
         int hour = yCoords[yCoords.length-1];
-        endX = GRAPH_WIDTH;
-        endY = GRAPH_HIGHT;
-        prevX = startX;
-        prevY = endY;
-        unitX = (endX - startX) / 23;
-        unitY = (endY - startY) / numHoritzontalLines;
+        int endX = GraphDrawer.GRAPH_WIDTH;
+        int endY = GraphDrawer.GRAPH_HIGHT;
+        int prevX = GraphDrawer.INITIAL_POINT_X;
+        int prevY;
+        int unitX = (endX - GraphDrawer.INITIAL_POINT_X) / 23;
+        int unitY = (endY - GraphDrawer.INITIAL_POINT_Y) / numHoritzontalLines;
 
-
-        g2d.setFont(new Font("TimesRoman", Font.PLAIN, 14));
+        g2d.setFont(GraphDrawer.font);
 
         //Dibuix de les lineas verticals
-        for (int i = startX; i <= endX; i += unitX) {
-
-            g2d.drawLine(i, startY, i, endY);
+        int drawingHour = hour+1;
+        for (int i = GraphDrawer.INITIAL_POINT_X; i <= endX; i += unitX) {
+            g2d.drawLine(i, GraphDrawer.INITIAL_POINT_Y, i, endY);
             g2d.setColor(Color.BLACK);
             g2d.rotate(-0.78, i, endY + 30);
-            g2d.drawString(hour + ":00", i - 32, endY + 30);
+            g2d.drawString(drawingHour + ":00", i - 32, endY + 30);
             g2d.setColor(Color.GRAY);
             g2d.rotate(0.78, i, endY + 30);
-            hour++;
-            if (hour > 23) {
-                hour = 0;
+            drawingHour++;
+            if (drawingHour > 23) {
+                drawingHour = 0;
             }
         }
 
         //dibuix de les lineas horitzontals
         int count = 0;
-        for (int i = endY; i >= startY; i -= unitY) {
-            g2d.drawLine(startX, i, endX, i);
+        for (int i = endY; i >= GraphDrawer.INITIAL_POINT_Y; i -= unitY) {
+            g2d.drawLine(GraphDrawer.INITIAL_POINT_X, i, endX, i);
             g2d.setColor(Color.BLACK);
-            g2d.drawString(Integer.toString(topElementY*count/numHoritzontalLines), startX - 45, i + 5);
+            g2d.drawString(Integer.toString(topElementY*count/numHoritzontalLines), GraphDrawer.INITIAL_POINT_X - 45, i + 5);
             g2d.setColor(Color.DARK_GRAY);
             count++;
         }
 
         g2d.setColor(Color.BLUE);
         g2d.setStroke(new BasicStroke(2));
-        g2d.drawLine(startX, startY, startX, endY);
-        g2d.drawLine(startX, endY, endX, endY);
+        g2d.drawLine(GraphDrawer.INITIAL_POINT_X, GraphDrawer.INITIAL_POINT_Y, GraphDrawer.INITIAL_POINT_X, endY);
+        g2d.drawLine(GraphDrawer.INITIAL_POINT_X, endY, endX, endY);
 
 
         g2d.setColor(lineColor);
@@ -157,14 +122,10 @@ class GraphDrawer extends JPanel {
             g2d.drawLine(prevX, prevY, prevX += unitX, prevY = endY - (yCoords[i] * unitY * numHoritzontalLines / topElementY));
         }
 
-
         g2d.setColor(Color.BLACK);
         g2d.drawString(name, 205 , endY + 105);
         g2d.setColor(lineColor);
         g2d.drawLine( 150, endY + 100, 200, endY + 100);
-
-
-
     }
 
     /**
@@ -173,9 +134,7 @@ class GraphDrawer extends JPanel {
      * @return Sections the graph will have, between 1 and 10
      */
     private int numSections(int x) {
-        while (x > 10) {
-            x /= 10;
-        }
+        while (x > 10) x /= 10;
         return x;
     }
 
@@ -184,7 +143,7 @@ class GraphDrawer extends JPanel {
      * @param inputArray Array of values
      * @return The highest value from the array
      */
-    private int GetMax(int[] inputArray) {
+    private int maxValue(int[] inputArray) {
         int maxValue = inputArray[0];
         for (int i = 1; i < inputArray.length; i++) {
             if (inputArray[i] > maxValue) {

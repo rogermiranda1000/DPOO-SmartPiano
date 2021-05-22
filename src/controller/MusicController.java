@@ -85,6 +85,8 @@ public class MusicController implements SongEnder, PlaylistBarEvent, SongRequest
     }
 
     private void advanceAndPlay(int value) {
+        if (this.list == null) return;
+
         this.addPlay();
         if (this.isRandom) this.songIndex = this.getRandomNext();
         else {
