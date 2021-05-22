@@ -127,10 +127,10 @@ public class PianoController implements SongValidator, SongEnder {
      * @param volume Value between 1 = full, 0 = silence
      */
     public void setVolume(float volume) {
-        //TODO: Cridar això segons l'usuari carregat
         this.volume = volume;
         if (this.volume > 1) this.volume = 1;
         else if (this.volume < 0) this.volume = 0;
+        this.notePlayer.setVolume(this.volume);
     }
 
     @Override
