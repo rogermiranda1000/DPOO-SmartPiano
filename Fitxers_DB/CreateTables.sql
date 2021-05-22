@@ -98,7 +98,7 @@ CREATE TABLE SongNotes (
     velocity TINYINT,               -- Volume of the note. 0 = silent, 127 = max volume
     octave TINYINT,
     song MEDIUMINT NOT NULL,
-    PRIMARY KEY (note, tick, pressed, song),
+    PRIMARY KEY (note, tick, pressed, song, octave),
     FOREIGN KEY (song)
     REFERENCES Songs(id)
 );
