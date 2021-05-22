@@ -109,8 +109,8 @@ public class PianoController implements SongValidator, SongEnder {
      */
     @Override
     public void requestNote(SongNote note) {
-        if (note.getOctave() >= KeyboardConstants.INIT_OCTAVA && note.getOctave() < (KeyboardConstants.INIT_OCTAVA + KeyboardConstants.NUM_OCTAVES) && this.pianoPresser != null) this.pianoPresser.pressKey(note);
-        if (this.songSilenced && (note.getOctave() >= KeyboardConstants.INIT_OCTAVA && note.getOctave() < (KeyboardConstants.INIT_OCTAVA + KeyboardConstants.NUM_OCTAVES))) return;
+        if (note.getOctave() >= KeyboardConstants.INIT_OCTAVE && note.getOctave() < (KeyboardConstants.INIT_OCTAVE + KeyboardConstants.NUM_OCTAVES) && this.pianoPresser != null) this.pianoPresser.pressKey(note);
+        if (this.songSilenced && (note.getOctave() >= KeyboardConstants.INIT_OCTAVE && note.getOctave() < (KeyboardConstants.INIT_OCTAVE + KeyboardConstants.NUM_OCTAVES))) return;
         this.notePlayer.executeNote(note);
     }
 

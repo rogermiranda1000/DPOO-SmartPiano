@@ -240,7 +240,7 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
         keys.setBackground(ColorConstants.BACKGROUND.getColor());
         keys.add(title);
 
-        for (byte octava = KeyboardConstants.INIT_OCTAVA; octava < KeyboardConstants.NUM_OCTAVES + KeyboardConstants.INIT_OCTAVA; octava++) {
+        for (byte octava = KeyboardConstants.INIT_OCTAVE; octava < KeyboardConstants.NUM_OCTAVES + KeyboardConstants.INIT_OCTAVE; octava++) {
             JPanel panel = new JPanel();
             panel.setBackground(ColorConstants.BACKGROUND.getColor());
 
