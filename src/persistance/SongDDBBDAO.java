@@ -179,10 +179,11 @@ public class SongDDBBDAO implements SongDAO {
     public ArrayList<Song> getAccessibleSongs(String loggedUser) {
         try {
             ResultSet rs = this.ddbb.getSentence("SELECT Songs.name, Author.username, Songs.date, Songs.duration " +
-                            "FROM Songs JOIN Users AS Author ON Songs.author = Author.id" +
-                            "    LEFT JOIN RegisteredUsers AS RegisteredAuthor ON RegisteredAuthor.id = Author.id" +
-                            "    LEFT JOIN Listen ON Songs.id = Listen.song " +
-                            "WHERE (RegisteredAuthor.id IS NOT NULL AND Author.username = ?) OR Songs.public = true " +
+                            "FROM Songs JOIN Users AS Author ON Songs.author = Author.id " +
+                                "LEFT JOIN RegisteredUsers AS RegisteredAuthor ON RegisteredAuthor.id = Author.id " +
+                                "LEFT JOIN Listen ON Songs.id = Listen.song " +
+                            "WHERE ((RegisteredAuthor.id IS NOT NULL AND Author.username = ?) OR Songs.public = true) " +
+                                "AND Songs.duration > 0 " +
                             "GROUP BY Songs.id " +
                             "ORDER BY COUNT(*) DESC, MAX(Author.username) ASC, MAX(Songs.name) ASC;",
                     loggedUser);
