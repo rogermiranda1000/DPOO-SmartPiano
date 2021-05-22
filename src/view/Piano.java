@@ -11,15 +11,44 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Class that contains the piano keys, the note bindings and some extra buttons
+ */
 public class Piano extends JPanel implements ActionListener, PianoNotifier {
+
+    /**
+     * Text for the record button when it's not recording
+     */
     private static final String TEXT_START_RECORDING = "Start recording";
+
+    /**
+     * Text for the record button when it's recording
+     */
     private static final String TEXT_SAVE_RECORDING = "Save recording";
+
+    /**
+     * Text for the mute button when it's un-muted
+     */
     private static final String TEXT_MUTE_PIANO = "Mute shown octaves";
+
+    /**
+     * Text for the mute button when it's muted
+     */
     private static final String TEXT_UNMUTE_PIANO = "Unmute shown octaves";
 
+    /**
+     * Associated value to BLACK pieces
+     */
     public static final boolean IS_BLACK = true;
+
+    /**
+     * Associated value to WHITE pieces
+     */
     public static final boolean IS_WHITE = false;
 
+    /**
+     * List of keys the piano has
+     */
     private final Tecla[] keys;
     private final JButton record;
     private final JButton mute;
