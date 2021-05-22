@@ -133,6 +133,9 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
 
         this.musicController.reset();
 
+        this.pianoController.stopRecording();
+        this.pianoController.closeCurrentSong();
+
         this.menu.dispose();
         this.menu = null;
 

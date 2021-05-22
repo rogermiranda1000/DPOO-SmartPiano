@@ -130,6 +130,6 @@ public class BottomPanel extends JPanel implements ActionListener, PlayingSongNo
      */
     @Override
     public void newSongPlaying(String songName) {
-        this.playingSong.setText(songName);
+        SwingUtilities.invokeLater(()->this.playingSong.setText(songName));
     }
 }

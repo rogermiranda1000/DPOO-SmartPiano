@@ -150,11 +150,13 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
      * Puts the focus on piano to enable the key listeners to work
      */
     public void focusPiano() {
-        cl.show(mainContent, ("piano"));
-        piano.requestFocus();
+        SwingUtilities.invokeLater(()-> {
+            cl.show(mainContent, ("piano"));
+            piano.requestFocus();
 
-        resetButtonsColors();
-        pianoButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
+            resetButtonsColors();
+            pianoButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
+        });
     }
 
     /**
@@ -374,7 +376,7 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
      */
     @Override
     public void unpressAllKeys() {
-        this.piano.unpressAllKeys();
+        SwingUtilities.invokeLater(()->this.piano.unpressAllKeys());
     }
 
     /**
@@ -383,7 +385,7 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
      */
     @Override
     public void pressKey(SongNote key) {
-        this.piano.pressKey(key);
+        SwingUtilities.invokeLater(()->this.piano.pressKey(key));
     }
 
     /**
@@ -393,7 +395,7 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
      */
     @Override
     public void setConfig(float songVolume, float pianoVolume) {
-        this.settings.setConfig(songVolume, pianoVolume);
+        SwingUtilities.invokeLater(()->this.settings.setConfig(songVolume, pianoVolume));
     }
 
     /**
@@ -403,7 +405,7 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
      */
     @Override
     public void setUserInformation(String name, String email) {
-        this.settings.setUserInformation(name, email);
+        SwingUtilities.invokeLater(()->this.settings.setUserInformation(name, email));
     }
 
     /**
