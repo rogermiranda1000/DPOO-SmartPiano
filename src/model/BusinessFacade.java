@@ -70,14 +70,24 @@ public class BusinessFacade {
      * @return Lista amb cançons
      */
     public List getPlaylist(String list) {
+        List l = this.getBasicPlaylist(list);
+        if (l != null) {
+            for (Song s: l.getSongs()) this.songManager.updateSong(s);
+        }
+        return l;
+    }
+
+    /**
+     * Donat un nom obtè la playlist del usuari amb coincidencia; sense notes
+     * @param list Nom de la llista
+     * @return Lista amb cançons
+     */
+    public List getBasicPlaylist(String list) {
         if (this.loggedUser == null) return null;
 
         List search = new List(list, this.loggedUser.getName());
         for (List l : this.getPlaylists()) {
-            if (l.equals(search)) {
-                for (Song s: l.getSongs()) this.songManager.updateSong(s);
-                return l;
-            }
+            if (l.equals(search)) return l;
         }
         return null; // not found
     }
@@ -213,8 +223,8 @@ public class BusinessFacade {
     }
 
     public boolean addSongPlaylist(Song song, String playlist) {
-        List add = this.getPlaylist(playlist);
-        if (add == null || this.loggedUser == null) return false;
+        List add = this.getBasicPlaylist(playlist);
+        if (add == null) return false;
 
         if (!this.playlistManager.addSongPlaylist(new List(playlist, this.loggedUser.getName()), song)) return false;
         add.addSong(song);
@@ -222,7 +232,7 @@ public class BusinessFacade {
     }
 
     public Boolean existsSongInPlaylist(Song song, String playlist) {
-        List search = this.getPlaylist(playlist);
+        List search = this.getBasicPlaylist(playlist);
         if (search == null) return null;
 
         for (Song s : search.getSongs()) {
@@ -237,10 +247,11 @@ public class BusinessFacade {
     }
 
     public boolean removeSongPlaylist(String playlist, Song song) {
-        if (this.loggedUser == null) return false;
-        if (!this.playlistManager.removeSongPlaylist(new List(playlist, this.loggedUser.getName()), song)) return false;
+        List list = this.getBasicPlaylist(playlist);
+        if (list == null) return false;
 
-        this.getPlaylist(playlist).removeSong(song);
+        if (!this.playlistManager.removeSongPlaylist(new List(playlist, this.loggedUser.getName()), song)) return false;
+        list.removeSong(song);
         return true;
     }
 
