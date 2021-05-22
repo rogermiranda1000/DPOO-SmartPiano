@@ -81,7 +81,7 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
         pianoButton = new GenericButton("Piano",f);
         rankingButton = new GenericButton("Ranking",f);
         settingsButton = new GenericButton("Settings",f);
-        exitButton = new GenericButton("Exit",f);
+        exitButton = new GenericButton("Log out",f);
 
         songsButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
         playlistButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
