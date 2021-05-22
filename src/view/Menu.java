@@ -73,38 +73,22 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
 
     public JPanel topPanel() {
         JPanel panel = new JPanel();
-        // TODO: Upgrade
         panel.setLayout(new GridLayout(0, 6));
+        Font f = new Font("Arial", Font.BOLD, 20);
 
-        songsButton = new JButton("Songs");
-        songsButton.setBackground(ColorConstants.BUTTON.getColor());
+        songsButton = new GenericButton("Songs",f);
+        playlistButton = new GenericButton("Playlist",f);
+        pianoButton = new GenericButton("Piano",f);
+        rankingButton = new GenericButton("Ranking",f);
+        settingsButton = new GenericButton("Settings",f);
+        exitButton = new GenericButton("Exit",f);
+
         songsButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
-        songsButton.setFont(new Font("Arial", Font.BOLD, 20));
-
-        playlistButton = new JButton("Playlists");
-        playlistButton.setBackground(ColorConstants.BUTTON.getColor());
         playlistButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
-        playlistButton.setFont(new Font("Arial", Font.BOLD, 20));
-
-        pianoButton = new JButton("Piano");
-        pianoButton.setBackground(ColorConstants.BUTTON.getColor());
         pianoButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
-        pianoButton.setFont(new Font("Arial", Font.BOLD, 20));
-
-        rankingButton = new JButton("Ranking");
-        rankingButton.setBackground(ColorConstants.BUTTON.getColor());
         rankingButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
-        rankingButton.setFont(new Font("Arial", Font.BOLD, 20));
-
-        settingsButton = new JButton("Settings");
-        settingsButton.setBackground(ColorConstants.BUTTON.getColor());
         settingsButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
-        settingsButton.setFont(new Font("Arial", Font.BOLD, 20));
-
-        exitButton = new JButton("Log out");
-        exitButton.setBackground(ColorConstants.BUTTON.getColor());
         exitButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
-        exitButton.setFont(new Font("Arial", Font.BOLD, 20));
 
         songsButton.addActionListener(this);
         playlistButton.addActionListener(this);
@@ -129,7 +113,6 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
 
         return panel;
     }
-
 
     private void resetButtonsColors() {
         songsButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
