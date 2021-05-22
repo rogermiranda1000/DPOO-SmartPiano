@@ -50,10 +50,27 @@ public class Piano extends JPanel implements ActionListener, PianoNotifier {
      * List of keys the piano has
      */
     private final Tecla[] keys;
+
+    /**
+     * Button for recording songs
+     */
     private final JButton record;
+
+    /**
+     * Button for muting the notes from the octaves the player can see
+     */
     private final JButton mute;
+
+    /**
+     * Object to notify recording actions to
+     */
     private final RecordingEvent recordingEvent;
 
+    /**
+     * Initializes the panel and it's keys
+     * @param event Object to notify piano key events to
+     * @param recording Object to notify recording actions to
+     */
     public Piano(TeclaEvent event, RecordingEvent recording) {
         this.keys = new Tecla[12 * KeyboardConstants.NUM_OCTAVES];
         this.recordingEvent = recording;
@@ -86,7 +103,7 @@ public class Piano extends JPanel implements ActionListener, PianoNotifier {
             int octava = (i/12) + KeyboardConstants.INIT_OCTAVA;
             String nota = Note.getNote(i % 12).toString();
 
-            Tecla temp = new Tecla(event, Note.getNote(i % 12), (nota.charAt(nota.length() - 1) == 'X') ? IS_BLACK : IS_WHITE, octava).setKeyAssocieted('t');
+            Tecla temp = new Tecla(event, Note.getNote(i % 12), (nota.charAt(nota.length() - 1) == 'X') ? IS_BLACK : IS_WHITE, octava).setKeyAssociated('t');
             this.keys[i] = temp;
             jPtemp.add(temp);
             this.addKeyListener(temp); // per alguna rao li hem d'afegir el KeyListener (potser culpa del request focus?)
@@ -112,7 +129,7 @@ public class Piano extends JPanel implements ActionListener, PianoNotifier {
      * @param letter Nova tecla a escoltar
      */
     public void changeKey(Note note, int octava, char letter) {
-        this.getKey(note, octava).setKeyAssocieted(letter);
+        this.getKey(note, octava).setKeyAssociated(letter);
     }
 
     /**
@@ -125,6 +142,10 @@ public class Piano extends JPanel implements ActionListener, PianoNotifier {
         }
     }
 
+    /**
+     * Called when a button is pressed, either recording or muting, executes the necessary action
+     * @param e Event that triggered this function
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == record) {
@@ -160,11 +181,18 @@ public class Piano extends JPanel implements ActionListener, PianoNotifier {
         }
     }
 
+    /**
+     * Un-presses all the piano keys
+     */
     @Override
     public void unpressAllKeys() {
         for (Tecla t : this.keys) t.stopNote();
     }
 
+    /**
+     * Presses the note in the piano
+     * @param key Note to play
+     */
     @Override
     public void pressKey(SongNote key) {
         Tecla note = this.keys[(key.getOctave()-KeyboardConstants.INIT_OCTAVA)*12 + key.getNote().ordinal()];

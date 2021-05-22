@@ -11,21 +11,92 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Initializes the "Songs" tab, and implements its functionalities
+ */
 public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
+
+    /**
+     * Model the song table will have
+     */
     private final DefaultTableModel songs;
+
+    /**
+     * Table that holds the songs
+     */
     private final JTable songsTable;
 
+    /**
+     * Model the playlist table will have (for when inserting a song into a playlist)
+     */
     private final DefaultTableModel playlists;
+
+    /**
+     * Table that holds the available playlists (for when inserting a song into a playlist)
+     */
     private final JTable playlistsTable;
 
+    /**
+     * Object to notify song related actions to
+     */
     private final SongsEvent event;
+
+    /**
+     * Object to request songs to be played in the music player
+     */
     private final SongRequest requestEvent;
+
+    /**
+     * Object to request songs to be played in the piano
+     */
     private final SongRequestPiano playSongPiano;
 
-    private JButton playSongButton, playSongButtonInPiano, addSongButton, removeSongButton, backToSongsButton, addToPlaylistButton;
+    /**
+     * Button used to play the song in the music player
+     */
+    private JButton playSongButton;
+
+    /**
+     * Button used to play the song in the piano
+     */
+    private JButton playSongButtonInPiano;
+
+    /**
+     * Button used to add songs into a playlist
+     */
+    private JButton addSongButton;
+
+    /**
+     * Button used to delete songs
+     */
+    private JButton removeSongButton;
+
+    /**
+     * Button used to return to the main songs view when adding to a playlist
+     */
+    private JButton backToSongsButton;
+
+    /**
+     * Button used to add songs into a playlist
+     */
+    private JButton addToPlaylistButton;
+
+    /**
+     * Panel that stores the contents of this tab
+     */
     private final JPanel mainContent;
+
+    /**
+     * Used to switch between the main "songs" view, and the add to "playlist" view
+     */
     private final CardLayout cl;
 
+    /**
+     * Initializes the variables and sets up the panels
+     * @param songE Object to notify song related actions to
+     * @param requestE Object to request songs to be played in the music player
+     * @param playSongP Object to request songs to be played in the piano
+     */
     public Songs(SongsEvent songE, SongRequest requestE, SongRequestPiano playSongP) {
         this.songs = new UneditableTable();
         this.songsTable = new JTable(this.songs);
@@ -48,6 +119,11 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
         this.setVisible(true);
     }
 
+
+    /**
+     * Creates the song list table and stores it in a panel
+     * @return A Panel containing the song list
+     */
     public JPanel songsList(){
         JPanel songsList = new JPanel();
         Font f = new Font(null, Font.PLAIN, 16);
@@ -78,16 +154,26 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
         return songsList;
     }
 
+    /**
+     * Updates the songs being displayed on the song list
+     */
     public void reloadSongs() {
         this.clearSongsTable();
         for (Song s : this.event.getUserSongs()) this.addSongToTable(s);
     }
 
+    /**
+     * Updates the playlists on the playlist list
+     */
     public void reloadPlaylists() {
         this.clearPlaylistTable();
         for (String l : this.event.getPlaylists()) this.addPlaylistToTable(l);
     }
 
+    /**
+     * Sets up a panel for choosing what playlist to add songs to
+     * @return Panel with a list of playlists
+     */
     public JPanel addToPlaylist(){
         JPanel playlistsList = new JPanel();
         Font f = new Font(null, Font.PLAIN, 16);
@@ -115,8 +201,11 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
         return playlistsList;
     }
 
+    /**
+     * Generates the bottom panel of the playlist view
+     * @return A panel with the buttons used to navigate the playlist selection for adding a song
+     */
     public JPanel playlistsBotPanel() {
-        Font f = new Font(null, Font.BOLD, 20);
         JPanel panel = new JPanel();
         panel.setBackground(ColorConstants.MENU.getColor());
 
@@ -135,8 +224,11 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
         return panel;
     }
 
+    /**
+     * Generates the bottom panel of the songs view
+     * @return A panel with buttons to add, play (in piano and player) and delete songs
+     */
     public JPanel songsBotPanel() {
-        Font f = new Font(null, Font.BOLD, 20);
         JPanel panel = new JPanel();
         panel.setBackground(ColorConstants.MENU.getColor());
 
@@ -161,15 +253,27 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
         return panel;
     }
 
+    /**
+     * Adds a song to the songs table
+     * @param song Song to add to the table
+     */
     private void addSongToTable(Song song) {
         songs.addRow(new Object[]{song.getName(), song.getArtist(), song.getDate(), (int)Math.floor(song.getDuration()), String.format("%.1f", song.getScore())});
     }
 
+    /**
+     * Returns the song at a specific row of the table
+     * @param row Row to search the song on
+     * @return The song in the selected row of the table
+     */
     private Song getSongFromTable(int row) {
         // cada fila té Object[]{song, song.getArtist(), song.getDate(), song.getDuration(), song.getScore()}
         return new Song((String) this.songs.getValueAt(row, 0), (String) this.songs.getValueAt(row, 1), (String) this.songs.getValueAt(row, 2));
     }
 
+    /**
+     * Removes every song from the song table
+     */
     private void clearSongsTable() {
         int count = this.songs.getRowCount();
         while (count > 0){
@@ -178,10 +282,17 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
         }
     }
 
+    /**
+     * Adds a playlist to the playlist table
+     * @param title Title of the list to add
+     */
     private void addPlaylistToTable(String title) {
         playlists.addRow(new Object[]{title});
     }
 
+    /**
+     * Removes every playlist from the playlist table
+     */
     private void clearPlaylistTable() {
         int rowCount = this.playlists.getRowCount();
         while (rowCount > 0) {
@@ -190,14 +301,23 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
         }
     }
 
+    /**
+     * Generates a popup for when a user tries to do an action with no song selected
+     */
     private void popUpNoSongSelected() {
         JOptionPane.showMessageDialog(this, "You haven't selected a song. ლ(ಠ益ಠლ)");
     }
 
+    /**
+     * Generates a popup for when a user tries to do an action with no playlist selected
+     */
     private void popUpNoPlaylistSelected() {
         JOptionPane.showMessageDialog(this, "You haven't selected a playlist. ლ(ಠ益ಠლ)");
     }
 
+    /**
+     * Generates a popup for when a song was added to a playlist
+     */
     public void popUpSongsAdded() {
         JOptionPane.showMessageDialog(this, "Finished adding to playlist. (◕‿◕✿)");
     }
@@ -260,22 +380,38 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
         }
     }
 
+    /**
+     * The song couldn't be deleted
+     * @param song Song which we tried to delete
+     */
     @Override
     public void unableToDeleteSong(Song song) {
         JOptionPane.showMessageDialog(this, song.getName() + " can't be deleted!");
     }
 
+    /**
+     * The song was deleted
+     * @param song Song which we tried to delete
+     */
     @Override
     public void songDeleted(Song song) {
         this.reloadSongs();
         JOptionPane.showMessageDialog(this, song.getName() + " was deleted.");
     }
 
+    /**
+     * The song couldn't be added
+     * @param song Song which we tried to add
+     */
     @Override
     public void unableToAddSong(Song song) {
         JOptionPane.showMessageDialog(this, "Error adding the song " + song.toString() + ".");
     }
 
+    /**
+     * The song was added
+     * @param song Song which we tried to add
+     */
     @Override
     public void songAdded(Song song) {
 

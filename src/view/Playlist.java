@@ -10,18 +10,60 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Initializes the panel of the "Playlists" tab and implements its functionalities
+ */
 public class Playlist extends JPanel implements ActionListener, ListSelectionListener, PlaylistMenuNotifier {
+
+    /**
+     * Structure that holds the names of the playlists
+     */
     private final DefaultListModel<String> playlistName;
+
+    /**
+     * All the user's playlists
+     */
     private final JList<String> playlistList;
+
+    /**
+     * Holds the names of the songs of the playlist
+     */
     private final DefaultListModel<Song> songsName;
+
+    /**
+     * All the songs in the playlist
+     */
     private final JList<Song> songsList;
+
+    /**
+     * Button to start playing the selected playlist
+     */
     private JButton playPlaylistButton;
+
+    /**
+     * Button to start playing the selected playlist
+     */
     private JButton removeSongButton;
+
+    /**
+     * Button to remove the selected playlist
+     */
     private JButton removePlaylistButton;
+
+    /**
+     * Button to start playing the selected playlist
+     */
     private JButton createPlaylistButton;
 
+    /**
+     * Object to notify for playlist events
+     */
     private final PlaylistEvent event;
 
+    /**
+     * Sets up the panel with both columns and it's buttons
+     * @param playlistE Object to notify for playlist events
+     */
     public Playlist(PlaylistEvent playlistE) {
         this.event = playlistE;
 
@@ -42,11 +84,18 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
         this.add(playlistView);
     }
 
+    /**
+     * Reloads the playlists being shown in the list
+     */
     public void reloadPlaylists() {
         this.playlistName.clear();
         this.playlistName.addAll(this.event.getPlaylists());
     }
 
+    /**
+     * Sets up the panel with the list of playlists
+     * @return Panel with all the needed contents
+     */
     public JPanel playlistList() {
         JPanel r = new JPanel();
 
@@ -73,6 +122,10 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
         return r;
     }
 
+    /**
+     * Sets up the panel that holds the buttons
+     * @return Panel with all the buttons set up
+     */
     public JPanel playlistBotPanel() {
         JPanel panel = new JPanel();
         panel.setBackground(ColorConstants.MENU.getColor());
@@ -98,6 +151,9 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
         return panel;
     }
 
+    /**
+     * Updates the songs list for the newly selected playlist
+     */
     protected void updateSongsSelectedList() {
         this.songsName.clear();
 
@@ -105,6 +161,10 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
         this.songsName.addAll(this.event.getPlaylistSongs(this.playlistList.getSelectedValuesList().get(0)));
     }
 
+    /**
+     * Called when one of the buttons is pressed, does the required action depending on which called it
+     * @param e Event that called this function
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == createPlaylistButton) {
@@ -123,6 +183,10 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
         }
     }
 
+    /**
+     * When a new playlist is selected this gets called
+     * @param e Event that called this function
+     */
     @Override
     public void valueChanged(ListSelectionEvent e) {
         if (e.getValueIsAdjusting()) return;
@@ -130,17 +194,26 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
         if (e.getSource() == this.playlistList) this.updateSongsSelectedList();
     }
 
+    /**
+     * The new playlist was created
+     */
     @Override
     public void playlistCreated() {
         this.reloadPlaylists();
         JOptionPane.showMessageDialog(this, "Playlist created.");
     }
 
+    /**
+     * The playlist couldn't be created
+     */
     @Override
     public void playlistNotCreated() {
         JOptionPane.showMessageDialog(this, "This playlist already exists!");
     }
 
+    /**
+     * The playlist was deleted
+     */
     @Override
     public void playlistDeleted() {
         this.reloadPlaylists();
@@ -148,17 +221,26 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
         JOptionPane.showMessageDialog(this, "Playlist deleted.");
     }
 
+    /**
+     * The playlist couldn't be deleted
+     */
     @Override
     public void playlistNotDeleted() {
         // no hauria d'arribar aquí mai
         JOptionPane.showMessageDialog(this, "Error deleting the playlist.");
     }
 
+    /**
+     * The song was deleted from the playlist
+     */
     @Override
     public void songDeletedFromPlaylist() {
         this.updateSongsSelectedList();
     }
 
+    /**
+     * The song couldn't be deleted from the playlist
+     */
     @Override
     public void songNotDeletedFromPlaylist() {
         // no hauria d'arribar aquí mai
