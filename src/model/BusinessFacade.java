@@ -67,7 +67,7 @@ public class BusinessFacade {
      * Donat un nom obtè la playlist del usuari amb coincidencia.
      * Important: les cançons de la llista son vàl·lides (tenen notes)
      * @param list Nom de la llista
-     * @return LLista amb cançons
+     * @return Lista amb cançons
      */
     public List getPlaylist(String list) {
         if (this.loggedUser == null) return null;
@@ -176,6 +176,8 @@ public class BusinessFacade {
         this.loggedUser = null;
         this.loggedUserPlaylists = null;
         this.loggedUserConfig = null;
+
+        System.gc(); // l'enunciat especifica que no poden quedar dades de l'usuari en RAM; cap problema! ;)
     }
 
     public float getSongVolume() {
