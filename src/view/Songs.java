@@ -59,7 +59,6 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
         songs.addColumn("Artist");
         songs.addColumn("Date");
         songs.addColumn("Duration");
-        songs.addColumn("Punctuation");
 
         songsTable.setBounds(30, 40, 80, 90);
         songsTable.setFont(f);
@@ -116,7 +115,6 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
     }
 
     public JPanel playlistsBotPanel() {
-        Font f = new Font(null, Font.BOLD, 20);
         JPanel panel = new JPanel();
         panel.setBackground(ColorConstants.MENU.getColor());
 
@@ -162,7 +160,7 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
     }
 
     private void addSongToTable(Song song) {
-        songs.addRow(new Object[]{song.getName(), song.getArtist(), song.getDate(), (int)Math.floor(song.getDuration()), String.format("%.1f", song.getScore())});
+        songs.addRow(new Object[]{song.getName(), song.getArtist(), song.getDate(), (int)Math.floor(song.getDuration())});
     }
 
     private Song getSongFromTable(int row) {

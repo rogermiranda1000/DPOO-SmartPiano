@@ -152,7 +152,6 @@ public class SongDDBBDAO implements SongDAO {
 
             song.setPublic(rs.getBoolean(2));
             song.setTickLength(rs.getLong(3));
-            song.setScore(0); // TODO
 
             return (this.updateSongNotes(song, rs.getInt(1)));
         } catch (SQLException ex) {
@@ -190,7 +189,7 @@ public class SongDDBBDAO implements SongDAO {
                     loggedUser);
 
             ArrayList<Song> r = new ArrayList<>();
-            while (rs.next()) r.add(new Song(rs.getString(1), rs.getString(2), rs.getDate(3), 0.f, rs.getDouble(4)));
+            while (rs.next()) r.add(new Song(rs.getString(1), rs.getString(2), rs.getDate(3), rs.getDouble(4)));
             return r;
         } catch (SQLException ex) {
             ex.printStackTrace();
