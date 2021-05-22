@@ -135,7 +135,6 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
         songs.addColumn("Artist");
         songs.addColumn("Date");
         songs.addColumn("Duration");
-        songs.addColumn("Punctuation");
 
         songsTable.setBounds(30, 40, 80, 90);
         songsTable.setFont(f);
@@ -258,7 +257,7 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
      * @param song Song to add to the table
      */
     private void addSongToTable(Song song) {
-        songs.addRow(new Object[]{song.getName(), song.getArtist(), song.getDate(), (int)Math.floor(song.getDuration()), String.format("%.1f", song.getScore())});
+        songs.addRow(new Object[]{song.getName(), song.getArtist(), song.getDate(), (int)Math.floor(song.getDuration())});
     }
 
     /**
@@ -395,7 +394,7 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
      */
     @Override
     public void songDeleted(Song song) {
-        this.reloadSongs();
+        SwingUtilities.invokeLater(()->this.reloadSongs());
         JOptionPane.showMessageDialog(this, song.getName() + " was deleted.");
     }
 
@@ -413,7 +412,5 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
      * @param song Song which we tried to add
      */
     @Override
-    public void songAdded(Song song) {
-
-    }
+    public void songAdded(Song song) { }
 }

@@ -153,8 +153,8 @@ public class SongDDBBDAO implements SongDAO {
     @Override
     public boolean deleteUserSongs(String user) {
         try {
-            this.ddbb.runSentence("DELETE SongNotes FROM SongNotes JOIN Songs ON Songs.id = SongNotes.song JOIN Users ON Users.id = Songs.author WHERE Users.username = ?;", user);
-            this.ddbb.runSentence("DELETE Songs FROM Songs JOIN Users ON Users.id = Songs.author WHERE Users.username = ?;", user);
+            this.ddbb.runSentence("DELETE SongNotes FROM SongNotes JOIN Songs ON Songs.id = SongNotes.song JOIN Users ON Users.id = Songs.author JOIN RegisteredUsers ON RegisteredUsers.id = Users.id WHERE Users.username = ?;", user);
+            this.ddbb.runSentence("DELETE Songs FROM Songs JOIN Users ON Users.id = Songs.author JOIN RegisteredUsers ON RegisteredUsers.id = Users.id WHERE Users.username = ?;", user);
             return true;
         } catch (SQLException ex) {
             return false;
@@ -197,7 +197,6 @@ public class SongDDBBDAO implements SongDAO {
 
             song.setPublic(rs.getBoolean(2));
             song.setTickLength(rs.getLong(3));
-            song.setScore(0); // TODO
 
             return (this.updateSongNotes(song, rs.getInt(1)));
         } catch (SQLException ex) {
@@ -247,7 +246,7 @@ public class SongDDBBDAO implements SongDAO {
                     loggedUser);
 
             ArrayList<Song> r = new ArrayList<>();
-            while (rs.next()) r.add(new Song(rs.getString(1), rs.getString(2), rs.getDate(3), 0.f, rs.getDouble(4)));
+            while (rs.next()) r.add(new Song(rs.getString(1), rs.getString(2), rs.getDate(3), rs.getDouble(4)));
             return r;
         } catch (SQLException ex) {
             ex.printStackTrace();
