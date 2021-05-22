@@ -29,6 +29,8 @@ public class Piano extends JPanel implements ActionListener, PianoNotifier {
         this.keys = new Tecla[12 * KeyboardConstants.NUM_OCTAVES];
         this.recordingEvent = recording;
 
+        this.setLayout(new BorderLayout());
+
         JPanel btn = new JPanel();
         btn.setLayout(new BoxLayout(btn, BoxLayout.PAGE_AXIS));
         btn.setBackground(ColorConstants.BACKGROUND.getColor());
@@ -43,9 +45,12 @@ public class Piano extends JPanel implements ActionListener, PianoNotifier {
         this.mute.setFocusable(false);
         btn.add(this.mute);
 
-        this.add(btn);
+        this.add(btn, BorderLayout.NORTH);
 
         this.setBackground(ColorConstants.BACKGROUND.getColor());
+
+        JPanel jPtemp = new JPanel();
+        jPtemp.setBackground(ColorConstants.BACKGROUND.getColor());
 
         // draw piano
         for (int i = 0; i < this.keys.length; i++) {
@@ -54,9 +59,11 @@ public class Piano extends JPanel implements ActionListener, PianoNotifier {
 
             Tecla temp = new Tecla(event, Note.getNote(i % 12), (nota.charAt(nota.length() - 1) == 'X') ? IS_BLACK : IS_WHITE, octava).setKeyAssocieted('t');
             this.keys[i] = temp;
-            this.add(temp);
+            jPtemp.add(temp);
             this.addKeyListener(temp); // per alguna rao li hem d'afegir el KeyListener (potser culpa del request focus?)
         }
+
+        this.add(jPtemp, BorderLayout.SOUTH);
     }
 
     /**

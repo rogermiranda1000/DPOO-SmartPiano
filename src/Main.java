@@ -1,6 +1,7 @@
 import controller.Controller;
 import persistance.*;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
@@ -15,8 +16,7 @@ public class Main {
         System.out.println( "╔══╦═╦═╦══╦═╦══╗╔═╦══╦══╦═╦╦═╗\n" +
                             "║══╣║║║║╔╗║╬╠╗╔╝║╬╠║║╣╔╗║║║║║║\n" +
                             "╠══║║║║║╠╣║╗╣║║░║╔╬║║╣╠╣║║║║║║\n" +
-                            "╚══╩╩═╩╩╝╚╩╩╝╚╝░╚╝╚══╩╝╚╩╩═╩═╝"); //Roger, no borris.
-
+                            "╚══╩╩═╩╩╝╚╩╩╝╚╝░╚╝╚══╩╝╚╩╩═╩═╝");
 
         try {
             Config c = new Config(new File("config.json"));
@@ -25,21 +25,27 @@ public class Main {
 
             /* FILE EXCEPTIONS */
         } catch (FileNotFoundException ex) {
-            System.err.println("El fitxer config.json no existeix!");
+            Main.showErrorAndClose("El fitxer config.json no existeix!");
 
             /* DDBB EXCEPTIONS */
         } catch (ClassNotFoundException ex) {
-            System.err.println("No tens la dependencia del driver de MariaDB!");
+            Main.showErrorAndClose("No tens la dependencia del driver de MariaDB!");
         } catch (SQLInvalidAuthorizationSpecException ex) {
-            System.err.println("Les credencials especificades en config.json (usuari/password) son incorrectes!");
+            Main.showErrorAndClose("Les credencials especificades en config.json (usuari/password) son incorrectes!");
         } catch (SQLNonTransientConnectionException ex) {
-            System.err.println("Les dades especificades en config.json (ip/port) son incorrectes!");
+            Main.showErrorAndClose("Les dades especificades en config.json (ip/port) son incorrectes!");
         } catch (SQLSyntaxErrorException ex) {
-            System.err.println("El nom de la base de dades especificat al config.json és incorrecte!");
+            Main.showErrorAndClose("El nom de la base de dades especificat al config.json és incorrecte!");
 
             /* OTHER EXCEPTIONS */
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Main.showErrorAndClose("Error d'SQL desconegut! (" + ex.getMessage() + ")");
         }
+    }
+
+    private static void showErrorAndClose(String error) {
+        JFrame frame = new JFrame();
+        JOptionPane.showMessageDialog(frame, error, "ERROR!", JOptionPane.ERROR_MESSAGE);
+        frame.dispose();
     }
 }
