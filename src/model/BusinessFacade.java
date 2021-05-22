@@ -52,7 +52,7 @@ public class BusinessFacade {
     }
 
     public Song getSong(Song s) {
-        this.songManager.updateSong(s);
+        if (!s.isValid()) this.songManager.updateSong(s); // m'aprofito de la referència per Java; al cambiar la canço aquí tambè la estic cambiant on es crida i pot arribar al cas que ja estigui actualitzada
         return s;
     }
 
