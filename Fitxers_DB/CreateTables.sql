@@ -42,12 +42,12 @@ CREATE TABLE PianoKeys (
 );
 CREATE TABLE Songs (
     id MEDIUMINT NOT NULL AUTO_INCREMENT,
-    public BINARY(1),    -- 1 = public, 0 = private
+    public BINARY(1),                   -- 1 = public, 0 = private
     name VARCHAR(255),
-    date DATE DEFAULT CURRENT_TIMESTAMP, -- Day when the song was published, default value = row creation date
+    date DATE DEFAULT CURRENT_TIMESTAMP,-- Day when the song was published, default value = row creation date
     author MEDIUMINT,
-    tick_length DOUBLE,
-    duration DOUBLE DEFAULT 0,
+    tick_length DOUBLE,                 -- us/tick
+    duration DOUBLE DEFAULT 0,          -- duration of the song [in seconds]
     PRIMARY KEY (id),
     FOREIGN KEY (author)
     REFERENCES Users(id)
@@ -97,7 +97,7 @@ CREATE TABLE SongNotes (
 DROP TRIGGER IF EXISTS SongsDurationUpdater;
 CREATE TRIGGER SongsDurationUpdater AFTER INSERT ON SongNotes
 FOR EACH ROW BEGIN
-    UPDATE Songs SET duration = (SELECT (MAX(SN.tick)*Songs.tick_length)/(1000 * 1000) FROM SongNotes AS SN WHERE SN.song = NEW.song) WHERE Songs.id = NEW.song;
+    UPDATE Songs SET duration = GREATEST((NEW.tick*Songs.tick_length)/(1000 * 1000), duration) WHERE Songs.id = NEW.song;
 END;
 
 DROP TRIGGER IF EXISTS DefaultPianoKeys;
