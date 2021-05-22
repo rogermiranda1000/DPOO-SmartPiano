@@ -17,4 +17,9 @@ public interface PianoNotifier {
      * @param key Note to play
      */
     void pressKey(SongNote key);
+
+    /**
+     * Asks the user for the song information
+     */
+    void requestSongInformation();
 }

@@ -27,4 +27,21 @@ public enum Note {
         index %= r.length;
         return r[index];
     }
+
+    /**
+     * Checks if the note should be black
+     * @return Returns if the note ends with "X"
+     */
+    public boolean isBlack() {
+        return this.name().matches(".+X$");
+    }
+
+    /**
+     * Note's name
+     * @return Note's name, but the ones that ends with "X" now ends with "#"
+     */
+    @Override
+    public String toString() {
+        return this.name().replaceAll("X$", "#");
+    }
 }

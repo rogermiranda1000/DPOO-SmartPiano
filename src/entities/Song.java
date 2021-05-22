@@ -221,6 +221,14 @@ public class Song {
     }
 
     /**
+     * Returns if the song is valid or not (if the keys are loaded)
+     * @return Valid song (true), or not (false)
+     */
+    public boolean isValid() {
+        return this.notes.size() > 0;
+    }
+
+    /**
      * Duration [s] of the song
      * @return Seconds the song lasts for
      */

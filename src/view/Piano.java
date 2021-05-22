@@ -100,10 +100,10 @@ public class Piano extends JPanel implements ActionListener, PianoNotifier {
 
         // draw piano
         for (int i = 0; i < this.keys.length; i++) {
-            int octava = (i/12) + KeyboardConstants.INIT_OCTAVE;
-            String nota = Note.getNote(i % 12).toString();
+            int octava = (i/12) + KeyboardConstants.INIT_OCTAVA;
+            Note nota = Note.getNote(i);
 
-            Tecla temp = new Tecla(event, Note.getNote(i % 12), (nota.charAt(nota.length() - 1) == 'X') ? IS_BLACK : IS_WHITE, octava).setKeyAssociated('t');
+            Tecla temp = new Tecla(event, nota, nota.isBlack() ? IS_BLACK : IS_WHITE, octava).setKeyAssocieted('t');
             this.keys[i] = temp;
             jPtemp.add(temp);
             this.addKeyListener(temp); // per alguna rao li hem d'afegir el KeyListener (potser culpa del request focus?)
@@ -156,20 +156,7 @@ public class Piano extends JPanel implements ActionListener, PianoNotifier {
 
             if (!isRecording) {
                 // no està grabant -> s'ha de guardar (o no)
-                JPanel panel = new JPanel();
-                panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-                JLabel text = new JLabel("Song name:");
-                JCheckBox ck = new JCheckBox("Public: ");
-                ck.setSelected(true); // per defecte public
-                JTextField tF = new JTextField();
-
-                panel.add(text);
-                panel.add(tF);
-                panel.add(ck);
-
-                int result = JOptionPane.showConfirmDialog(null, panel, "Add a new song", JOptionPane.OK_CANCEL_OPTION);
-                if (result == JOptionPane.OK_OPTION && tF.getText().length()>0) this.recordingEvent.saveRecordedSong(tF.getText(), ck.isSelected());
+                this.recordingEvent.validateRecording();
             }
         }
         else if (e.getSource() == this.mute) {
@@ -179,6 +166,27 @@ public class Piano extends JPanel implements ActionListener, PianoNotifier {
             if (isMuted) this.recordingEvent.muteSong();
             else this.recordingEvent.unmuteSong();
         }
+    }
+
+    /**
+     * Asks the user for information about their recorded song
+     */
+    @Override
+    public void requestSongInformation() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        JLabel text = new JLabel("Song name:");
+        JCheckBox ck = new JCheckBox("Public: ");
+        ck.setSelected(true); // per defecte public
+        JTextField tF = new JTextField();
+
+        panel.add(text);
+        panel.add(tF);
+        panel.add(ck);
+
+        int result = JOptionPane.showConfirmDialog(null, panel, "Add a new song", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION && tF.getText().length()>0) this.recordingEvent.saveRecordedSong(tF.getText(), ck.isSelected());
     }
 
     /**
