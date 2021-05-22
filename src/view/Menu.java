@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, PlaylistMenuNotifier, DeleteUserNotifier, PianoNotifier, ConfigLoadNotifier {
+public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, PlaylistMenuNotifier, DeleteUserNotifier, PianoNotifier, ConfigLoadNotifier, NewPlayNotifier {
     public static final int HEIGHT = 900;
     public static final int WIDTH = 1600;
     private JButton songsButton, playlistButton, pianoButton, rankingButton, settingsButton, exitButton;
@@ -139,10 +139,6 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
         settingsButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
     }
 
-    public void reloadRankingData() {
-        this.ranking.reloadGraphs();
-    }
-
     private void exitMessage() {
         JOptionPane.showMessageDialog(this, "The user has logout.", "User logout", JOptionPane.INFORMATION_MESSAGE);
     }
@@ -268,5 +264,13 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
     @Override
     public void setUserInformation(String name, String email) {
         this.settings.setUserInformation(name, email);
+    }
+
+    /**
+     * There's a new play -> the graphs needs to be updated
+     */
+    @Override
+    public void reloadGraphs() {
+        this.ranking.reloadGraphs();
     }
 }

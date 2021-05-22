@@ -152,7 +152,7 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     @Override
     public void addPlay(int secondsPlayed, Song song) {
         this.model.addPlay(secondsPlayed, song);
-        this.menu.reloadRankingData();
+        this.menu.reloadGraphs();
     }
 
     @Override
