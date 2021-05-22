@@ -252,7 +252,7 @@ public class BusinessFacade {
         if (this.loggedUser == null) return false;
 
         char[] bind = this.loggedUserConfig.getNotesBind();
-        bind[(octava-KeyboardConstants.INIT_OCTAVA)*12 + key.ordinal()] = newBind;
+        bind[(octava-KeyboardConstants.INIT_OCTAVE)*12 + key.ordinal()] = newBind;
         this.loggedUserConfig.setNoteBind(bind); // tecnicament va per referencia; no faria falta
         this.configManager.setConfig(this.loggedUser.getName(), bind);
         return true;

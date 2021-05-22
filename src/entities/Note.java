@@ -1,5 +1,8 @@
 package entities;
 
+/**
+ * List of possible values a note can have within an octave
+ */
 public enum Note {
     Do,
     DoX,
@@ -15,9 +18,9 @@ public enum Note {
     Si;
 
     /**
-     * Retorna la nota corresponent. Si index > entities.Note.values().length es fa el mòdul.
-     * @param index Index de la nota
-     * @return Nota segons l'index
+     * Returns the corresponding note, if index > entities.Note.values().length the module is applied
+     * @param index Index of the note
+     * @return Note corresponding to the index
      */
     public static Note getNote(int index) {
         Note[] r = Note.values();

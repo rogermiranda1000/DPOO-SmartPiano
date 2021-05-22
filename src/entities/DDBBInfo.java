@@ -1,6 +1,13 @@
 package entities;
 
+/**
+ * Saves the information about the database access
+ */
 public class DDBBInfo {
+
+    /**
+     * Port the database connection
+     */
     private final String port;
     private final String ip;
     private final String dbName;
