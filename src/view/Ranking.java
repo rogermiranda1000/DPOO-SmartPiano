@@ -50,5 +50,8 @@ public class Ranking extends JPanel implements NewPlayNotifier {
 
         // afegir-los de nou
         this.addStatistics();
+
+        // re-pintar
+        this.revalidate();
     }
 }
