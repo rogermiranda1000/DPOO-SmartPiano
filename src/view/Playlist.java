@@ -133,7 +133,7 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
     @Override
     public void playlistCreated() {
         this.reloadPlaylists();
-        //JOptionPane.showMessageDialog(this, "Playlist created.");
+        JOptionPane.showMessageDialog(this, "Playlist created.");
     }
 
     @Override
@@ -145,7 +145,7 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
     public void playlistDeleted() {
         this.reloadPlaylists();
         this.updateSongsSelectedList();
-        //JOptionPane.showMessageDialog(this, "Playlist deleted.");
+        JOptionPane.showMessageDialog(this, "Playlist deleted.");
     }
 
     @Override
