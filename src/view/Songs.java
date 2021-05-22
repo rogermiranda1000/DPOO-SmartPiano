@@ -267,7 +267,7 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
 
     @Override
     public void songDeleted(Song song) {
-        this.reloadSongs();
+        SwingUtilities.invokeLater(()->this.reloadSongs());
         JOptionPane.showMessageDialog(this, song.getName() + " was deleted.");
     }
 
@@ -277,7 +277,5 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
     }
 
     @Override
-    public void songAdded(Song song) {
-
-    }
+    public void songAdded(Song song) { }
 }

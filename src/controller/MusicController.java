@@ -88,7 +88,10 @@ public class MusicController implements SongEnder, PlaylistBarEvent, SongRequest
         if (this.list == null) return;
 
         this.addPlay();
-        if (this.isRandom) this.songIndex = this.getRandomNext();
+        if (this.isRandom) {
+            this.songIndex = this.getRandomNext();
+            this.playSong(); // getRandomNext() sempre retorna un numero dins de la llista
+        }
         else {
             this.songIndex += value;
             if (this.isLooping) {
