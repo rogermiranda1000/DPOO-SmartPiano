@@ -60,16 +60,6 @@ CREATE TABLE Lists (
     FOREIGN KEY (author)
     REFERENCES RegisteredUsers(id)
 );
-CREATE TABLE Ranking (
-    user MEDIUMINT NOT NULL,
-    song MEDIUMINT NOT NULL,
-    points MEDIUMINT,
-    PRIMARY KEY (user, song),
-    FOREIGN KEY (user)
-    REFERENCES RegisteredUsers(id),
-    FOREIGN KEY (song)
-    REFERENCES Songs(id)
-);
 CREATE TABLE Listen (
     date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,  -- Date when the reproduction took place, default value = row creation date
     user MEDIUMINT NOT NULL,
