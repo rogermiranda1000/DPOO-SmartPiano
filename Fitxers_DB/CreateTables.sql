@@ -2,7 +2,6 @@
 DROP TABLE IF EXISTS SongNotes CASCADE;
 DROP TABLE IF EXISTS ListSongs CASCADE;
 DROP TABLE IF EXISTS Listen CASCADE;
-DROP TABLE IF EXISTS Ranking CASCADE;
 DROP TABLE IF EXISTS Lists CASCADE;
 DROP TABLE IF EXISTS Songs CASCADE;
 DROP TABLE IF EXISTS PianoKeys CASCADE;
@@ -48,6 +47,7 @@ CREATE TABLE Songs (
     date DATE DEFAULT CURRENT_TIMESTAMP, -- Day when the song was published, default value = row creation date
     author MEDIUMINT,
     tick_length DOUBLE,
+    duration DOUBLE DEFAULT 0,
     PRIMARY KEY (id),
     FOREIGN KEY (author)
     REFERENCES Users(id)
@@ -94,6 +94,12 @@ CREATE TABLE SongNotes (
 );
 
 -- Triggers
+DROP TRIGGER IF EXISTS SongsDurationUpdater;
+CREATE TRIGGER SongsDurationUpdater AFTER INSERT ON SongNotes
+FOR EACH ROW BEGIN
+    UPDATE Songs SET duration = (SELECT (MAX(SN.tick)*Songs.tick_length)/(1000 * 1000) FROM SongNotes AS SN WHERE SN.song = NEW.song) WHERE Songs.id = NEW.song;
+END;
+
 DROP TRIGGER IF EXISTS DefaultPianoKeys;
 CREATE TRIGGER DefaultPianoKeys
     AFTER INSERT ON RegisteredUsers
