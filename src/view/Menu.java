@@ -242,6 +242,11 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
     }
 
     @Override
+    public void requestSongInformation() {
+        this.piano.requestSongInformation();
+    }
+
+    @Override
     public void setConfig(float songVolume, float pianoVolume) {
         SwingUtilities.invokeLater(()->this.settings.setConfig(songVolume, pianoVolume));
     }

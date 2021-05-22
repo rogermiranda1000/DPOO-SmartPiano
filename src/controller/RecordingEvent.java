@@ -23,4 +23,10 @@ public interface RecordingEvent {
      * Unmute the octave INIT_OCTAVA to (INIT_OCTAVA+NUM_OCTAVES)
      */
     void unmuteSong();
+
+    /**
+     * Tells the Controller the user has stopped playing the piano.
+     * If the song is valid, the Controller should notify the view thought 'requestSongInformation()'.
+     */
+    void validateRecording();
 }
