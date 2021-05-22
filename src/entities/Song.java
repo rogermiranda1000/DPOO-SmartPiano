@@ -15,31 +15,29 @@ public class Song {
     private String author;
     private final Date creationDate;
     private boolean isPublic;
-    private Float score;
     private final ArrayList<SongNote> notes;
     private double duration;
 
-    public Song(String songName, String author, Date creationDate, double tickLength, boolean isPublic, Float score) {
+    public Song(String songName, String author, Date creationDate, double tickLength, boolean isPublic) {
         this.notes = new ArrayList<>();
         this.tickLength = tickLength;
         this.songName = songName;
         this.author = author;
         this.creationDate = creationDate;
         this.isPublic = isPublic;
-        this.score = score;
     }
 
-    public Song(String songName, String author, Date creationDate, Float score, double duration) {
-        this(songName, author, creationDate, -1, false, score);
+    public Song(String songName, String author, Date creationDate, double duration) {
+        this(songName, author, creationDate, -1, false);
         this.duration = duration;
     }
 
     public Song(String songName, String author, Date creationDate) {
-        this(songName, author, creationDate, -1, false, null);
+        this(songName, author, creationDate, -1, false);
     }
 
     public Song(String songName, String author, String creationDate) {
-        this(songName, author, Song.parseDate(creationDate), -1, false, null);
+        this(songName, author, Song.parseDate(creationDate), -1, false);
     }
 
     /**
@@ -51,12 +49,12 @@ public class Song {
      * @param notes Notes that builds the song
      */
     public Song(String songName, double tickLength, boolean isPublic, ArrayList<SongNote> notes) {
-        this(songName, "", null, tickLength, isPublic, 0.f);
+        this(songName, "", null, tickLength, isPublic);
         this.notes.addAll(notes);
     }
 
     public Song() {
-        this(null, null, null, -1, false, null);
+        this(null, null, null, -1, false);
     }
 
     /**
@@ -108,24 +106,12 @@ public class Song {
         this.tickLength = tickLength;
     }
 
-    public void setScore(float score) {
-        this.score = score;
-    }
-
     public void setPublic(boolean isPublic) {
         this.isPublic = isPublic;
     }
 
     public void setAuthor(String author) {
         this.author = author;
-    }
-
-    /**
-     * Obté la puntuació de la canço
-     * @return Mitjana de les puntuacions [@Nullable]
-     */
-    public Float getScore() {
-        return this.score;
     }
 
     /**
