@@ -115,6 +115,14 @@ public class Song {
     }
 
     /**
+     * Returns if the song is valid or not (if the keys are loaded)
+     * @return Valid song (true), or not (false)
+     */
+    public boolean isValid() {
+        return this.notes.size() > 0;
+    }
+
+    /**
      * Duració [s] de la canço
      * @return Segons que dura la canço
      */
