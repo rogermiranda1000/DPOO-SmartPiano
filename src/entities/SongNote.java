@@ -53,4 +53,16 @@ public class SongNote implements Comparable<SongNote> {
         else if (r == 0) return 0;
         else return 1;
     }
+
+    /**
+     * Check if it's the same note (independent from the tick and pressed)
+     * @param o Note to compare
+     * @return If it's the same velocity, ocatve and note (true), or not (false)
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof SongNote)) return false;
+        SongNote note = (SongNote) o;
+        return (note.velocity == this.velocity && note.octave == this.octave && note.note == this.note);
+    }
 }

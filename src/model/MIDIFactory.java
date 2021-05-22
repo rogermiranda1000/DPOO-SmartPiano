@@ -8,6 +8,7 @@ import javax.sound.midi.*;
 import java.io.IOException;
 import java.lang.String;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class MIDIFactory {
@@ -48,22 +49,67 @@ public class MIDIFactory {
                         long tick = event.getTick();
                         int key = sm.getData1();
                         byte velocity = (byte) sm.getData2();
-                        r.addNote(new SongNote(tick, (sm.getCommand() == NOTE_ON), velocity, (byte) (key / 12), Note.getNote(key)));
+                        if (velocity == 0) continue; // TODO només si NOTE_OFF?
+                        SongNote current = new SongNote(tick, (sm.getCommand() == NOTE_ON), velocity, (byte) (key / 12), Note.getNote(key));
+                        if (!current.isPressed()) {
+                            if (MIDIFactory.isPressedBefore(r, current)) r.addNote(current);
+                        }
+                        else {
+                            if (MIDIFactory.isReleasedBefore(r, current)) r.addNote(current);
+                        }
                     }
                     //else System.out.println("Command:" + sm.getCommand());
                 }
                 /*else if (message instanceof MetaMessage) {
                     MetaMessage mm = (MetaMessage) message;
-                    if (mm.getType() == 1) {
+                    if (mm.getType() == 0x01) {
                         // la metadata és de tipus 'Text'
-                        System.out.println(new String(mm.getData(), StandardCharsets.ISO_8859_1));
+                        System.out.println("Text: " + new String(mm.getData(), StandardCharsets.ISO_8859_1));
                     }
-                }*/
-                //else System.out.println("Other message: " + message.getClass());
+                    else if (mm.getType() == 0x03) {
+                        // la metadata és de tipus 'Name'
+                        System.out.println("Name: " + new String(mm.getData(), StandardCharsets.ISO_8859_1));
+                    }
+                    else if (mm.getType() == 0x04) {
+                        // la metadata és de tipus 'Instrument'
+                    }
+                    else System.out.println("Other meta message");
+                }
+                else System.out.println("Other message: " + message.getClass());*/
             }
         }
 
         r.sort();
         return r;
+    }
+
+    /**
+     * Checks if a note is pressed before unpressing it
+     * @param s The song to check
+     * @param sn The note to check
+     * @return If it was pressed (true), or not (false)
+     */
+    private static boolean isPressedBefore(Song s, SongNote sn) {
+        ArrayList<SongNote> notes = s.getNotes();
+        for (int last = notes.size()-1; last >= 0; last--) {
+            SongNote current = notes.get(last);
+            if (current.equals(sn)) return current.isPressed();
+        }
+        return false; // si s'ha arribat al final -> no s'ha premut
+    }
+
+    /**
+     * Checks if a note is released/unpressed before pressing it
+     * @param s The song to check
+     * @param sn The note to check
+     * @return If it was released/unpressed (true), or not (false)
+     */
+    private static boolean isReleasedBefore(Song s, SongNote sn) {
+        ArrayList<SongNote> notes = s.getNotes();
+        for (int last = notes.size()-1; last >= 0; last--) {
+            SongNote current = notes.get(last);
+            if (current.equals(sn)) return (!current.isPressed());
+        }
+        return true; // si s'ha arribat al final -> no s'ha premut
     }
 }
