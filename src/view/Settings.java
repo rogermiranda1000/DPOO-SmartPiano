@@ -156,7 +156,7 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
     private void saveConfig() {
         this.updateEvent.updatePianoVolume(this.getPianoVolume());
         this.updateEvent.updateSongVolume(this.getSongVolume());
-        //JOptionPane.showMessageDialog(this, "Changes on configuration saved.","Configuration saved!",JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Changes on configuration saved.","Configuration saved!",JOptionPane.INFORMATION_MESSAGE);
     }
 
     private String deleteUser() {
