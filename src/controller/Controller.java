@@ -209,6 +209,12 @@ public class Controller implements LoginEvent, MenuEvent, SongsEvent, PlaylistEv
     }
 
     @Override
+    public void validateRecording() {
+        // only request if the player has pressed any note
+        if (this.pianoController.getSongNotes().size() > 0) this.menu.requestSongInformation();
+    }
+
+    @Override
     public void updateSongVolume(float volume) {
         if (!this.model.setVolumeSong(volume)) return;
         this.musicController.setVolume(volume);

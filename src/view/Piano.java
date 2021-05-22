@@ -106,20 +106,7 @@ public class Piano extends JPanel implements ActionListener, PianoNotifier {
 
             if (!isRecording) {
                 // no està grabant -> s'ha de guardar (o no)
-                JPanel panel = new JPanel();
-                panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-                JLabel text = new JLabel("Song name:");
-                JCheckBox ck = new JCheckBox("Public: ");
-                ck.setSelected(true); // per defecte public
-                JTextField tF = new JTextField();
-
-                panel.add(text);
-                panel.add(tF);
-                panel.add(ck);
-
-                int result = JOptionPane.showConfirmDialog(null, panel, "Add a new song", JOptionPane.OK_CANCEL_OPTION);
-                if (result == JOptionPane.OK_OPTION && tF.getText().length()>0) this.recordingEvent.saveRecordedSong(tF.getText(), ck.isSelected());
+                this.recordingEvent.validateRecording();
             }
         }
         else if (e.getSource() == this.mute) {
@@ -129,6 +116,24 @@ public class Piano extends JPanel implements ActionListener, PianoNotifier {
             if (isMuted) this.recordingEvent.muteSong();
             else this.recordingEvent.unmuteSong();
         }
+    }
+
+    @Override
+    public void requestSongInformation() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        JLabel text = new JLabel("Song name:");
+        JCheckBox ck = new JCheckBox("Public: ");
+        ck.setSelected(true); // per defecte public
+        JTextField tF = new JTextField();
+
+        panel.add(text);
+        panel.add(tF);
+        panel.add(ck);
+
+        int result = JOptionPane.showConfirmDialog(null, panel, "Add a new song", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION && tF.getText().length()>0) this.recordingEvent.saveRecordedSong(tF.getText(), ck.isSelected());
     }
 
     @Override
