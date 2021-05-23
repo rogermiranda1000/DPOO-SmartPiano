@@ -246,6 +246,8 @@ public class BusinessFacade {
     public boolean deleteLoggedUser(String password) {
         if (this.loggedUser == null) return false;
 
+        if (this.userManager.getUser(this.loggedUser.getName(), password) == null) return false; // password incorrecte
+
         if (!this.configManager.deleteUserConfig(this.loggedUser.getName())) return false;
         if (!this.statisticsManager.deletePlayerStatistics(this.loggedUser.getName())) return false;
         for (List l : this.getPlaylists()) {
