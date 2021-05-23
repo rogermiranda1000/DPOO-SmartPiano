@@ -31,6 +31,8 @@ public class DDBBAccess {
 
     /**
      * Connects to the database using the parameters
+     * @param info The information for the database connection
+     * @param maxConnections Maximum number of simultaneous connections to the database
      * @throws SQLException Error when connecting to the database
      * @throws ClassNotFoundException The driver is missing
      * @throws SQLInvalidAuthorizationSpecException Invalid credentials
