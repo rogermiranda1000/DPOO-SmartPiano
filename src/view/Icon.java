@@ -5,13 +5,44 @@ package view;
  */
 public enum Icon {
 
+    /**
+     * The character used for the loop button
+     */
     LOOP("\uD83D\uDD04"),
+
+    /**
+     * The character used for the back button
+     */
     BACK("⏪"),
+
+    /**
+     * The character used for the pause button
+     */
     PAUSE("⏸"),
+
+    /**
+     * The character used for the play button
+     */
     PLAY("▶"),
+
+    /**
+     * The character used for the next button
+     */
     NEXT("⏩"),
+
+    /**
+     * The character used for the random button
+     */
     SHUFFLE("\uD83D\uDD00"),
+
+    /**
+     * The character used for going back buttons
+     */
     GOBACK("←"),
+
+    /**
+     * The character used to add playlists and adding songs to playlists
+     */
     ADD("+");
 
     /**
