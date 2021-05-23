@@ -4,17 +4,65 @@ package entities;
  * List of possible values a note can have within an octave
  */
 public enum Note {
+
+    /**
+     * The first note of an octave
+     */
     Do,
+
+    /**
+     * The second note of an octave
+     */
     DoX,
+
+    /**
+     * The third note of an octave
+     */
     Re,
+
+    /**
+     * The fourth note of an octave
+     */
     ReX,
+
+    /**
+     * The fifth note of an octave
+     */
     Mi,
+
+    /**
+     * The sixth note of an octave
+     */
     Fa,
+
+    /**
+     * The seventh note of an octave
+     */
     FaX,
+
+    /**
+     * The eighth note of an octave
+     */
     Sol,
+
+    /**
+     * The ninth note of an octave
+     */
     SolX,
+
+    /**
+     * The tenth note of an octave
+     */
     La,
+
+    /**
+     * The eleventh note of an octave
+     */
     LaX,
+
+    /**
+     * The twelfth note of an octave
+     */
     Si;
 
     /**
