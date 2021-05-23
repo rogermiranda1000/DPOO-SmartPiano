@@ -4,28 +4,33 @@ import entities.Song;
 
 import java.util.ArrayList;
 
+/**
+ * Interfaces tasked with actions done in the "Songs" tab
+ */
 public interface SongsEvent {
+
     /**
-     * Retorna totes les playlists del usuari actual
-     * @return Tots els noms de les playlists
+     * Returns all the playlist from the logged user
+     * @return The names of the playlists
      */
     ArrayList<String> getPlaylists();
+
     /**
-     * Obtè les cançons del usuari i les públiques
-     * @return Cançons que l'usuari loguejat té acces
+     * Returns all the songs the logged user should be able to see
+     * @return Private songs the user created and all the public songs
      */
     ArrayList<Song> getUserSongs();
 
     /**
-     * Elimina la canço sol·licitada
-     * @param song Canço a eliminar
+     * Deletes the specified song from the database
+     * @param song Song to delete
      */
     void deleteSong(Song song);
 
     /**
-     * Solocita afegir una canço a una playlist
-     * @param song Canço a afegir
-     * @param list Playlist on afegir la canço
+     * Adds a song to a playlist
+     * @param song Song to add
+     * @param list Playlist to add the song in
      */
     void addSongPlaylist(Song song, String list);
 }
