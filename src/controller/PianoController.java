@@ -8,17 +8,45 @@ import view.PianoNotifier;
 
 import java.util.ArrayList;
 
+/**
+ * Class tasked with recording user's songs and playing songs on the keyboard
+ */
 public class PianoController implements SongValidator, SongEnder {
+
     /**
-     * us / tick
-     * tick_length [us/tick] * 1 [tick] = 10^3 [us]   (cada tick son 1ms)
+     * Length of every tick [us],
+     * tick_length [us/tick] * 1 [tick] = 10^3 [us]   (every tick is 1ms)
      */
     public static final double TICK_LENGTH = 1000;
+
+    /**
+     * True if the octaves the user can see are silenced
+     */
     private boolean songSilenced;
+
+    /**
+     * True if the keys pressed are being recorded
+     */
     private boolean recording;
+
+    /**
+     * Object that will play the keys pressed by the user
+     */
     private final NotePlayer notePlayer;
+
+    /**
+     * Object that will play the notes of the song
+     */
     private NotePlayer songPlayer;
+
+    /**
+     * List of notes the user has recorded
+     */
     private ArrayList<SongNote> songNotes;
+
+    /**
+     * Moment the user started recording
+     */
     private long startTime;
 
     /**
@@ -27,10 +55,13 @@ public class PianoController implements SongValidator, SongEnder {
     private PianoNotifier pianoPresser;
 
     /**
-     * Keyboard volume
+     * Keyboard volume (0 = silent, 1 = max volume)
      */
     private float volume;
 
+    /**
+     * Initializes the controller resetting the variables
+     */
     public PianoController() {
         this.songSilenced = false;
         this.recording = false;
@@ -43,16 +74,27 @@ public class PianoController implements SongValidator, SongEnder {
         this.notePlayer.setVolume(this.volume);
     }
 
+    /**
+     * Adds an object to connect the PianoController with the view
+     * @param sv Connects the PianoController with the view
+     */
     public void addEventListener(PianoNotifier sv) {
         this.pianoPresser = sv;
     }
 
+    /**
+     * Stops the song that was playing
+     */
     public void closeCurrentSong() {
         if (this.songPlayer != null) this.songPlayer.closePlayer();
 
         this.pianoPresser.unpressAllKeys(); // release all notes from piano
     }
 
+    /**
+     * Closes the song that is playing and starts a new one
+     * @param s Song to play
+     */
     public void playSong(Song s) {
         if (this.songPlayer != null) this.closeCurrentSong();
 
@@ -124,7 +166,7 @@ public class PianoController implements SongValidator, SongEnder {
 
     /**
      * Changes the volume of the piano
-     * @param volume Value between 1 = full, 0 = silence
+     * @param volume Volume of the song (o = silence, 1 = max volume)
      */
     public void setVolume(float volume) {
         this.volume = volume;
@@ -133,6 +175,9 @@ public class PianoController implements SongValidator, SongEnder {
         this.notePlayer.setVolume(this.volume);
     }
 
+    /**
+     * The song that was playing ended
+     */
     @Override
     public void songEnded() {
         this.pianoPresser.unpressAllKeys();
