@@ -124,7 +124,7 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
      * Creates the song list table and stores it in a panel
      * @return A Panel containing the song list
      */
-    public JPanel songsList(){
+    private JPanel songsList(){
         JPanel songsList = new JPanel();
         Font f = new Font(null, Font.PLAIN, 16);
 
@@ -173,7 +173,7 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
      * Sets up a panel for choosing what playlist to add songs to
      * @return Panel with a list of playlists
      */
-    public JPanel addToPlaylist(){
+    private JPanel addToPlaylist(){
         JPanel playlistsList = new JPanel();
         Font f = new Font(null, Font.PLAIN, 16);
 
@@ -204,7 +204,7 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
      * Generates the bottom panel of the playlist view
      * @return A panel with the buttons used to navigate the playlist selection for adding a song
      */
-    public JPanel playlistsBotPanel() {
+    private JPanel playlistsBotPanel() {
         JPanel panel = new JPanel();
         panel.setBackground(ColorConstants.MENU.getColor());
 
@@ -227,7 +227,7 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
      * Generates the bottom panel of the songs view
      * @return A panel with buttons to add, play (in piano and player) and delete songs
      */
-    public JPanel songsBotPanel() {
+    private JPanel songsBotPanel() {
         JPanel panel = new JPanel();
         panel.setBackground(ColorConstants.MENU.getColor());
 
@@ -317,7 +317,7 @@ public class Songs extends JPanel implements ActionListener, SongsMenuNotifier {
     /**
      * Generates a popup for when a song was added to a playlist
      */
-    public void popUpSongsAdded() {
+    private void popUpSongsAdded() {
         JOptionPane.showMessageDialog(this, "Finished adding to playlist. (◕‿◕✿)");
     }
 

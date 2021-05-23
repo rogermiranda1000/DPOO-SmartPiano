@@ -18,12 +18,12 @@ public class MIDIFactory {
     /**
      * Constant representing a note press
      */
-    public static final int NOTE_ON = 0x90;
+    private static final int NOTE_ON = 0x90;
 
     /**
      * Constant representing a note release
      */
-    public static final int NOTE_OFF = 0x80;
+    private static final int NOTE_OFF = 0x80;
 
     /**
      * Given a .mid file, extracts the SongNotes
