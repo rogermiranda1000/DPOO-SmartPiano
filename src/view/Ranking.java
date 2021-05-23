@@ -32,12 +32,16 @@ public class Ranking extends JPanel implements NewPlayNotifier {
 
     private void addStatistics() {
         songsGraph = new GraphDrawer(this.event.getSongsStatistics(), "Songs listened per hour", Color.RED);
+        songsGraph.setBackground(ColorConstants.BACKGROUND.getColor());
+
         graphPanel.add(songsGraph);
 
         timeGraph = new GraphDrawer(this.event.getTimeStatistics(), "Seconds listened per hour", new Color(0x016618));
+        timeGraph.setBackground(ColorConstants.BACKGROUND.getColor());
         graphPanel.add(timeGraph);
 
         top5Table = new Top5Drawer(this.event);
+        top5Table.setBackground(ColorConstants.BACKGROUND.getColor());
         tablePanel.add(top5Table);
     }
 
