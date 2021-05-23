@@ -44,7 +44,7 @@ public class Main {
         } catch (SQLInvalidAuthorizationSpecException ex) {
             Main.showErrorAndClose("Les credencials especificades en config.json (usuari/password) son incorrectes!");
         } catch (SQLNonTransientConnectionException ex) {
-            Main.showErrorAndClose("Les dades especificades en config.json (ip/port) son incorrectes!");
+            Main.showErrorAndClose("No s'ha pogut establir una conexió amb la base de dades!");
         } catch (SQLSyntaxErrorException ex) {
             Main.showErrorAndClose("El nom de la base de dades especificat al config.json és incorrecte!");
 
