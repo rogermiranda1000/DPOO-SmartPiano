@@ -394,7 +394,7 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
     }
 
     /**
-     * Requests
+     * Asks the user for information about their recorded song
      */
     @Override
     public void requestSongInformation() {
