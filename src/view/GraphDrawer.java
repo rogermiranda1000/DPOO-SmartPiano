@@ -29,6 +29,7 @@ class GraphDrawer extends JPanel {
 
         int topElementY = this.maxValue(yCoords);
         int numHoritzontalLines = this.numSections(topElementY);
+
         int hour = yCoords[yCoords.length-1];
         int endX = GraphDrawer.GRAPH_WIDTH;
         int endY = GraphDrawer.GRAPH_HIGHT;
@@ -90,7 +91,7 @@ class GraphDrawer extends JPanel {
 
     private int maxValue(int[] inputArray) {
         int maxValue = inputArray[0];
-        for (int i = 1; i < inputArray.length; i++) {
+        for (int i = 1; i < inputArray.length - 1; i++) {
             if (inputArray[i] > maxValue) {
                 maxValue = inputArray[i];
             }
