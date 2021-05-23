@@ -80,7 +80,7 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
     /**
      * Field where the password is input when registering
      */
-    private JPasswordField passwordRegister;
+    private GenericField passwordRegister;
 
     /**
      * Field where the password is input for the second time when registering
@@ -263,19 +263,7 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
         email.add(emailRegister);
 
         // Password
-        JPanel password = new JPanel();
-        password.setBackground(ColorConstants.BACKGROUND.getColor());
-        password.setVisible(true);
-        password.setMaximumSize(new Dimension(WIDTH, 45));
-
-        Label passwordTxt = new Label("Password :");
-        passwordTxt.setPreferredSize(new Dimension(TXT_WIDTH, TXT_HEIGHT));
-
-        passwordRegister = new JPasswordField();
-        passwordRegister.setPreferredSize(new Dimension(TXT_WIDTH, TXT_HEIGHT));
-
-        password.add(passwordTxt);
-        password.add(passwordRegister);
+        this.passwordRegister = new GenericField("Password:", true);
 
         // Confirm password
         JPanel confirmPassword = new JPanel();
@@ -306,7 +294,7 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
         // Add of all the components
         container.add(header, BorderLayout.CENTER);
         container.add(username, BorderLayout.CENTER);
-        container.add(password, BorderLayout.CENTER);
+        container.add(this.passwordRegister, BorderLayout.CENTER);
         container.add(confirmPassword, BorderLayout.CENTER);
         container.add(email, BorderLayout.CENTER);
         container.add(buttons, BorderLayout.CENTER);
@@ -327,7 +315,7 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
      * @return True if they are equal
      */
     private boolean checkPasswords() {
-        return String.valueOf(passwordRegister.getPassword()).equals(String.valueOf(confirmPasswordRegister.getPassword()));
+        return String.valueOf(passwordRegister.getInput()).equals(String.valueOf(confirmPasswordRegister.getPassword()));
     }
 
     /**
@@ -354,9 +342,9 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
         String passwordRegex = "(^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$)";
 
         Pattern pat = Pattern.compile(passwordRegex);
-        if (String.valueOf(passwordRegister.getPassword()).equals(""))
+        if (String.valueOf(passwordRegister.getInput()).equals(""))
             return false;
-        return pat.matcher(String.valueOf(passwordRegister.getPassword())).matches();
+        return pat.matcher(String.valueOf(passwordRegister.getInput())).matches();
     }
 
     /**
@@ -364,11 +352,11 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
      */
     private void wrongPassword() {
         JOptionPane.showMessageDialog(this, "Wrong password. Password need have: " +
-                "\n- More than 8 characters. " +
-                "\n- At least one lower case and upper case." +
-                "\n- At least one numeric character." +
-                "\n- No whitespaces." +
-                "\nTry it again ( ͡❛ ︹ ͡❛)",
+                        "\n- More than 8 characters. " +
+                        "\n- At least one lower case and upper case." +
+                        "\n- At least one numeric character." +
+                        "\n- No whitespaces." +
+                        "\nTry it again ( ͡❛ ︹ ͡❛)",
                 "Wrong password",
                 JOptionPane.ERROR_MESSAGE);
     }
@@ -427,7 +415,7 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
             if (this.checkMail()) {
                 if (this.checkPassword()) {
                     if (this.checkPasswords()) {
-                        this.event.requestRegister(usernameRegister.getText(), emailRegister.getText(), String.valueOf(passwordRegister.getPassword()));
+                        this.event.requestRegister(usernameRegister.getText(), emailRegister.getText(), String.valueOf(passwordRegister.getInput()));
                     } else this.wrongPasswords();
                 } else this.wrongPassword();
             } else this.wrongMail();
