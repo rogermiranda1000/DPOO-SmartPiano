@@ -124,8 +124,9 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
         settingsButton.setForeground(ColorConstants.TOP_BUTTON_FONT.getColor());
     }
 
-    private void exitMessage() {
-        JOptionPane.showMessageDialog(this, "The user has logout.", "User logout", JOptionPane.INFORMATION_MESSAGE);
+    private int exitMessage() {
+        return JOptionPane.showConfirmDialog(null, "Do you want to logout?", "Confirm",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
     }
 
     @Override
@@ -158,8 +159,11 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
             resetButtonsColors();
             settingsButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == exitButton) {
-            exitMessage();
-            this.event.exitSession();
+            if (exitMessage() == JOptionPane.YES_OPTION) {
+                this.event.exitSession();
+            }
+
+
         }
     }
 
