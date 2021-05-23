@@ -218,10 +218,12 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
     }
 
     /**
-     * Shows a message for when the user logs out
+     * Asks for confirmation for when the user logs out
+     * @return The user's answer
      */
-    private void exitMessage() {
-        JOptionPane.showMessageDialog(this, "The user has logout.", "User logout", JOptionPane.INFORMATION_MESSAGE);
+    private int exitMessage() {
+        return JOptionPane.showConfirmDialog(null, "Do you want to logout?", "Confirm",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
     }
 
     /**
@@ -258,8 +260,11 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
             resetButtonsColors();
             settingsButton.setForeground(ColorConstants.ACTIVE_BUTTON.getColor());
         } else if (e.getSource() == exitButton) {
-            exitMessage();
-            this.event.exitSession();
+            if (exitMessage() == JOptionPane.YES_OPTION) {
+                this.event.exitSession();
+            }
+
+
         }
     }
 
@@ -389,15 +394,18 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
     }
 
     /**
-     * Loads the volume values on the sliders of the "Settings" tab
-     * @param songVolume Volume of the music player (0 = silent, 1 = max volume)
-     * @param pianoVolume Volume of the piano player (0 = silent, 1 = max volume)
+     * Requests
      */
     @Override
     public void requestSongInformation() {
         this.piano.requestSongInformation();
     }
 
+    /**
+     * Loads the volume values on the sliders of the "Settings" tab
+     * @param songVolume Volume of the music player (0 = silent, 1 = max volume)
+     * @param pianoVolume Volume of the piano player (0 = silent, 1 = max volume)
+     */
     @Override
     public void setConfig(float songVolume, float pianoVolume) {
         SwingUtilities.invokeLater(()->this.settings.setConfig(songVolume, pianoVolume));
