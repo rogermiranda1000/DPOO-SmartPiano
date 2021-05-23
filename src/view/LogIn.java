@@ -307,6 +307,13 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
     }
 
     /**
+     * Shows an error message for when an incorrect user is input when registering
+     */
+    private void wrongUser() {
+        JOptionPane.showMessageDialog(this, "Wrong user format. Try it again ( ͡❛ ︹ ͡❛)", "Wrong mail", JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
      * Shows an error message for a user-password combination doesn't exist at logging in
      */
     @Override
@@ -343,14 +350,15 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
         } else if (e.getSource() == backButton) {
             cl.show(mainContent, ("login"));
         } else if (e.getSource() == pushRegisterButton) {
-            if (this.checkMail()) {
-                if (this.checkPassword()) {
-                    if (this.checkPasswords()) {
-                        this.event.requestRegister(this.usernameRegister.getInput(), this.emailRegister.getInput(), this.passwordRegister.getInput());
-                    } else this.wrongPasswords();
-                } else this.wrongPassword();
-            } else this.wrongMail();
-
+            if (!this.usernameRegister.getInput().equals("")) {
+                if (this.checkMail()) {
+                    if (this.checkPassword()) {
+                        if (this.checkPasswords()) {
+                            this.event.requestRegister(this.usernameRegister.getInput(), this.emailRegister.getInput(), this.passwordRegister.getInput());
+                        } else this.wrongPasswords();
+                    } else this.wrongPassword();
+                } else this.wrongMail();
+            } else this.wrongUser();
         }
     }
 }
