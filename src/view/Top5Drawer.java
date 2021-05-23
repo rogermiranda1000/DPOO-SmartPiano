@@ -50,7 +50,7 @@ public class Top5Drawer extends JPanel {
     /**
      * Number of reproductions per song, from most popular to least
      */
-    private int[] numRep = new int[NUM_SONGS];
+    private final int[] numRep = new int[NUM_SONGS];
 
     /**
      * The data to show on the table
