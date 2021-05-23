@@ -10,22 +10,34 @@ import java.lang.String;
 import java.net.URL;
 import java.util.*;
 
+/**
+ * Class tasked with reading .mid files and turning them into Song objects with SongNotes
+ */
 public class MIDIFactory {
+
+    /**
+     * Constant representing a note press
+     */
     public static final int NOTE_ON = 0x90;
+
+    /**
+     * Constant representing a note release
+     */
     public static final int NOTE_OFF = 0x80;
 
     /**
-     * Donat un fitxer .mid extreu les tecles
+     * Given a .mid file, extracts the SongNotes
      *
-     * @param song     Nom de la canço
-     * @param author   Autor creador de la canço
-     * @param creation Temps de creació
-     * @param url      Ruta del midi
-     * @return Conço (array de notes)
-     * @throws IOException              Error al obrir el fitxer (file not found?)
-     * @throws InvalidMidiDataException Error al tractar el fitxer com MIDI (.zip?)
+     * @param song Name of the song
+     * @param author Name of the author of the song
+     * @param creation Creation date
+     * @param url Route to the MIDI file
+     * @return Song object with all the notes
+     * @throws IOException Error when opening the file (file not found?)
+     * @throws InvalidMidiDataException Error when treating the file as MIDI (.zip?)
      */
     public static Song getSong(String song, String author, Date creation, URL url) throws IOException, InvalidMidiDataException {
+
         Sequence sequence = MidiSystem.getSequence(url);
 
         double tickLength = (double) sequence.getMicrosecondLength() / sequence.getTickLength();

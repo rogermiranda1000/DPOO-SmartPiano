@@ -1,5 +1,6 @@
 package view;
 
+import controller.UpdateConfigEvent;
 import entities.KeyboardConstants;
 import entities.Note;
 
@@ -14,16 +15,75 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Initializes the "Settings" tab, and implements its functionalities
+ */
 public class Settings extends JPanel implements ActionListener, ChangeListener, KeyChanger, DeleteUserNotifier, ConfigLoadNotifier {
-    private JSlider volumePiano, volumeSong;
-    private JLabel volumePianoTxt, volumeSongTxt;
-    private JLabel userName, userEmail;
-    private JButton deleteButton, saveButton;
+
+    /**
+     * Slider to configure the volume of the piano
+     */
+    private JSlider volumePiano;
+
+    /**
+     * Slider to configure the volume of the song
+     */
+    private JSlider volumeSong;
+
+    /**
+     * Label with the configured piano volume (0 = silenced, 100 = max volume)
+     */
+    private JLabel volumePianoTxt;
+
+    /**
+     * Label with the configured song volume (0 = silenced, 100 = max volume)
+     */
+    private JLabel volumeSongTxt;
+
+    /**
+     * The name of the logged user
+     */
+    private JLabel userName;
+
+    /**
+     * The email of the logged user
+     */
+    private JLabel userEmail;
+
+    /**
+     * Used to delete the user's account
+     */
+    private JButton deleteButton;
+
+    /**
+     * Used to save the configuration changes
+     */
+    private JButton saveButton;
+
+    /**
+     * Object to notify configuration changes to
+     */
     private final UpdateConfigEvent updateEvent;
+
+    /**
+     * Used by the user to input the password when deleting the account
+     */
     private JPasswordField passwordInput;
+
+    /**
+     * Used to confirm the deletion of the account
+     */
     private JButton confirm;
+
+    /**
+     * Window for deleting the user's account
+     */
     private JDialog dialog;
 
+    /**
+     * Initializes the object
+     * @param updateEvent Object to notify configuration changes to
+     */
     public Settings(UpdateConfigEvent updateEvent) {
         this.updateEvent = updateEvent;
 
@@ -33,6 +93,10 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
         this.setVisible(true);
     }
 
+    /**
+     * Sets up the panel with every needed element inside
+     * @return A panel with the tab's elements
+     */
     private JPanel settingsView() {
         JPanel content = new JPanel();
         content.setBackground(ColorConstants.BACKGROUND.getColor());
@@ -124,6 +188,10 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
         return content;
     }
 
+    /**
+     * Sets up a dialog where the user has to confirm the password to delete their account
+     * @return A JDialog with the required elements
+     */
     private JDialog confirmPassword(){
         JDialog dialog = new JDialog();
         dialog.setTitle("Confirm password");
@@ -162,6 +230,10 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
         return dialog;
     }
 
+    /**
+     * Creates all the buttons for changing key configurations and some extra labels
+     * @return Panel with the buttons and some labels
+     */
     private JPanel keysConfig() {
         JPanel keys = new JPanel(), title = new JPanel();
 
@@ -169,7 +241,7 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
         keys.setBackground(ColorConstants.BACKGROUND.getColor());
         keys.add(title);
 
-        for (byte octava = KeyboardConstants.INIT_OCTAVA; octava < KeyboardConstants.NUM_OCTAVES + KeyboardConstants.INIT_OCTAVA; octava++) {
+        for (byte octava = KeyboardConstants.INIT_OCTAVE; octava < KeyboardConstants.NUM_OCTAVES + KeyboardConstants.INIT_OCTAVE; octava++) {
             JPanel panel = new JPanel();
             panel.setBackground(ColorConstants.BACKGROUND.getColor());
 
@@ -191,7 +263,7 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
     }
 
     /**
-     * Save the slider's current value
+     * Saves the slider's current value
      */
     private void saveConfig() {
         this.updateEvent.updatePianoVolume(this.getPianoVolume());
@@ -199,20 +271,36 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
         JOptionPane.showMessageDialog(this, "Changes on configuration saved.","Configuration saved!",JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+     * Returns the slider's configured piano volume
+     * @return A value between 0 (silence) and 1 (max volume)
+     */
     private float getPianoVolume() {
         return this.volumePiano.getValue()/100.f;
     }
 
+    /**
+     * Returns the slider's configured song volume
+     * @return A value between 0 (silence) and 1 (max volume)
+     */
     private float getSongVolume() {
         return this.volumeSong.getValue()/100.f;
     }
 
+    /**
+     * Called when the slider's value changes, saves the value in the corresponding label
+     * @param e Event that triggered this function
+     */
     @Override
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() == volumePiano) volumePianoTxt.setText(Integer.toString(volumePiano.getValue()));
         else if (e.getSource() == volumeSong) volumeSongTxt.setText(Integer.toString(volumeSong.getValue()));
     }
 
+    /**
+     * Called when a button is pressed, the corresponding action is executed depending on which button was pressed
+     * @param e Event that triggered this function
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == saveButton) {
@@ -225,27 +313,49 @@ public class Settings extends JPanel implements ActionListener, ChangeListener, 
         }
     }
 
+    /**
+     * Notifies of a configuration change in note associations
+     * @param n Note that changed
+     * @param octava Octave of the note
+     * @param newLetter New letter the note will be assigned to
+     */
     @Override
     public void changeKey(Note n, byte octava, char newLetter) {
         this.updateEvent.updateKeyBinder(n, octava, newLetter);
     }
 
+    /**
+     * The user has input the correct password to delete their account
+     */
     @Override
     public void userDeleted() {
         JOptionPane.showMessageDialog(this, "Bye! :'(","Did I do something wrong? owo", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+     * The user has input an incorrect password when trying to delete their account
+     */
     @Override
     public void userNotDeleted() {
         JOptionPane.showMessageDialog(this, "This password it's not the current user's one!","Wrong password!", JOptionPane.ERROR_MESSAGE);
     }
 
+    /**
+     * Loads the volume values on the sliders
+     * @param songVolume Volume of the music player (0 = silent, 1 = max volume)
+     * @param pianoVolume Volume of the piano player (0 = silent, 1 = max volume)
+     */
     @Override
     public void setConfig(float songVolume, float pianoVolume) {
         this.volumePiano.setValue((int)(pianoVolume*100.f));
         this.volumeSong.setValue((int)(songVolume*100.f));
     }
 
+    /**
+     * Loads the name and email of the user on the view
+     * @param name Name of the user
+     * @param email Email of the user
+     */
     @Override
     public void setUserInformation(String name, String email) {
         this.userName.setText(name);

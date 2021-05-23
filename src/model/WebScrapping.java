@@ -15,20 +15,50 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Class charged with scrapping the website and downloading the .mid files
+ */
 public class WebScrapping {
+
+    /**
+     * Regex used to get the author's name
+     */
     public static final Pattern USER_PATTERN = Pattern.compile("^(?:by )?(.+?)(?: \\(\\d{4}.\\d{4}\\))?$"); // RegEx time \o.0/
+
+    /**
+     * Link to the website that holds the song information
+     */
     private static final String LINK = "https://www.mutopiaproject.org/cgibin/make-table.cgi?Instrument=Piano&startat=%d";
+
+    /**
+     * The amount of songs every page of the website holds
+     */
     private static final int FILES_PER_LINK = 10;
 
+    /**
+     * Xpath that leads to the song's name
+     */
     private static final String PATH_SONG_NAME = "body > div.container > div > div > table > tbody > tr:nth-child(%d) > td > table > tbody > tr:nth-child(1) > td:nth-child(1)";
+
+    /**
+     * Xpath that leads to the song's author name
+     */
     private static final String PATH_AUTHOR = "body > div.container > div > div > table > tbody > tr:nth-child(%d) > td > table > tbody > tr:nth-child(1) > td:nth-child(2)";
+
+    /**
+     * Xpath that leads to the song's .mid file to download
+     */
     private static final String PATH_MIDI = "body > div.container > div > div > table > tbody > tr:nth-child(%d) > td > table > tbody > tr:nth-child(4) > td:nth-child(2) > a";
+
+    /**
+     * Xpath that leads to the song's date
+     */
     private static final String PATH_DATE = "body > div.container > div > div > table > tbody > tr:nth-child(%d) > td > table > tbody > tr:nth-child(3) > td:nth-child(4)";
 
     /**
-     * S'elimina el 'by' i la data de naixement/mort del usuari. Si no ho té es deixa tal qual.
-     * @param complete String a segmentar
-     * @return String segmentada
+     * The 'by' and the user's birth/death date get eliminated. If the user doesen't have it it's left as it is.
+     * @param complete String to segment
+     * @return Segmented string
      */
     private static synchronized String getMatch(String complete) {
         // se elimina el 'by' y la fecha de nacimiento/muerte del usuario, si no lo tiene se queda igual
@@ -37,6 +67,10 @@ public class WebScrapping {
         return matcher.group(1);
     }
 
+    /**
+     * Gets form the url the song's name, author and MIDI file url
+     * @param sn Object to notify when a song should be added to the database
+     */
     public static void getSongs(SongNotifier sn) {
         int desfase = 0;
         boolean end = false;
@@ -68,6 +102,11 @@ public class WebScrapping {
         }
     }
 
+    /**
+     * Downloads the html content of the url
+     * @param url Url to go to
+     * @return Content of the url
+     */
     private static String getURLContent(String url) {
         StringBuilder sb = new StringBuilder();
 

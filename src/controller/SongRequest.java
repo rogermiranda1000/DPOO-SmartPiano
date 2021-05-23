@@ -3,8 +3,13 @@ package controller;
 import entities.Song;
 
 /**
- * Sol·licitud a MusicController per reproduir una canço
+ * Interface tasked with requesting a song to play
  */
 public interface SongRequest {
+
+    /**
+     * Requests a song to be played
+     * @param song Song to play
+     */
     void requestSong(Song song);
 }

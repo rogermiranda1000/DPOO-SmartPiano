@@ -7,23 +7,49 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 
+/**
+ * Class that manages database operations regarding song plays and statistics creation
+ */
 public class StatisticsDDBBDAO implements StatisticsDAO {
+
+    /**
+     * Object used to access the database
+     */
     private final DDBBAccess ddbb;
 
+    /**
+     * Initiates the class, saving the DDBBAccess
+     * @param ddbb Object used to access the database
+     */
     public StatisticsDDBBDAO(DDBBAccess ddbb) {
         this.ddbb = ddbb;
     }
 
+    /**
+     * Returns the evolution of the plays per hour
+     * @return An array of values representing the number of total plays for each hour in the last 24 hours,
+     * the last value is the current hour
+     */
     @Override
     public int[] getSongStatistics() {
         return getStatistics("SELECT COUNT(l.song) AS times, DAY(l.date) AS day, HOUR(l.date) AS hour, HOUR(NOW()) AS hour_now FROM Listen AS l WHERE DATE_SUB(NOW(),INTERVAL 23 HOUR) < l.date GROUP BY day, hour ORDER BY day, hour ASC;");
     }
 
+    /**
+     * Returns the evolution of the time listened per hour
+     * @return An array of values representing the number of seconds listened for each hour in the last 24 hours,
+     * the last value is the current hour
+     */
     @Override
     public int[] getTimeStatistics() {
         return getStatistics("SELECT SUM(l.seconds_listened) AS seconds, DAY(l.date) AS day, HOUR(l.date) AS hour, HOUR(NOW()) AS hour_now FROM Listen AS l WHERE DATE_SUB(NOW(),INTERVAL 23 HOUR) < l.date GROUP BY day, hour ORDER BY day, hour ASC;");
     }
 
+    /**
+     * Returns the values regarding a certain query (statistics)
+     * @param query Query to get the statistics from
+     * @return Values of the query
+     */
     private int[] getStatistics(String query) {
         try {
             ResultSet rs = this.ddbb.getSentence(query);
@@ -62,6 +88,13 @@ public class StatisticsDDBBDAO implements StatisticsDAO {
         }
     }
 
+    /**
+     * Adds a play of a certain length to the specified song
+     * @param nick Username of the logged user
+     * @param song Song to add the play to
+     * @param seconds Seconds this play lasted for
+     * @return True if the operation was successful
+     */
     @Override
     public boolean addListen(String nick, Song song, int seconds) {
         try {
@@ -76,6 +109,11 @@ public class StatisticsDDBBDAO implements StatisticsDAO {
         }
     }
 
+    /**
+     * Returns the top 5 most popular songs
+     * @param plays Array which will be filled with the plays of each song, from most popular to least
+     * @return Array of songs, from most popular to least
+     */
     @Override
     public Song[] getTop5(int[] plays) {
         try {
@@ -96,6 +134,11 @@ public class StatisticsDDBBDAO implements StatisticsDAO {
         }
     }
 
+    /**
+     * Delete the user's statistics
+     * @param s User name
+     * @return If the statistics from the player was deleted (true) or something happened (false)
+     */
     @Override
     public boolean deletePlayerStatistics(String s) {
         try {
@@ -107,6 +150,11 @@ public class StatisticsDDBBDAO implements StatisticsDAO {
         }
     }
 
+    /**
+     * Deletes the plays from a specified song
+     * @param s Song to delete the plays from
+     * @return True if the operation was successful
+     */
     @Override
     public boolean deleteStatistics(Song s) {
         try {
