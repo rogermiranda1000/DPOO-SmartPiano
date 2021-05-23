@@ -4,42 +4,46 @@ import entities.Song;
 
 import java.util.ArrayList;
 
+/**
+ * Interface tasked with actions related to the "Playlists" tab
+ */
 public interface PlaylistEvent {
+
     /**
-     * Retorna totes les playlists del usuari actual
-     * @return Tots els noms de les playlists
+     * Returns the playlists of the logged user
+     * @return The names of all the playlists
      */
     ArrayList<String> getPlaylists();
 
     /**
-     * Retorna les cançons que formen una playlist
-     * @param playlist Nom de la playlist a buscar
+     * Returns all the songs in a playlist
+     * @param playlist Name of the playlist to look inside
      * @return Cançons formant playlist
      */
     ArrayList<Song> getPlaylistSongs(String playlist);
 
     /**
-     * Solicita afegir una playlist
-     * @param playlist Nom de la playlist
+     * Adds a playlist to the database
+     * @param playlist Name of the playlist
      */
     void addPlaylist(String playlist);
 
     /**
-     * Solicita eliminar una playlist
-     * @param playlist Nom de la playlist
+     * Deletes a playlist from the logged user
+     * @param playlist Name of the playlist
      */
     void removePlaylist(String playlist);
 
     /**
-     * Solicita eliminar una canço d'una playlist
-     * @param playlist Nom de la playlist on està la canço
-     * @param song Canço a eliminar
+     * Deletes a song from a specifiedplaylist
+     * @param playlist Name of the playlist where the song is in
+     * @param song Song to delete
      */
     void removeSongPlaylist(String playlist, Song song);
 
     /**
-     * Solicita reproduir una playlist
-     * @param playlist Nom de la playlist a reproduir
+     * Plays a playlist
+     * @param playlist Name of the playlist to play
      */
     void requestPlayList(String playlist);
 }
