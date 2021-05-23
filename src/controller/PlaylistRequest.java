@@ -3,8 +3,13 @@ package controller;
 import entities.List;
 
 /**
- * Sol·licitud a MusicController per reproduir una playlist
+ * Interface tasked with playing playlists
  */
 public interface PlaylistRequest {
+
+    /**
+     * Asks the MusicController to play a playlist
+     * @param list Playlist to play
+     */
     void requestPlaylist(List list);
 }
