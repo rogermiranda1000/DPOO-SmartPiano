@@ -11,25 +11,88 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Synthesizer;
 import java.util.ArrayList;
 
+/**
+ * Class tasked with triggering a note or playing a whole song, should be started to play the song
+ */
 public class NotePlayer extends Thread {
+
+    /**
+     * The instrument being used (0 = default piano)
+     */
     private static final int INSTRUMENT = 0;
+
+    /**
+     * Constant to change the speed at which the songs play (1 = standard)
+     */
     private static final int SPEED = 1;
 
+    /**
+     * Notes to play, sorted by tick
+     */
     private final ArrayList<SongNote> notes;
+
+    /**
+     * The time [us] every tick represents
+     */
     private final double tickLength;
+
+    /**
+     * The channels of the MIDI file
+     */
     private final MidiChannel[] channels;
+
+    /**
+     * Synthesiser the class will use to play the notes
+     */
     private final Synthesizer synth;
+
+    /**
+     * Tick of the next song that should play
+     */
     private long tick;
+
+    /**
+     * The second of the song when someone requested the current second
+     */
     private int lastSecondSent;
 
+    /**
+     * True if the player is paused
+     */
     private boolean paused;
+
+    /**
+     * True if the player hasn't been closed
+     */
     private boolean alive;
+
+    /**
+     * Volume the notes should be played in, used as a scalar value (1 = volume of the note, 0 = silent)
+     */
     private float volume;
 
+    /**
+     * Object to notify when the song ends
+     */
     private final SongEnder songEnder;
-    private final SongValidator songValidator;
-    private final Object notified; //Utilitzat per fer el notify
 
+    /**
+     * Object to validate a note play to
+     */
+    private final SongValidator songValidator;
+
+    /**
+     * Object that wll receive the notifications (used for un-pausing)
+     */
+    private final Object notified;
+
+    /**
+     * Creates a NotePlayer with the given attributes and initializes the necessary tools to play a song when started
+     * @param song Song to play when started
+     * @param volume Volume to play the song in (1 = volume of the note, 0 = silent)
+     * @param songEnder Object to notify when the song ends
+     * @param songValidator Object to validate a note play to
+     */
     public NotePlayer(Song song, float volume, SongEnder songEnder, SongValidator songValidator) {
         this.paused = false;
         this.alive = true;
@@ -54,10 +117,22 @@ public class NotePlayer extends Thread {
         this.synth = synth;
     }
 
+    /**
+     * Creates a NotePlayer with the given attributes (null songValidator) and initializes the necessary tools to play a song when started
+     * @param song Song to play when started
+     * @param volume Volume to play the song in (1 = volume of the note, 0 = silent)
+     * @param songEnder Object to notify when the song ends
+     */
     public NotePlayer(Song song, float volume, SongEnder songEnder) {
         this(song, volume, songEnder, null);
     }
 
+    /**
+     * Creates a NotePlayer with the given attributes (null songEnder) and initializes the necessary tools to play a song when started
+     * @param song Song to play when started
+     * @param volume Volume to play the song in (1 = volume of the note, 0 = silent)
+     * @param songValidator Object to validate a note play to
+     */
     public NotePlayer(Song song, float volume, SongValidator songValidator) {
         this(song, volume,  null, songValidator);
     }
@@ -83,21 +158,32 @@ public class NotePlayer extends Thread {
 
     }
 
+    /**
+     * Sets a new volume for the song to play in
+     * @param volume Volume to play the song in (1 = volume of the note, 0 = silent)
+     */
     public void setVolume(float volume) {
         this.volume = volume;
     }
 
+    /**
+     * Returns if the thread is active
+     * @return True if the player hasn't been closed
+     */
     public synchronized boolean getAlive() {
         return this.alive;
     }
 
     /**
-     * Força l'eliminació del thread
+     * Forces the deletion of the thread
      */
     public synchronized void closePlayer() {
         this.alive = false;
     }
 
+    /**
+     * Starts playing the loaded song
+     */
     @Override
     @SuppressWarnings("BusyWait")
     public void run() {
@@ -138,6 +224,10 @@ public class NotePlayer extends Thread {
         this.synth.close();
     }
 
+    /**
+     * Executes a single note (at the saved volume)
+     * @param note Note to play
+     */
     public void executeNote(SongNote note) {
         if (note.isPressed()) {
             this.channels[INSTRUMENT].noteOn(note.getId(), Math.round(note.getVelocity()*volume));
@@ -147,8 +237,8 @@ public class NotePlayer extends Thread {
     }
 
     /**
-     * Dóna els segons que han passat des de l'últim cop que s'ha cridat la funció
-     * @return valor corresponent al segon que han passat
+     * Returns the number of seconds that elapsed since this function was last called (or since the song started)
+     * @return Seconds elapsed since this function was last called
      */
     public int getCurrentSecond() {
         int second = (int)Math.round(tick * tickLength/1000/1000);

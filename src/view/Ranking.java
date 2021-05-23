@@ -4,47 +4,82 @@ import javax.swing.*;
 import java.awt.*;
 import controller.RankingEvent;
 
+/**
+ * Initializes the "Ranking" tab, sets up the graphs, table, and implements the functionalities
+ */
 public class Ranking extends JPanel implements NewPlayNotifier {
+
+    /**
+     * Object that will draw the plays graph
+     */
     private GraphDrawer songsGraph;
+
+    /**
+     * Object that will draw the time graph
+     */
     private GraphDrawer timeGraph;
+
+    /**
+     * Object that will draw the "top 5 songs" table
+     */
     private Top5Drawer top5Table;
+
+    /**
+     * Object that will draw the songs graph
+     */
     private final RankingEvent event;
+
+    /**
+     * Panel that holds both graphs
+     */
     private final JPanel graphPanel;
+
+    /**
+     * Panel that holds the "top 5 songs" table
+     */
     private final JPanel tablePanel;
 
-
-
+    /**
+     * Initializes the panel and inserts the table and graphs
+     * @param rankingE Object that will draw the songs graph
+     */
     public Ranking(RankingEvent rankingE) {
         this.event = rankingE;
 
         this.graphPanel = new JPanel();
-        graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.LINE_AXIS));
+        this.graphPanel.setLayout(new BoxLayout(this.graphPanel, BoxLayout.LINE_AXIS));
         this.tablePanel = new JPanel();
-        tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.LINE_AXIS));
+        this.tablePanel.setLayout(new BoxLayout(this.tablePanel, BoxLayout.LINE_AXIS));
 
         this.addStatistics();
 
         this.setLayout(new BorderLayout());
-        this.add(graphPanel, BorderLayout.CENTER);
-        this.add(tablePanel, BorderLayout.SOUTH);
+        this.add(this.graphPanel, BorderLayout.CENTER);
+        this.add(this.tablePanel, BorderLayout.SOUTH);
         this.setVisible(true);
     }
 
+    /**
+     * Adds the graphical elements into both panels
+     */
     private void addStatistics() {
-        songsGraph = new GraphDrawer(this.event.getSongsStatistics(), "Songs listened per hour", Color.RED);
-        songsGraph.setBackground(ColorConstants.BACKGROUND.getColor());
+        this.songsGraph = new GraphDrawer(this.event.getSongsStatistics(), "Songs listened per hour", Color.RED);
+        this.songsGraph.setBackground(ColorConstants.BACKGROUND.getColor());
 
-        graphPanel.add(songsGraph);
+        this.graphPanel.add(this.songsGraph);
 
-        timeGraph = new GraphDrawer(this.event.getTimeStatistics(), "Seconds listened per hour", new Color(0x016618));
-        timeGraph.setBackground(ColorConstants.BACKGROUND.getColor());
-        graphPanel.add(timeGraph);
+        this.timeGraph = new GraphDrawer(this.event.getTimeStatistics(), "Seconds listened per hour", new Color(0x016618));
+        this.timeGraph.setBackground(ColorConstants.BACKGROUND.getColor());
+        this.graphPanel.add(this.timeGraph);
 
-        top5Table = new Top5Drawer(this.event);
-        top5Table.setBackground(ColorConstants.BACKGROUND.getColor());
-        tablePanel.add(top5Table);
+        this.top5Table = new Top5Drawer(this.event);
+        this.top5Table.setBackground(ColorConstants.BACKGROUND.getColor());
+        this.tablePanel.add(this.top5Table);
     }
 
+    /**
+     * Updates the information on the table and graphs and repaints
+     */
     @Override
     public void reloadGraphs() {
         // eliminar anteriors elements

@@ -4,24 +4,69 @@ package view;
 import javax.swing.*;
 import java.awt.*;
 
+
+/**
+ * Class used to draw the graphs
+ */
 class GraphDrawer extends JPanel {
+
+    /**
+     * The height of the graph in pixels
+     */
     private static final int GRAPH_HIGHT = 450;
+
+    /**
+     * The width of the graph in pixels
+     */
     private static final int GRAPH_WIDTH = 700;
+
+    /**
+     * Value used for creating a margin
+     */
     private static final int INITIAL_POINT_X = 50;
+
+    /**
+     * Value used for creating a margin
+     */
     private static final int INITIAL_POINT_Y = 20;
+
+    /**
+     * Font used when printing the graph
+     */
     private static final Font font = new Font("TimesRoman", Font.PLAIN, 14);
 
+    /**
+     * List fo the values to create the graph from
+     */
     private final int[] yCoords;
+
+    /**
+     * Starting x position of the graph
+     */
     private final String name;
+
+    /**
+     * Starting y position of the graph
+     */
     private final Color lineColor;
 
 
+    /**
+     * Initializes the variables with the values sent
+     * @param yCoords Array with the values to display and the current hour at the end
+     * @param name Name of the graph to be displayed
+     * @param lineColor Color of the graph's main line
+     */
     public GraphDrawer(int[] yCoords, String name, Color lineColor) {
         this.yCoords = yCoords;
         this.name = name;
         this.lineColor = lineColor;
     }
 
+    /**
+     * Called when the component is drawn on screen, here the graph is drawn
+     * @param g Graphics object to be drawn
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -84,11 +129,21 @@ class GraphDrawer extends JPanel {
         g2d.drawLine( 150, endY + 100, 200, endY + 100);
     }
 
+    /**
+     * Calculates the number of sections the graph should have
+     * @param x Value from which to divide
+     * @return Sections the graph will have, between 1 and 10
+     */
     private int numSections(int x) {
         while (x > 10) x /= 10;
         return x;
     }
 
+    /**
+     * Returns the maximum value from an int array
+     * @param inputArray Array of values
+     * @return The highest value from the array
+     */
     private int maxValue(int[] inputArray) {
         int maxValue = inputArray[0];
         for (int i = 1; i < inputArray.length - 1; i++) {

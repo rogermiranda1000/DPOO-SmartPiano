@@ -3,12 +3,13 @@ package controller;
 import entities.SongNote;
 
 /**
- * When a note must be played in NotePlayer it sends a request validation (if not null)
+ * Interface tasked with requesting validations of notes to be played in NotePlayer (if not null)
  */
 public interface SongValidator {
+
     /**
-     * A note must be played
-     * @param sn Note
+     * Requests a song to be played
+     * @param sn Note to be played
      */
     void requestNote(SongNote sn);
 }

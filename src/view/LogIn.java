@@ -12,19 +12,100 @@ import java.io.File;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
+/**
+ * Window used for user Log in and Registration, the user can switch between both screens
+ */
 public class LogIn extends JFrame implements ActionListener, LogInNotifier {
+
+    /**
+     * Width of the window
+     */
     private static final int WIDTH = 400;
+
+    /**
+     * Height of the window
+     */
     private static final int HEIGHT = 400;
+
+    /**
+     * Preferred width of labels
+     */
     private static final int TXT_WIDTH = 120;
+
+    /**
+     * Preferred height of labels
+     */
     private static final int TXT_HEIGHT = 20;
 
-    private JButton loginButton, registerButton, backButton, pushResgisterButton;
-    private TextField usernameInput, emailRegister, usernameRegister;
-    private JPasswordField passwordInput, passwordRegister, confirmPasswordRegister;
+    /**
+     * Button to confirm to log in
+     */
+    private JButton loginButton;
+
+    /**
+     * Button to switch to the register screen
+     */
+    private JButton registerButton;
+
+    /**
+     * Button to go back from register to log in
+     */
+    private JButton backButton;
+
+    /**
+     * Button to confirm registration
+     */
+    private JButton pushRegisterButton;
+
+    /**
+     * Field where the username for logging in is typed
+     */
+    private TextField usernameInput;
+
+    /**
+     * Field where the email is typed
+     */
+    private TextField emailRegister;
+
+    /**
+     * Field where the username for registering is typed
+     */
+    private TextField usernameRegister;
+
+    /**
+     * Field where the password is input when logging in
+     */
+    private JPasswordField passwordInput;
+
+    /**
+     * Field where the password is input when registering
+     */
+    private JPasswordField passwordRegister;
+
+    /**
+     * Field where the password is input for the second time when registering
+     */
+    private JPasswordField confirmPasswordRegister;
+
+    /**
+     * Event to request log in and registers
+     */
     private final LoginEvent event;
+
+    /**
+     * Panel containing both register and log in views
+     */
     private final JPanel mainContent;
+
+    /**
+     * Card layout for switching between both register and log in views
+     */
     private final CardLayout cl;
 
+    /**
+     * Sets up every component in the frame
+     * @param event Object to notify log in and register events to
+     */
     public LogIn(LoginEvent event) {
         this.event = event;
 
@@ -44,6 +125,10 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
         cl.show(mainContent, ("login"));
     }
 
+    /**
+     * Builds everything in the log in screen
+     * @return Panel with every component needed set up inside
+     */
     public JPanel buildLogin() {
         JPanel container = new JPanel(new BorderLayout());
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
@@ -123,6 +208,10 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
         return container;
     }
 
+    /**
+     * Builds everything in the register screen
+     * @return Panel with every component needed set up inside
+     */
     public JPanel buildRegister() {
         JPanel container = new JPanel(new BorderLayout());
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
@@ -209,10 +298,10 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
         buttons.setMaximumSize(new Dimension(WIDTH, 100));
 
         backButton = new JButton("Back to view LogIn");
-        pushResgisterButton = new JButton("Register");
+        pushRegisterButton = new JButton("Register");
 
         buttons.add(backButton, BorderLayout.CENTER);
-        buttons.add(pushResgisterButton, BorderLayout.CENTER);
+        buttons.add(pushRegisterButton, BorderLayout.CENTER);
 
         // Add of all the components
         container.add(header, BorderLayout.CENTER);
@@ -228,15 +317,23 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
         backButton.addActionListener(this);
 
         // Register push click
-        pushResgisterButton.addActionListener(this);
+        pushRegisterButton.addActionListener(this);
 
         return container;
     }
 
+    /**
+     * Checks if both passwords are equal
+     * @return True if they are equal
+     */
     private boolean checkPasswords() {
         return String.valueOf(passwordRegister.getPassword()).equals(String.valueOf(confirmPasswordRegister.getPassword()));
     }
 
+    /**
+     * Checks if the email input by the user complies with the requirements
+     * @return True if the email complies with the format specifications
+     */
     private boolean checkMail() {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
                 "[a-zA-Z0-9_+&*-]+)*@" +
@@ -249,15 +346,22 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
         return pat.matcher(emailRegister.getText()).matches();
     }
 
+    /**
+     * Checks if the password is valid
+     * @return True if the password complies with MIT password policies
+     */
     private boolean checkPassword() {
         String passwordRegex = "(^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$)";
 
         Pattern pat = Pattern.compile(passwordRegex);
-        if (String.valueOf(passwordRegister.getPassword()) == null)
+        if (String.valueOf(passwordRegister.getPassword()).equals(""))
             return false;
         return pat.matcher(String.valueOf(passwordRegister.getPassword())).matches();
     }
 
+    /**
+     * Shows an error message explaining the requirements of a valid password
+     */
     private void wrongPassword() {
         JOptionPane.showMessageDialog(this, "Wrong password. Password need have: " +
                 "\n- More than 8 characters. " +
@@ -269,31 +373,48 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
                 JOptionPane.ERROR_MESSAGE);
     }
 
+    /**
+     * Shows an error message for when an incorrect password is input when registering
+     */
     private void wrongPasswords() {
         JOptionPane.showMessageDialog(this, "Wrong password. Try it again ( ͡❛ ︹ ͡❛)", "Wrong password", JOptionPane.ERROR_MESSAGE);
     }
 
+    /**
+     * Shows an error message for when an incorrect email is input when registering
+     */
     private void wrongMail() {
         JOptionPane.showMessageDialog(this, "Wrong mail format. Try it again ( ͡❛ ︹ ͡❛)", "Wrong mail", JOptionPane.ERROR_MESSAGE);
     }
 
+    /**
+     * Shows an error message for a user-password combination doesn't exist at logging in
+     */
     @Override
     public void wrongLogin() {
         JOptionPane.showMessageDialog(this, "Wrong LogIn. Try it again ( ͡❛ ︹ ͡❛)", "Wrong Login", JOptionPane.ERROR_MESSAGE);
     }
 
+    /**
+     * Shows an message for when an account is created successfully
+     */
     @Override
     public void userCreated() {
         JOptionPane.showMessageDialog(this, "User created successfully ¯\\_( ͡❛ ‿‿ ͡❛)_/¯", "UserCreated", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+     * Shows an error message for when the user already exists in the database
+     */
     @Override
     public void wrongCreation() {
         JOptionPane.showMessageDialog(this, "This user is already taken. Try it again ( ͡❛ ︹ ͡❛)", "Wrong user", JOptionPane.ERROR_MESSAGE);
     }
 
-    //TODO: que es pugui accedir tant amb el nom d'usuari o el mail.
-    //TODO: dir exactament quin camp està malament si no s'accepta password.
+    /**
+     * Called when a button is pressed, does the action required depending on which button it was
+     * @param e Event that triggered this function
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == loginButton) {
@@ -302,7 +423,7 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
             cl.show(mainContent, ("register"));
         } else if (e.getSource() == backButton) {
             cl.show(mainContent, ("login"));
-        } else if (e.getSource() == pushResgisterButton) {
+        } else if (e.getSource() == pushRegisterButton) {
             if (this.checkMail()) {
                 if (this.checkPassword()) {
                     if (this.checkPasswords()) {

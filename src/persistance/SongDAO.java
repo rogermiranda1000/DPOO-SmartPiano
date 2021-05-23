@@ -1,15 +1,47 @@
 package persistance;
 
 import entities.Song;
-import entities.User;
 
 import java.util.ArrayList;
 
+/**
+ * Interface used for accessing the songs
+ */
 public interface SongDAO {
+
+    /**
+     * Adds a song to the database
+     * @param song Song to add
+     * @return True if the operation was successful
+     */
     boolean addSong(Song song);
+
+    /**
+     * Adds a song with a virtual creator to the database
+     * @param song Song to be added
+     * @return True if the operation was successful
+     */
     boolean addVirtualSong(Song song);
+
+    /**
+     * Deletes a song from the database
+     * @param song Song to be deleted
+     * @return True if the operation was successful
+     */
     boolean deleteSong(Song song);
+
+    /**
+     * Checks if the specified song exists in the database
+     * @param song Song to look for
+     * @return True if the song exists
+     */
     boolean existsSong(Song song);
+
+    /**
+     * Deletes all the songs created by the specified user
+     * @param user User to delete the songs from
+     * @return True if the operation was successful
+     */
     boolean deleteUserSongs(String user);
 
     /**
@@ -21,17 +53,17 @@ public interface SongDAO {
     Boolean isAuthor(Song song, String name);
 
     /**
-     * Donada una canço amb la informació bàsica (nom, data, autor) obtè tota la demés informació
-     * @param song Canço a omplenar
-     * @return Si s'ha realitzat exitosament (true), o no (false)
+     * Given a song with basic attributes (name, date, author), obtains the rest of the information
+     * @param song Song to fill
+     * @return True if the operation was successful
      */
     boolean updateSong(Song song);
 
     /**
-     * Obtè les cançons del usuari i les públiques
-     * /!\ La informació de les cançons és la bàsica (no hi ha tecles)
-     * @param loggedUser Usuari
-     * @return Cançons visibles per l'usuari
+     * Obtains all the songs from the user and the public ones
+     * /!\ Only the basic information of every song is loaded (there are no notes)
+     * @param loggedUser User logged in the app
+     * @return The songs the user should be able to see
      */
     ArrayList<Song> getAccessibleSongs(String loggedUser);
 }
