@@ -69,7 +69,7 @@ public class WebScrapping {
 
     /**
      * Gets form the url the song's name, author and MIDI file url
-     * @param sn
+     * @param sn Object to notify when a song should be added to the database
      */
     public static void getSongs(SongNotifier sn) {
         int desfase = 0;
