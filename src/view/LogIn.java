@@ -28,16 +28,6 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
     private static final int HEIGHT = 400;
 
     /**
-     * Preferred width of labels
-     */
-    private static final int TXT_WIDTH = 120;
-
-    /**
-     * Preferred height of labels
-     */
-    private static final int TXT_HEIGHT = 20;
-
-    /**
      * Button to confirm to log in
      */
     private JButton loginButton;
@@ -60,32 +50,32 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
     /**
      * Field where the username for logging in is typed
      */
-    private TextField usernameInput;
+    private GenericField usernameInput;
 
     /**
      * Field where the email is typed
      */
-    private TextField emailRegister;
+    private GenericField emailRegister;
 
     /**
      * Field where the username for registering is typed
      */
-    private TextField usernameRegister;
+    private GenericField usernameRegister;
 
     /**
      * Field where the password is input when logging in
      */
-    private JPasswordField passwordInput;
+    private GenericField passwordInput;
 
     /**
      * Field where the password is input when registering
      */
-    private JPasswordField passwordRegister;
+    private GenericField passwordRegister;
 
     /**
      * Field where the password is input for the second time when registering
      */
-    private JPasswordField confirmPasswordRegister;
+    private GenericField confirmPasswordRegister;
 
     /**
      * Event to request log in and registers
@@ -130,7 +120,7 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
      * @return Panel with every component needed set up inside
      */
     public JPanel buildLogin() {
-        JPanel container = new JPanel(new BorderLayout());
+        JPanel container = new JPanel();
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 
         // Logo
@@ -150,34 +140,10 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
         }
 
         // Username
-        JPanel username = new JPanel();
-        username.setBackground(ColorConstants.BACKGROUND.getColor());
-        username.setVisible(true);
-        username.setMaximumSize(new Dimension(WIDTH, 45));
-
-        Label usernameTxt = new Label("Username :");
-        usernameTxt.setPreferredSize(new Dimension(75, TXT_HEIGHT));
-
-        usernameInput = new TextField();
-        usernameInput.setPreferredSize(new Dimension(180, TXT_HEIGHT));
-
-        username.add(usernameTxt);
-        username.add(usernameInput);
+        this.usernameInput = new GenericField("Username:");
 
         // Password
-        JPanel password = new JPanel();
-        password.setBackground(ColorConstants.BACKGROUND.getColor());
-        password.setVisible(true);
-        password.setMaximumSize(new Dimension(WIDTH, 45));
-
-        Label passwordTxt = new Label("Password :");
-        passwordTxt.setPreferredSize(new Dimension(75, TXT_HEIGHT));
-
-        passwordInput = new JPasswordField();
-        passwordInput.setPreferredSize(new Dimension(180, TXT_HEIGHT));
-
-        password.add(passwordTxt);
-        password.add(passwordInput);
+        this.passwordInput = new GenericField("Password:", true);
 
         // Buttons
         JPanel buttons = new JPanel();
@@ -192,10 +158,10 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
         buttons.add(registerButton, BorderLayout.CENTER);
 
         // Add of all the components
-        container.add(logo, BorderLayout.CENTER);
-        container.add(username, BorderLayout.CENTER);
-        container.add(password, BorderLayout.CENTER);
-        container.add(buttons, BorderLayout.CENTER);
+        container.add(logo, BorderLayout.NORTH);
+        container.add(this.usernameInput, BorderLayout.CENTER);
+        container.add(this.passwordInput, BorderLayout.CENTER);
+        container.add(buttons, BorderLayout.SOUTH);
 
         this.add(container, BorderLayout.CENTER);
 
@@ -233,63 +199,16 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
         }
 
         // Username
-        JPanel username = new JPanel();
-        username.setBackground(ColorConstants.BACKGROUND.getColor());
-        username.setVisible(true);
-        username.setMaximumSize(new Dimension(WIDTH, 45));
-
-        Label usernameTxt = new Label("Username :");
-        usernameTxt.setPreferredSize(new Dimension(TXT_WIDTH, TXT_HEIGHT));
-
-        usernameRegister = new TextField();
-        usernameRegister.setPreferredSize(new Dimension(TXT_WIDTH, TXT_HEIGHT));
-
-        username.add(usernameTxt);
-        username.add(usernameRegister);
-
-        // Email
-        JPanel email = new JPanel();
-        email.setBackground(ColorConstants.BACKGROUND.getColor());
-        email.setVisible(true);
-        email.setMaximumSize(new Dimension(WIDTH, 45));
-
-        Label emailTxt = new Label("Email :");
-        emailTxt.setPreferredSize(new Dimension(TXT_WIDTH, 20));
-
-        emailRegister = new TextField();
-        emailRegister.setPreferredSize(new Dimension(TXT_WIDTH, TXT_HEIGHT));
-
-        email.add(emailTxt);
-        email.add(emailRegister);
+        this.usernameRegister = new GenericField("Username:");
 
         // Password
-        JPanel password = new JPanel();
-        password.setBackground(ColorConstants.BACKGROUND.getColor());
-        password.setVisible(true);
-        password.setMaximumSize(new Dimension(WIDTH, 45));
-
-        Label passwordTxt = new Label("Password :");
-        passwordTxt.setPreferredSize(new Dimension(TXT_WIDTH, TXT_HEIGHT));
-
-        passwordRegister = new JPasswordField();
-        passwordRegister.setPreferredSize(new Dimension(TXT_WIDTH, TXT_HEIGHT));
-
-        password.add(passwordTxt);
-        password.add(passwordRegister);
+        this.passwordRegister = new GenericField("Password:", true);
 
         // Confirm password
-        JPanel confirmPassword = new JPanel();
-        confirmPassword.setBackground(ColorConstants.BACKGROUND.getColor());
-        confirmPassword.setVisible(true);
-        confirmPassword.setMaximumSize(new Dimension(WIDTH, 45));
+        this.confirmPasswordRegister = new GenericField("Confirm Password:", true);
 
-        Label confirmPasswordTxt = new Label("Confirm Password :");
-        confirmPasswordTxt.setPreferredSize(new Dimension(TXT_WIDTH, TXT_HEIGHT));
-        confirmPasswordRegister = new JPasswordField();
-        confirmPasswordRegister.setPreferredSize(new Dimension(TXT_WIDTH, TXT_HEIGHT));
-
-        confirmPassword.add(confirmPasswordTxt);
-        confirmPassword.add(confirmPasswordRegister);
+        // Email
+        this.emailRegister = new GenericField("Email:");
 
         // Buttons
         JPanel buttons = new JPanel();
@@ -305,10 +224,10 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
 
         // Add of all the components
         container.add(header, BorderLayout.CENTER);
-        container.add(username, BorderLayout.CENTER);
-        container.add(password, BorderLayout.CENTER);
-        container.add(confirmPassword, BorderLayout.CENTER);
-        container.add(email, BorderLayout.CENTER);
+        container.add(this.usernameRegister, BorderLayout.CENTER);
+        container.add(this.passwordRegister, BorderLayout.CENTER);
+        container.add(this.confirmPasswordRegister, BorderLayout.CENTER);
+        container.add(this.emailRegister, BorderLayout.CENTER);
         container.add(buttons, BorderLayout.CENTER);
 
         this.add(container, BorderLayout.CENTER);
@@ -327,7 +246,7 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
      * @return True if they are equal
      */
     private boolean checkPasswords() {
-        return String.valueOf(passwordRegister.getPassword()).equals(String.valueOf(confirmPasswordRegister.getPassword()));
+        return passwordRegister.getInput().equals(this.confirmPasswordRegister.getInput());
     }
 
     /**
@@ -341,9 +260,9 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
                 "A-Z]{2,7}$";
 
         Pattern pat = Pattern.compile(emailRegex);
-        if (emailRegister.getText() == null)
+        if (this.emailRegister.getInput() == null)
             return false;
-        return pat.matcher(emailRegister.getText()).matches();
+        return pat.matcher(this.emailRegister.getInput()).matches();
     }
 
     /**
@@ -354,9 +273,9 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
         String passwordRegex = "(^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$)";
 
         Pattern pat = Pattern.compile(passwordRegex);
-        if (String.valueOf(passwordRegister.getPassword()).equals(""))
+        if (String.valueOf(passwordRegister.getInput()).equals(""))
             return false;
-        return pat.matcher(String.valueOf(passwordRegister.getPassword())).matches();
+        return pat.matcher(String.valueOf(passwordRegister.getInput())).matches();
     }
 
     /**
@@ -364,11 +283,11 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
      */
     private void wrongPassword() {
         JOptionPane.showMessageDialog(this, "Wrong password. Password need have: " +
-                "\n- More than 8 characters. " +
-                "\n- At least one lower case and upper case." +
-                "\n- At least one numeric character." +
-                "\n- No whitespaces." +
-                "\nTry it again ( ͡❛ ︹ ͡❛)",
+                        "\n- More than 8 characters. " +
+                        "\n- At least one lower case and upper case." +
+                        "\n- At least one numeric character." +
+                        "\n- No whitespaces." +
+                        "\nTry it again ( ͡❛ ︹ ͡❛)",
                 "Wrong password",
                 JOptionPane.ERROR_MESSAGE);
     }
@@ -385,6 +304,13 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
      */
     private void wrongMail() {
         JOptionPane.showMessageDialog(this, "Wrong mail format. Try it again ( ͡❛ ︹ ͡❛)", "Wrong mail", JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * Shows an error message for when an incorrect user is input when registering
+     */
+    private void wrongUser() {
+        JOptionPane.showMessageDialog(this, "Wrong user format. Try it again ( ͡❛ ︹ ͡❛)", "Wrong mail", JOptionPane.ERROR_MESSAGE);
     }
 
     /**
@@ -418,20 +344,21 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == loginButton) {
-            event.requestLogin(usernameInput.getText(), String.valueOf(passwordInput.getPassword()));
+            event.requestLogin(this.usernameInput.getInput(), this.passwordInput.getInput());
         } else if (e.getSource() == registerButton) {
             cl.show(mainContent, ("register"));
         } else if (e.getSource() == backButton) {
             cl.show(mainContent, ("login"));
         } else if (e.getSource() == pushRegisterButton) {
-            if (this.checkMail()) {
-                if (this.checkPassword()) {
-                    if (this.checkPasswords()) {
-                        this.event.requestRegister(usernameRegister.getText(), emailRegister.getText(), String.valueOf(passwordRegister.getPassword()));
-                    } else this.wrongPasswords();
-                } else this.wrongPassword();
-            } else this.wrongMail();
-
+            if (!this.usernameRegister.getInput().equals("")) {
+                if (this.checkMail()) {
+                    if (this.checkPassword()) {
+                        if (this.checkPasswords()) {
+                            this.event.requestRegister(this.usernameRegister.getInput(), this.emailRegister.getInput(), this.passwordRegister.getInput());
+                        } else this.wrongPasswords();
+                    } else this.wrongPassword();
+                } else this.wrongMail();
+            } else this.wrongUser();
         }
     }
 }
