@@ -95,9 +95,9 @@ public class SongNote implements Comparable<SongNote> {
     }
 
     /**
-     * Returns <0 if this goes before other,
-     *          =0 if you are equal,
-     *          >0 if other goes before.
+     * Returns less than 0 if this goes before other,
+     *          0 if you are equal,
+     *          greater than 0 if other goes before.
      * @param o Object to compare to
      * @return If this goes before the note being compared with
      */
