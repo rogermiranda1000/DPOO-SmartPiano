@@ -224,7 +224,7 @@ public class LogIn extends JFrame implements ActionListener, LogInNotifier {
 
         // Add of all the components
         container.add(header, BorderLayout.CENTER);
-        container.add(this.usernameInput, BorderLayout.CENTER);
+        container.add(this.usernameRegister, BorderLayout.CENTER);
         container.add(this.passwordRegister, BorderLayout.CENTER);
         container.add(this.confirmPasswordRegister, BorderLayout.CENTER);
         container.add(this.emailRegister, BorderLayout.CENTER);
