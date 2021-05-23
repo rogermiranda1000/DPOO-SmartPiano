@@ -8,12 +8,12 @@ public class User {
     /**
      * Name of the user
      */
-    private String name;
+    private final String name;
 
     /**
      * Email of the user
      */
-    private String email;
+    private final String email;
 
     /**
      * Generates a user with the give name and email
