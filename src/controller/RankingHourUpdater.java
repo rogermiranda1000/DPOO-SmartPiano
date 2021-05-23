@@ -1,28 +1,32 @@
 package controller;
 
-import model.WebScrapping;
 import view.NewPlayNotifier;
 
 /**
- * Notifies the graph each SECONDS_PER_UPDATE seconds (to update the hour and the external users reproductions)
+ * Notifies the graph each SECONDS_PER_UPDATE seconds (to update the hour and the external users plays)
  */
 public class RankingHourUpdater extends Thread {
+
     /**
-     * Time to notify the view that update is required
+     * Interval of seconds between updates
      */
     private static final int SECONDS_PER_UPDATE = 120;
 
     /**
-     * Connection with the view
+     * Object to notify when an update should happen
      */
     private final NewPlayNotifier notifier;
 
+    /**
+     * Initializes the class setting the NewPlayNotifier
+     * @param notifier Object to notify when an update should happen
+     */
     public RankingHourUpdater(NewPlayNotifier notifier) {
         this.notifier = notifier;
     }
 
     /**
-     * Loop each 1h
+     * Loop each SECONDS_PER_UPDATE seconds
      */
     @SuppressWarnings({"BusyWait", "InfiniteLoopStatement"})
     @Override
