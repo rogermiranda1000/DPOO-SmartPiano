@@ -2,24 +2,29 @@ package controller;
 
 import entities.Song;
 
+/**
+ * Interface tasked with requesting data to generate the statistics
+ */
 public interface RankingEvent {
 
     /**
-     * Retorna el nombre de cançons escoltades les ultimes 24h
-     * @return Array amb els valors de cançons desde (horaActual - 23h) fins l'hora actual
+     * Returns the evolution of the plays per hour
+     * @return An array of values representing the number of total plays for each hour in the last 24 hours,
+     * the last value is the current hour
      */
     int[] getSongsStatistics();
+
     /**
-     * Retorna el nombre de segons escoltades les ultimes 24h
-     * @return Array amb els valors de segons desde (horaActual - 23h) fins l'hora actual
+     * Returns the evolution of the time listened per hour
+     * @return An array of values representing the number of seconds listened for each hour in the last 24 hours,
+     * the last value is the current hour
      */
     int[] getTimeStatistics();
 
     /**
-     * Busca les 5 cançons més escoltades a la base de dades.
-     * @param plays array de 5 enters per obtenir el nombre de reproduccions de les cançons.
-     * @return llista de les 5cançons més escoltades
+     * Returns the top 5 most popular songs
+     * @param plays Array which will be filled with the plays of each song, from most popular to least
+     * @return Array of songs, from most popular to least
      */
-
     Song[] getTop5(int[] plays);
 }
