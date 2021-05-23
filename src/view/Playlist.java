@@ -96,7 +96,7 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
      * Sets up the panel with the list of playlists
      * @return Panel with all the needed contents
      */
-    public JPanel playlistList() {
+    private JPanel playlistList() {
         JPanel r = new JPanel();
 
         playlistList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -126,7 +126,7 @@ public class Playlist extends JPanel implements ActionListener, ListSelectionLis
      * Sets up the panel that holds the buttons
      * @return Panel with all the buttons set up
      */
-    public JPanel playlistBotPanel() {
+    private JPanel playlistBotPanel() {
         JPanel panel = new JPanel();
         panel.setBackground(ColorConstants.MENU.getColor());
 

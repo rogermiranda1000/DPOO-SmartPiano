@@ -75,7 +75,7 @@ public class BottomPanel extends JPanel implements ActionListener, PlayingSongNo
      * Adds the elements to a panel
      * @return The panel with the elements added
      */
-    public JPanel songPlayerMenu() {
+    private JPanel songPlayerMenu() {
         JPanel panel = new JPanel();
         Font f = new Font(null, Font.PLAIN, 15);
         panel.setBackground(ColorConstants.MENU.getColor());
