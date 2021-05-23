@@ -48,7 +48,7 @@ public class PianoController implements SongValidator, SongEnder {
     }
 
     public void closeCurrentSong() {
-        this.songPlayer.closePlayer();
+        if (this.songPlayer != null) this.songPlayer.closePlayer();
 
         this.pianoPresser.unpressAllKeys(); // release all notes from piano
     }
