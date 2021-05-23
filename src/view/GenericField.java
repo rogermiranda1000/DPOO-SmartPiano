@@ -60,6 +60,10 @@ public class GenericField extends JPanel {
         this(text, false);
     }
 
+    /**
+     * Get the input's text
+     * @return JTextField's text
+     */
     public String getInput() {
         if (this.input instanceof JPasswordField) return String.valueOf(((JPasswordField)this.input).getPassword());
         else return this.input.getText();
