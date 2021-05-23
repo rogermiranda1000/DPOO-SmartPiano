@@ -1,7 +1,6 @@
 package persistance;
 
 import entities.Song;
-import entities.User;
 
 import java.util.ArrayList;
 
