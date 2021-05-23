@@ -166,6 +166,10 @@ public class NotePlayer extends Thread {
         this.volume = volume;
     }
 
+    /**
+     * Returns if the thread is active
+     * @return True if the player hasn't been closed
+     */
     public synchronized boolean getAlive() {
         return this.alive;
     }
