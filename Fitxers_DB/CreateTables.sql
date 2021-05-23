@@ -2,7 +2,6 @@
 DROP TABLE IF EXISTS SongNotes CASCADE;
 DROP TABLE IF EXISTS ListSongs CASCADE;
 DROP TABLE IF EXISTS Listen CASCADE;
-DROP TABLE IF EXISTS Ranking CASCADE;
 DROP TABLE IF EXISTS Lists CASCADE;
 DROP TABLE IF EXISTS Songs CASCADE;
 DROP TABLE IF EXISTS PianoKeys CASCADE;
@@ -34,19 +33,21 @@ CREATE TABLE VirtualUsers (
 );
 CREATE TABLE PianoKeys (
     note ENUM('Do', 'Do#', 'Re', 'Re#', 'Mi', 'Fa', 'Fa#', 'Sol', 'Sol#', 'La', 'La#', 'Si') NOT NULL, -- Note of the piano this represents
+    octave TINYINT,
     user MEDIUMINT,      -- User that configured these settings
     keyboard CHAR(1),    -- Character/key related to the note
-    PRIMARY KEY (note),
+    PRIMARY KEY (note, octave, user),
     FOREIGN KEY (user)
     REFERENCES RegisteredUsers(id)
 );
 CREATE TABLE Songs (
     id MEDIUMINT NOT NULL AUTO_INCREMENT,
-    public BINARY(1),    -- 1 = public, 0 = private
+    public BINARY(1),                   -- 1 = public, 0 = private
     name VARCHAR(255),
-    date DATE DEFAULT CURRENT_TIMESTAMP, -- Day when the song was published, default value = row creation date
+    date DATE DEFAULT CURRENT_TIMESTAMP,-- Day when the song was published, default value = row creation date
     author MEDIUMINT,
-    tick_length DOUBLE,
+    tick_length DOUBLE,                 -- us/tick
+    duration DOUBLE DEFAULT 0,          -- duration of the song [in seconds]
     PRIMARY KEY (id),
     FOREIGN KEY (author)
     REFERENCES Users(id)
@@ -58,16 +59,6 @@ CREATE TABLE Lists (
     PRIMARY KEY (id),
     FOREIGN KEY (author)
     REFERENCES RegisteredUsers(id)
-);
-CREATE TABLE Ranking (
-    user MEDIUMINT NOT NULL,
-    song MEDIUMINT NOT NULL,
-    points MEDIUMINT,
-    PRIMARY KEY (user, song),
-    FOREIGN KEY (user)
-    REFERENCES RegisteredUsers(id),
-    FOREIGN KEY (song)
-    REFERENCES Songs(id)
 );
 CREATE TABLE Listen (
     date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,  -- Date when the reproduction took place, default value = row creation date
@@ -97,7 +88,46 @@ CREATE TABLE SongNotes (
     velocity TINYINT,               -- Volume of the note. 0 = silent, 127 = max volume
     octave TINYINT,
     song MEDIUMINT NOT NULL,
-    PRIMARY KEY (note, tick, pressed, song),
+    PRIMARY KEY (note, tick, pressed, song, octave),
     FOREIGN KEY (song)
     REFERENCES Songs(id)
 );
+
+-- Triggers
+DROP TRIGGER IF EXISTS SongsDurationUpdater;
+CREATE TRIGGER SongsDurationUpdater AFTER INSERT ON SongNotes
+FOR EACH ROW BEGIN
+    UPDATE Songs SET duration = GREATEST((NEW.tick*Songs.tick_length)/(1000 * 1000), duration) WHERE Songs.id = NEW.song;
+END;
+
+DROP TRIGGER IF EXISTS DefaultPianoKeys;
+CREATE TRIGGER DefaultPianoKeys
+    AFTER INSERT ON RegisteredUsers
+    FOR EACH ROW
+BEGIN
+    INSERT INTO PianoKeys (note, octave, user, keyboard)
+    VALUES ('Do', 1, NEW.id, 'a'),
+           ('Do#', 1, NEW.id, 's'),
+           ('Re', 1, NEW.id, 'd'),
+           ('Re#', 1, NEW.id, 'f'),
+           ('Mi', 1, NEW.id, 'g'),
+           ('Fa', 1, NEW.id, 'h'),
+           ('Fa#', 1, NEW.id, 'j'),
+           ('Sol', 1, NEW.id, 'k'),
+           ('Sol#', 1, NEW.id, 'l'),
+           ('La', 1, NEW.id, 'ñ'),
+           ('La#', 1, NEW.id, ','),
+           ('Si', 1, NEW.id, '.'),
+           ('Do', 2, NEW.id, 'q'),
+           ('Do#', 2, NEW.id, 'w'),
+           ('Re', 2, NEW.id, 'e'),
+           ('Re#', 2, NEW.id, 'r'),
+           ('Mi', 2, NEW.id, 't'),
+           ('Fa', 2, NEW.id, 'y'),
+           ('Fa#', 2, NEW.id, 'u'),
+           ('Sol', 2, NEW.id, 'i'),
+           ('Sol#', 2, NEW.id, 'o'),
+           ('La', 2, NEW.id, 'p'),
+           ('La#', 2, NEW.id, '9'),
+           ('Si', 2, NEW.id, '0');
+END;
