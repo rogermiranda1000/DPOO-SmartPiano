@@ -17,12 +17,12 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
     /**
      * Height of the window
      */
-    public static final int HEIGHT = 900;
+    private static final int HEIGHT = 900;
 
     /**
      * Width of the window
      */
-    public static final int WIDTH = 1600;
+    private static final int WIDTH = 1600;
 
     /**
      * Button used to access the "Songs" tab
@@ -163,7 +163,7 @@ public class Menu extends JFrame implements ActionListener, SongsMenuNotifier, P
      * Sets up a Panel with the buttons for switching tabs
      * @return A panel with every button set up and an action listener associated
      */
-    public JPanel topPanel() {
+    private JPanel topPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(0, 6));
         Font f = new Font("Arial", Font.BOLD, 20);
