@@ -388,7 +388,7 @@ public class BusinessFacade {
 
     /**
      * Returns the note binds configuration for the logged user
-     * @return
+     * @return A character array of the bindings of the notes, from lowest to highest
      */
     public char[] getBinds() {
         Config c = this.getConfig();
