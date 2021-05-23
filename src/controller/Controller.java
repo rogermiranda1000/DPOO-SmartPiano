@@ -9,7 +9,6 @@ import persistance.*;
 import view.LogIn;
 import view.Menu;
 import view.NewPlayNotifier;
-import view.UpdateConfigEvent;
 
 import java.util.ArrayList;
 

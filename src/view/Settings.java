@@ -1,5 +1,6 @@
 package view;
 
+import controller.UpdateConfigEvent;
 import entities.KeyboardConstants;
 import entities.Note;
 
