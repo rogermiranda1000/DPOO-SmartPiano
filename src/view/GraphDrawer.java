@@ -75,7 +75,6 @@ class GraphDrawer extends JPanel {
         int topElementY = this.maxValue(yCoords);
         if (topElementY == 0) topElementY = 1;
         int numHoritzontalLines = this.numSections(topElementY);
-        if (numHoritzontalLines == 0) numHoritzontalLines = 1;
 
         int hour = yCoords[yCoords.length-1];
         int endX = GraphDrawer.GRAPH_WIDTH;
