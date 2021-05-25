@@ -73,6 +73,7 @@ class GraphDrawer extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         int topElementY = this.maxValue(yCoords);
+        if (topElementY == 0) topElementY = 1;
         int numHoritzontalLines = this.numSections(topElementY);
 
         int hour = yCoords[yCoords.length-1];
